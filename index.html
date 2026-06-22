@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-<title>MotoConnect Mansa</title>
+<title>MotoConnect Mansa — Admin</title>
 <meta name="description" content="MotoConnect Mansa — Transport subscription management"/>
 <meta name="theme-color" content="#1e3a5f"/>
 <meta name="mobile-web-app-capable" content="yes"/>
@@ -40,6 +40,12 @@
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh}
 
+  /* ── LOGIN ── */
+  #loginPage{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:1rem;background:linear-gradient(135deg,#1e3a5f 0%,#2d5a8e 60%,#1a6b55 100%)}
+  .login-card{background:#fff;border:1px solid var(--border);border-radius:18px;padding:2.5rem 2rem;width:100%;max-width:380px;box-shadow:0 8px 40px rgba(30,58,95,0.22);text-align:center}
+  .login-logo{font-size:2.6rem;margin-bottom:.5rem}
+  .login-card h1{font-size:1.6rem;font-weight:700;color:var(--sidebar-bg);letter-spacing:-.5px}
+  .login-card p{color:var(--muted);font-size:.9rem;margin:.4rem 0 1.8rem}
   .input-wrap{position:relative;margin-bottom:1rem;text-align:left}
   .input-wrap label{display:block;font-size:.78rem;color:var(--muted);margin-bottom:.35rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
   .input-wrap input{width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--radius);padding:.7rem 2.6rem .7rem .9rem;color:var(--text);font-size:.95rem;outline:none;transition:border .2s}
@@ -297,6 +303,9 @@
     .main{padding-bottom:calc(60px + env(safe-area-inset-bottom))}
     .page{padding:1rem}
   }
+  /* notch/safe area for login on iPhone */
+  #loginPage{padding-bottom:env(safe-area-inset-bottom)}
+
   /* Install banner */
   #installBanner{display:none;position:fixed;bottom:70px;left:1rem;right:1rem;background:var(--sidebar-bg);color:#fff;border-radius:12px;padding:.85rem 1rem;z-index:300;box-shadow:0 4px 20px rgba(30,58,95,0.3);align-items:center;gap:.75rem}
   #installBanner.show{display:flex}
@@ -326,6 +335,12 @@
     box-shadow:0 2px 12px rgba(245,158,11,.4);transition:transform .15s;
   }
   .btn-pub-apply:hover{transform:translateY(-1px)}
+  .btn-pub-admin{
+    background:rgba(255,255,255,.1);color:#fff;font-size:.82rem;
+    font-weight:600;padding:.5rem 1rem;border:1px solid rgba(255,255,255,.2);
+    border-radius:50px;cursor:pointer;transition:background .15s;
+  }
+  .btn-pub-admin:hover{background:rgba(255,255,255,.18)}
 
   .pub-hero{
     text-align:center;padding:2.5rem 1.5rem 1.5rem;
@@ -478,6 +493,49 @@
   .ref-chip{display:inline-block;background:#1e3a5f;color:#fbbf24;font-family:monospace;font-weight:700;font-size:1rem;padding:.4rem 1rem;border-radius:8px;margin:.75rem 0}
   .apply-back-link{display:block;text-align:center;color:rgba(255,255,255,.6);font-size:.82rem;margin-top:1rem;cursor:pointer;text-decoration:underline}
   .apply-back-link:hover{color:#fff}
+
+  /* ══ ADMIN: APPLICATIONS TAB ══════════════════════════ */
+  .app-queue-card{background:#fff3cd;border:1px solid #ffc107;border-radius:10px;padding:1rem 1.1rem;margin-bottom:.75rem;display:flex;align-items:flex-start;gap:.9rem}
+  .app-queue-icon{font-size:1.8rem;flex-shrink:0}
+  .app-queue-info{flex:1;min-width:0}
+  .app-queue-name{font-weight:700;font-size:.95rem;color:var(--text)}
+  .app-queue-meta{font-size:.78rem;color:var(--muted);margin-top:.2rem;line-height:1.5}
+  .app-queue-ref{font-size:.7rem;color:var(--accent);font-family:monospace;font-weight:700}
+  .app-queue-actions{display:flex;flex-direction:column;gap:.4rem;flex-shrink:0}
+
+  /* ══ RIDER ID CARD MODAL ══════════════════════════════ */
+  .id-card{
+    background:linear-gradient(135deg,#1e3a5f 0%,#2d5a8e 60%,#1a6b55 100%);
+    border-radius:14px;padding:1.25rem;color:#fff;
+    position:relative;overflow:hidden;margin-bottom:1rem;
+  }
+  .id-card::before{
+    content:'🏍️';position:absolute;right:-10px;bottom:-20px;
+    font-size:6rem;opacity:.08;
+  }
+  .id-card-top{display:flex;align-items:center;gap:.8rem;margin-bottom:1rem}
+  .id-card-avatar{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#fbbf24,#e8820c);color:#000;font-weight:800;font-size:1.5rem;display:flex;align-items:center;justify-content:center;border:3px solid rgba(255,255,255,.3)}
+  .id-card-title{flex:1}
+  .id-card-title h3{font-size:1.05rem;font-weight:800;color:#fff;margin-bottom:.15rem}
+  .id-card-title small{font-size:.72rem;color:rgba(255,255,255,.6)}
+  .id-card-logo{font-size:.72rem;color:rgba(255,255,255,.5);text-align:right}
+  .id-card-logo strong{display:block;color:#fbbf24;font-size:.85rem}
+  .id-card-fields{display:grid;grid-template-columns:1fr 1fr;gap:.5rem .75rem;font-size:.78rem}
+  .id-field label{display:block;color:rgba(255,255,255,.55);font-size:.65rem;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.1rem}
+  .id-field span{color:#fff;font-weight:600}
+  .id-card-footer{margin-top:1rem;padding-top:.75rem;border-top:1px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:space-between}
+  .id-card-footer .id-num{font-family:monospace;font-size:.85rem;color:#fbbf24;font-weight:700}
+  .id-card-footer .id-status{}
+
+  /* ══ AVAILABILITY TOGGLE ══════════════════════════════ */
+  .avail-toggle{display:flex;gap:.3rem}
+  .avail-btn{padding:.3rem .6rem;font-size:.72rem;border:1.5px solid var(--border);border-radius:20px;background:#fff;cursor:pointer;font-weight:600;transition:all .15s}
+  .avail-btn.sel-available{background:#d1fae5;border-color:#10b981;color:#065f46}
+  .avail-btn.sel-busy{background:#ffedd5;border-color:#f59e0b;color:#92400e}
+  .avail-btn.sel-offline{background:#f1f5f9;border-color:#94a3b8;color:#64748b}
+
+  /* pending badge on nav */
+  .nav-badge{display:inline-flex;align-items:center;justify-content:center;background:#f59e0b;color:#000;border-radius:50%;width:18px;height:18px;font-size:.65rem;font-weight:800;margin-left:auto}
 </style>
 </head>
 <body>
@@ -488,6 +546,7 @@
     <div class="pub-logo">🏍️ Moto<span>Connect</span> <span style="font-size:.7rem;color:rgba(255,255,255,.5);font-weight:400">Mansa</span></div>
     <div class="pub-header-actions">
       <button class="btn-pub-apply" onclick="showApplyPage()">🚀 Apply as Rider</button>
+      <button class="btn-pub-admin" onclick="showLandingFromPublic()">🔐 Admin</button>
     </div>
   </header>
 
@@ -556,7 +615,7 @@
           <div class="form-row"><label>Preferred Plan</label>
             <select id="appPlan"><option value="Basic">Basic</option><option value="Standard">Standard</option><option value="Premium">Premium</option></select>
           </div>
-          <div class="form-row"><label>Additional Notes</label><textarea id="appNotes" rows="2" placeholder="Anything else you'd like to share (optional)…"></textarea></div>
+          <div class="form-row"><label>Additional Notes</label><textarea id="appNotes" rows="2" placeholder="Any info for admin (optional)…"></textarea></div>
           <div class="apply-nav">
             <button class="btn btn-ghost btn-sm" onclick="applyBack(2)">← Back</button>
             <button class="btn btn-primary btn-sm" onclick="applyNext(2)">Next →</button>
@@ -570,7 +629,7 @@
             <div id="appReviewContent" style="line-height:2;color:var(--muted)"></div>
           </div>
           <div style="background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:.75rem;font-size:.78rem;color:#92400e;margin-bottom:1rem">
-            ⚠️ Your details will be saved as a reference. We'll contact you on your phone if a spot becomes available.
+            ⚠️ Your application will be reviewed by admin. You will be contacted on your phone once approved.
           </div>
           <div class="apply-nav">
             <button class="btn btn-ghost btn-sm" onclick="applyBack(3)">← Back</button>
@@ -583,7 +642,7 @@
           <div class="apply-confirm-box">
             <div class="big-check">✅</div>
             <h3>Application Submitted!</h3>
-            <p>Thank you for applying to MotoConnect Mansa. Keep your reference number safe — we'll contact you on your phone if your application is taken further.</p>
+            <p>Thank you for applying to MotoConnect Mansa. Keep your reference number safe — admin will contact you on your phone once reviewed.</p>
             <div class="ref-chip" id="appRefDisplay">MCM-XXXX</div>
             <p style="font-size:.78rem;margin-top:.5rem">Processing usually takes 1–2 business days.</p>
             <button class="btn btn-primary btn-sm mt1" onclick="showPublicPage()" style="margin-top:1rem">← Back to Directory</button>
@@ -596,6 +655,422 @@
   </div>
 </div>
 
+<!-- ══ LANDING PAGE ═════════════════════════════════════ -->
+<div id="landingPage">
+  <!-- animated background blobs -->
+  <div class="blob blob1"></div>
+  <div class="blob blob2"></div>
+  <div class="blob blob3"></div>
+
+  <!-- road strip at the bottom -->
+  <div class="road">
+    <div class="road-line" style="animation-delay:0s;left:0"></div>
+    <div class="road-line" style="animation-delay:.4s;left:0"></div>
+    <div class="road-line" style="animation-delay:.8s;left:0"></div>
+    <span class="lp-moto">🏍️</span>
+  </div>
+
+  <div class="lp-content">
+    <div class="lp-badge">🏍️</div>
+
+    <h1 class="lp-title">Moto<span>Connect</span></h1>
+    <p class="lp-sub">The smart transport subscription platform built for Mansa's roads</p>
+
+    <div class="lp-location">📍 Mansa, Luapula Province — Zambia</div>
+
+    <div class="lp-pills">
+      <span class="lp-pill green">✅ Subscription Management</span>
+      <span class="lp-pill amber">⏱️ Auto Expiry Tracking</span>
+      <span class="lp-pill blue">📊 Live Revenue Stats</span>
+      <span class="lp-pill green">🗺️ Zone-Based Fares</span>
+      <span class="lp-pill amber">📱 Works Offline</span>
+      <span class="lp-pill blue">🧾 Invoice Generator</span>
+    </div>
+
+    <div style="display:flex;flex-direction:column;align-items:center;gap:.75rem;animation:fadeUp .6s .65s ease both">
+      <button class="lp-cta" onclick="showPublicPage()">
+        🔍 Find a Rider
+      </button>
+      <button onclick="enterApp()" style="background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.25);color:#fff;font-size:.82rem;font-weight:600;padding:.5rem 1.4rem;border-radius:50px;cursor:pointer;">
+        🔐 Admin Login
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ LOGIN ══════════════════════════════════════════ -->
+<div id="loginPage">
+  <div class="login-card">
+    <div class="login-logo">🏍️</div>
+    <h1>MotoConnect</h1>
+    <p>Mansa Transport Platform — Admin</p>
+    <div class="input-wrap">
+      <label>Password</label>
+      <input type="password" id="loginPw" placeholder="Enter admin password" autocomplete="current-password"/>
+      <button class="toggle-pw" onclick="togglePw('loginPw',this)" type="button">👁</button>
+    </div>
+    <button class="btn btn-primary" onclick="doLogin()">Access Dashboard</button>
+    <div id="loginErr" style="display:none" class="alert alert-err">Incorrect password. Please try again.</div>
+    <p style="font-size:.75rem;color:var(--muted);margin-top:1rem">First-time setup: use the default password, then change it in Settings.</p>
+  </div>
+</div>
+
+<!-- ══ APP ════════════════════════════════════════════ -->
+<div id="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <h2>🏍️ MotoConnect</h2>
+      <span>Mansa, Luapula</span>
+    </div>
+    <nav>
+      <div class="nav-label">Main</div>
+      <div class="nav-item active" onclick="showPage('dashboard',this)">📊 Dashboard</div>
+      <div class="nav-item" onclick="showPage('subscriptions',this)">📝 Subscriptions</div>
+      <div class="nav-label">Configuration</div>
+      <div class="nav-item" onclick="showPage('fares',this)">🏷️ Fares &amp; Rates</div>
+      <div class="nav-item" onclick="showPage('locations',this)">📍 Locations</div>
+      <div class="nav-label">Admin</div>
+      <div class="nav-item" onclick="showPage('reports',this)">📈 Reports</div>
+      <div class="nav-item" onclick="showPage('applications',this)">📋 Applications <span class="nav-badge" id="appNavBadge" style="display:none">0</span></div>
+      <div class="nav-item" onclick="showPage('settings',this)">⚙️ Settings</div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-row">
+        <div class="avatar" id="avatarInitial">A</div>
+        <div class="user-info">
+          <span class="bold" id="adminNameDisplay">Admin User</span>
+          <small>Platform Manager</small>
+        </div>
+      </div>
+      <div class="sidebar-actions">
+        <button class="btn btn-ghost btn-sm" onclick="doLogout()">🚪 Logout</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div style="display:flex;align-items:center;gap:.75rem">
+      <button class="hamburger" onclick="toggleSidebar()">☰</button>
+      <span class="topbar-title" id="pageTitle">Dashboard</span>
+    </div>
+    <div class="topbar-right">
+      <select class="currency-select" id="currencySelect" onchange="setCurrency(this.value)">
+        <option value="ZMW">🇿🇲 ZMW</option>
+        <option value="USD">🇺🇸 USD</option>
+        <option value="EUR">🇪🇺 EUR</option>
+        <option value="GBP">🇬🇧 GBP</option>
+        <option value="ZAR">🇿🇦 ZAR</option>
+      </select>
+      <div class="notification-bell" onclick="toggleNotifPanel()" id="bellBtn">
+        🔔<span class="notif-badge" id="notifBadge" style="display:none">0</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- NOTIFICATIONS PANEL -->
+  <div class="notif-panel" id="notifPanel">
+    <h3>🔔 Alerts</h3>
+    <div id="notifList"><p class="text-muted" style="font-size:.82rem">No alerts right now.</p></div>
+  </div>
+
+  <main class="main">
+
+    <!-- ── DASHBOARD ── -->
+    <div class="page active" id="page-dashboard">
+      <div class="page-head">
+        <h2>Overview</h2>
+        <div class="export-row">
+          <button class="btn btn-ghost btn-sm" onclick="exportCSV()">⬇️ Export CSV</button>
+          <button class="btn btn-primary btn-sm" onclick="openModal('subModal')">+ New Subscription</button>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Monthly Revenue</div>
+          <div class="stat-value text-accent" id="statRevenue">—</div>
+          <div class="stat-sub stat-up" id="statRevenueNote">Active subscriptions total</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Active Subscriptions</div>
+          <div class="stat-value" id="statActive">0</div>
+          <div class="stat-sub">Across all vehicle types</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Expiring Soon</div>
+          <div class="stat-value stat-warn" id="statExpiring">0</div>
+          <div class="stat-sub">Within the next 7 days</div>
+        </div>
+        <div class="stat-card" style="cursor:pointer" onclick="showPage('applications',null)">
+          <div class="stat-label">Pending Applications</div>
+          <div class="stat-value stat-warn" id="statPending">0</div>
+          <div class="stat-sub">Tap to review &amp; approve →</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Operating Zones</div>
+          <div class="stat-value" id="statZones">0</div>
+          <div class="stat-sub">Active coverage areas</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>Recent Subscriptions</h3>
+          <span class="text-muted" style="font-size:.8rem;cursor:pointer" onclick="showPage('subscriptions',null)">View All →</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Operator</th><th>Vehicle</th><th>Plan</th><th>Expiry</th><th>Status</th></tr></thead>
+            <tbody id="recentSubsBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SUBSCRIPTIONS ── -->
+    <div class="page" id="page-subscriptions">
+      <div class="page-head">
+        <h2>All Subscriptions</h2>
+        <button class="btn btn-primary btn-sm" onclick="openModal('subModal')">+ New Subscription</button>
+      </div>
+      <div class="toolbar">
+        <input class="search-input" placeholder="🔍  Search operator or phone…" id="subSearch" oninput="renderSubs()"/>
+        <select class="filter-select" id="subFilterStatus" onchange="renderSubs()">
+          <option value="">All Statuses</option>
+          <option value="active">Active</option>
+          <option value="pending">Pending</option>
+          <option value="expired">Expired</option>
+        </select>
+        <select class="filter-select" id="subFilterType" onchange="renderSubs()">
+          <option value="">All Types</option>
+          <option value="Taxi">Taxi</option>
+          <option value="Motorbike">Motorbike</option>
+          <option value="Tour Operator">Tour Operator</option>
+        </select>
+        <button class="btn btn-ghost btn-sm" onclick="exportCSV()">⬇️ Export CSV</button>
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>#</th><th>Operator</th><th>Phone</th><th>Type</th><th>Zone</th><th>Plan</th><th>Price/mo</th><th>Avail</th><th>Expiry</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="allSubsBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── FARES ── -->
+    <div class="page" id="page-fares">
+      <div class="page-head">
+        <h2>Fares &amp; Rates</h2>
+        <button class="btn btn-primary btn-sm" onclick="openModal('fareModal')">+ Add Fare</button>
+      </div>
+      <div class="two-col" style="margin-bottom:1.25rem">
+        <div class="card">
+          <div class="card-header"><h3>🧮 Fare Estimator</h3></div>
+          <div class="card-body">
+            <div class="form-row">
+              <label>Vehicle Type</label>
+              <select id="estType" onchange="calcFare()">
+                <option value="Taxi">Taxi</option>
+                <option value="Motorbike">Motorbike</option>
+                <option value="Tour Operator">Tour Operator</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label>Distance (km)</label>
+              <input type="number" id="estDist" value="1" min="0.1" step="0.5" oninput="calcFare()"/>
+            </div>
+            <div class="form-row">
+              <label>Zone Multiplier</label>
+              <select id="estMult" onchange="calcFare()">
+                <option value="1.0">Standard (1.0×)</option>
+                <option value="1.2">High Demand (1.2×)</option>
+                <option value="1.5">Premium (1.5×)</option>
+              </select>
+            </div>
+            <div class="estimator-result" id="fareResult">—</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>Fare Configuration</h3></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Type</th><th>Base</th><th>Per KM</th><th>Svc %</th><th></th></tr></thead>
+              <tbody id="fareBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── LOCATIONS ── -->
+    <div class="page" id="page-locations">
+      <div class="page-head">
+        <h2>Location Zones</h2>
+        <button class="btn btn-primary btn-sm" onclick="openModal('zoneModal')">+ Add Zone</button>
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Zone</th><th>Description</th><th>Multiplier</th><th>Actions</th></tr></thead>
+            <tbody id="zoneBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── REPORTS ── -->
+    <div class="page" id="page-reports">
+      <div class="page-head"><h2>Reports &amp; Export</h2></div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total Revenue (All Time)</div>
+          <div class="stat-value text-accent" id="rptTotal">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Active Operators</div>
+          <div class="stat-value" id="rptActive">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Expired / Lapsed</div>
+          <div class="stat-value stat-warn" id="rptExpired">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Pending Activations</div>
+          <div class="stat-value" id="rptPending">0</div>
+        </div>
+      </div>
+      <div class="card" style="max-width:480px">
+        <div class="card-header"><h3>Export Data</h3></div>
+        <div class="card-body">
+          <p style="font-size:.85rem;color:var(--muted);margin-bottom:1rem">Download your data as CSV for use in Excel, Google Sheets, or for backup.</p>
+          <div class="export-row">
+            <button class="btn btn-success btn-sm" onclick="exportCSV()">⬇️ Subscriptions CSV</button>
+            <button class="btn btn-ghost btn-sm" onclick="exportFaresCSV()">⬇️ Fares CSV</button>
+            <button class="btn btn-ghost btn-sm" onclick="exportZonesCSV()">⬇️ Zones CSV</button>
+          </div>
+          <div class="divider"></div>
+          <p style="font-size:.85rem;color:var(--muted);margin-bottom:1rem">Full JSON backup — import this to restore all data.</p>
+          <div class="export-row">
+            <button class="btn btn-primary btn-sm" onclick="exportJSON()">📦 Full Backup (JSON)</button>
+            <label class="btn btn-ghost btn-sm" style="cursor:pointer">📂 Import Backup<input type="file" accept=".json" style="display:none" onchange="importJSON(event)"/></label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SETTINGS ── -->
+    <div class="page" id="page-settings">
+      <div class="page-head"><h2>Settings</h2></div>
+
+      <div class="settings-card">
+        <h3>🔐 Change Password</h3>
+        <div class="form-row">
+          <label>Current Password</label>
+          <div class="input-wrap" style="margin-bottom:0">
+            <input type="password" id="curPw" placeholder="Enter current password"/>
+            <button class="toggle-pw" onclick="togglePw('curPw',this)" type="button">👁</button>
+          </div>
+        </div>
+        <div class="form-row">
+          <label>New Password</label>
+          <div class="input-wrap" style="margin-bottom:0">
+            <input type="password" id="newPw" placeholder="At least 6 characters"/>
+            <button class="toggle-pw" onclick="togglePw('newPw',this)" type="button">👁</button>
+          </div>
+        </div>
+        <div class="form-row">
+          <label>Confirm New Password</label>
+          <div class="input-wrap" style="margin-bottom:0">
+            <input type="password" id="confPw" placeholder="Repeat new password"/>
+            <button class="toggle-pw" onclick="togglePw('confPw',this)" type="button">👁</button>
+          </div>
+        </div>
+        <div id="pwMsg" style="display:none" class="alert"></div>
+        <button class="btn btn-primary btn-sm mt1" onclick="changePassword()">Update Password</button>
+      </div>
+
+      <div class="settings-card">
+        <h3>🏢 Platform Settings</h3>
+        <div class="form-row">
+          <label>Admin Display Name</label>
+          <input type="text" id="adminNameInput" placeholder="e.g. Chanda Mwale"/>
+        </div>
+        <div class="form-row">
+          <label>Default Currency</label>
+          <select id="defaultCurrency">
+            <option value="ZMW">ZMW — Zambian Kwacha</option>
+            <option value="USD">USD — US Dollar</option>
+            <option value="EUR">EUR — Euro</option>
+            <option value="GBP">GBP — Pound Sterling</option>
+            <option value="ZAR">ZAR — South African Rand</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>Expiry Warning (days before)</label>
+          <input type="number" id="warnDays" value="7" min="1" max="30"/>
+        </div>
+        <div id="settingsMsg" style="display:none" class="alert"></div>
+        <button class="btn btn-primary btn-sm mt1" onclick="saveSettings()">Save Settings</button>
+      </div>
+
+      <div class="settings-card" style="border-color:#fca5a5;background:#fff5f5">
+        <h3 style="color:var(--danger)">⚠️ Danger Zone</h3>
+        <p style="font-size:.82rem;color:var(--muted);margin-bottom:.75rem">Permanently clear all subscription data. Cannot be undone.</p>
+        <button class="btn btn-danger btn-sm" onclick="clearAllData()">🗑️ Clear All Subscriptions</button>
+      </div>
+    </div>
+
+
+    <!-- ── APPLICATIONS ── -->
+    <div class="page" id="page-applications">
+      <div class="page-head">
+        <h2>Rider Applications</h2>
+        <span class="text-muted" style="font-size:.82rem">Review and approve rider subscription applications</span>
+      </div>
+      <div class="toolbar">
+        <input class="search-input" placeholder="🔍 Search applicant…" id="appSearch" oninput="renderApplications()"/>
+        <select class="filter-select" id="appFilterStatus" onchange="renderApplications()">
+          <option value="">All</option>
+          <option value="pending">Pending</option>
+          <option value="active">Approved</option>
+          <option value="rejected">Rejected</option>
+        </select>
+      </div>
+      <div id="appQueueList"></div>
+    </div>
+
+  </main>
+
+  <!-- MOBILE BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <div class="bottom-nav-items">
+      <button class="bnav-item active" id="bn-dashboard" onclick="showPage('dashboard',null);setBottomNav('dashboard')">
+        <span class="bnav-icon">📊</span>Dashboard
+      </button>
+      <button class="bnav-item" id="bn-subscriptions" onclick="showPage('subscriptions',null);setBottomNav('subscriptions')">
+        <span class="bnav-icon">📝</span>Subs
+      </button>
+      <button class="bnav-item" id="bn-fares" onclick="showPage('fares',null);setBottomNav('fares')">
+        <span class="bnav-icon">🏷️</span>Fares
+      </button>
+      <button class="bnav-item" id="bn-reports" onclick="showPage('reports',null);setBottomNav('reports')">
+        <span class="bnav-icon">📈</span>Reports
+      </button>
+      <button class="bnav-item" id="bn-applications" onclick="showPage('applications',null);setBottomNav('applications')">
+        <span class="bnav-icon">📋</span>Apply
+      </button>
+      <button class="bnav-item" id="bn-settings" onclick="showPage('settings',null);setBottomNav('settings')">
+        <span class="bnav-icon">⚙️</span>Settings
+      </button>
+    </div>
+  </nav>
+
+</div>
 
 <!-- INSTALL BANNER -->
 <div id="installBanner">
@@ -606,8 +1081,274 @@
   </div>
 </div>
 
+<!-- ══ MODALS ═══════════════════════════════════════════ -->
+
+<!-- NEW / EDIT SUBSCRIPTION -->
+<div class="overlay" id="subModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="subModalTitle">New Subscription</h3>
+      <button class="close-btn" onclick="closeModal('subModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="subEditId"/>
+      <div class="two-col">
+        <div class="form-row">
+          <label>Operator Name</label>
+          <input type="text" id="subName" placeholder="Full name or company"/>
+        </div>
+        <div class="form-row">
+          <label>Phone Number</label>
+          <input type="tel" id="subPhone" placeholder="e.g. 0977 123456"/>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="form-row">
+          <label>Vehicle Type</label>
+          <select id="subType">
+            <option>Taxi</option>
+            <option>Motorbike</option>
+            <option>Tour Operator</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>Plan</label>
+          <select id="subPlan">
+            <option>Basic</option>
+            <option>Standard</option>
+            <option>Premium</option>
+          </select>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="form-row">
+          <label>Monthly Price (ZMW)</label>
+          <input type="number" id="subPrice" placeholder="e.g. 150" min="0"/>
+        </div>
+        <div class="form-row">
+          <label>Subscription Duration</label>
+          <select id="subDuration" onchange="calcExpiry()">
+            <option value="1">1 Month</option>
+            <option value="3">3 Months</option>
+            <option value="6">6 Months</option>
+            <option value="12">1 Year</option>
+            <option value="0">Custom date</option>
+          </select>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="form-row">
+          <label>Start Date</label>
+          <input type="date" id="subStart" oninput="calcExpiry()"/>
+        </div>
+        <div class="form-row">
+          <label>Expiry Date <span style="font-size:.7rem;color:var(--accent)">(auto-calculated)</span></label>
+          <input type="date" id="subExpiry"/>
+        </div>
+      </div>
+      <div class="form-row">
+        <label>Status</label>
+        <select id="subStatus">
+          <option value="active">Active</option>
+          <option value="pending">Pending</option>
+          <option value="expired">Expired</option>
+        </select>
+      </div>
+      <div class="two-col">
+        <div class="form-row">
+          <label>Operating Zone</label>
+          <select id="subZone">
+            <option value="">— Select Zone —</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>Availability</label>
+          <select id="subAvailability">
+            <option value="available">✅ Available</option>
+            <option value="busy">⏳ Busy</option>
+            <option value="offline">Offline</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <label>Notes (optional)</label>
+        <textarea id="subNotes" rows="2" placeholder="Any additional info…"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('subModal')">Cancel</button>
+      <button class="btn btn-primary btn-sm" onclick="saveSub()">Save Subscription</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT FARE -->
+<div class="overlay" id="fareModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="fareModalTitle">Add / Edit Fare</h3>
+      <button class="close-btn" onclick="closeModal('fareModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="fareEditId"/>
+      <div class="form-row">
+        <label>Vehicle Type</label>
+        <input type="text" id="fareType" placeholder="e.g. Taxi"/>
+      </div>
+      <div class="two-col">
+        <div class="form-row">
+          <label>Base Fare (ZMW)</label>
+          <input type="number" id="fareBase" placeholder="0.00" min="0" step="0.5"/>
+        </div>
+        <div class="form-row">
+          <label>Per KM (ZMW)</label>
+          <input type="number" id="farePerKm" placeholder="0.00" min="0" step="0.5"/>
+        </div>
+      </div>
+      <div class="form-row">
+        <label>Service Fee (%)</label>
+        <input type="number" id="fareSvc" placeholder="e.g. 10" min="0" max="100"/>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('fareModal')">Cancel</button>
+      <button class="btn btn-primary btn-sm" onclick="saveFare()">Save Fare</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD / EDIT ZONE -->
+<div class="overlay" id="zoneModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="zoneModalTitle">Add Zone</h3>
+      <button class="close-btn" onclick="closeModal('zoneModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="zoneEditId"/>
+      <div class="form-row">
+        <label>Zone Name</label>
+        <input type="text" id="zoneName" placeholder="e.g. Mansa Central"/>
+      </div>
+      <div class="form-row">
+        <label>Description</label>
+        <input type="text" id="zoneDesc" placeholder="Brief description"/>
+      </div>
+      <div class="form-row">
+        <label>Rate Multiplier</label>
+        <select id="zoneMult">
+          <option value="1.0">Standard (1.0×)</option>
+          <option value="1.2">High Demand (1.2×)</option>
+          <option value="1.5">Premium (1.5×)</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('zoneModal')">Cancel</button>
+      <button class="btn btn-primary btn-sm" onclick="saveZone()">Save Zone</button>
+    </div>
+  </div>
+</div>
+
+<!-- INVOICE MODAL -->
+<div class="overlay" id="invoiceModal">
+  <div class="modal" style="max-width:520px">
+    <div class="modal-header">
+      <h3>🧾 Subscription Invoice</h3>
+      <button class="close-btn" onclick="closeModal('invoiceModal')">✕</button>
+    </div>
+    <div class="modal-body" id="invoiceBody"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('invoiceModal')">Close</button>
+      <button class="btn btn-primary btn-sm" onclick="printInvoice()">🖨️ Print</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM DELETE -->
+<div class="overlay" id="confirmModal">
+  <div class="modal" style="max-width:360px">
+    <div class="modal-header">
+      <h3>Confirm Delete</h3>
+      <button class="close-btn" onclick="closeModal('confirmModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p id="confirmMsg" style="font-size:.9rem;color:var(--muted)">Are you sure you want to delete this item?</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('confirmModal')">Cancel</button>
+      <button class="btn btn-danger btn-sm" id="confirmOkBtn">Delete</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- RIDER ID CARD MODAL -->
+<div class="overlay" id="riderCardModal">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-header">
+      <h3>🆔 Rider ID Card</h3>
+      <button class="close-btn" onclick="closeModal('riderCardModal')">✕</button>
+    </div>
+    <div class="modal-body" id="riderCardBody"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('riderCardModal')">Close</button>
+      <button class="btn btn-primary btn-sm" onclick="printRiderCard()">🖨️ Print</button>
+      <button class="btn btn-success btn-sm" onclick="shareRiderCard()">📤 Share</button>
+    </div>
+  </div>
+</div>
+
+<!-- APPROVE APPLICATION MODAL -->
+<div class="overlay" id="approveModal">
+  <div class="modal" style="max-width:400px">
+    <div class="modal-header">
+      <h3>✅ Approve Application</h3>
+      <button class="close-btn" onclick="closeModal('approveModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="approveAppId"/>
+      <p style="font-size:.85rem;color:var(--muted);margin-bottom:1rem">Set subscription details for this rider before activating.</p>
+      <div class="two-col">
+        <div class="form-row"><label>Monthly Price (ZMW)</label><input type="number" id="approvePrice" placeholder="e.g. 150" min="0"/></div>
+        <div class="form-row"><label>Duration</label>
+          <select id="approveDuration">
+            <option value="1">1 Month</option>
+            <option value="3">3 Months</option>
+            <option value="6">6 Months</option>
+            <option value="12">1 Year</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row"><label>Start Date</label><input type="date" id="approveStart"/></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('approveModal')">Cancel</button>
+      <button class="btn btn-success btn-sm" onclick="confirmApprove()">✅ Activate Rider</button>
+    </div>
+  </div>
+</div>
 
 <script>
+// ══════════════════════════════════════════════════════
+//  LANDING PAGE
+// ══════════════════════════════════════════════════════
+function showLanding(){
+  hideAllPages();
+  const lp=document.getElementById('landingPage');
+  lp.style.display='flex';
+  lp.classList.remove('hide');
+}
+function enterApp(){
+  // "Admin Login" from landing → go to login page
+  const lp=document.getElementById('landingPage');
+  lp.classList.add('hide');
+  setTimeout(()=>{
+    lp.style.display='none';
+    showLoginPage();
+  },650);
+}
+
 // ══════════════════════════════════════════════════════
 //  PWA — MANIFEST + SERVICE WORKER + INSTALL PROMPT
 // ══════════════════════════════════════════════════════
@@ -655,33 +1396,687 @@ if('serviceWorker' in navigator){
 // ══════════════════════════════════════════════════════
 //  STATE & PERSISTENCE
 // ══════════════════════════════════════════════════════
-const KEYS={subs:'mc_subscriptions',zones:'mc_zones'};
+const KEYS={pw:'mc_password',subs:'mc_subscriptions',fares:'mc_fares',zones:'mc_zones',settings:'mc_settings'};
+const DEFAULT_PW='admin123';
+const RATES={ZMW:1,USD:0.049,EUR:0.046,GBP:0.040,ZAR:0.90};
+let state={currency:'ZMW',warnDays:7,adminName:'Admin User'};
 
 function save(key,data){try{localStorage.setItem(key,JSON.stringify(data));}catch(e){console.error('save',e);}}
 function load(key,def){try{const v=localStorage.getItem(key);return v!==null?JSON.parse(v):def;}catch(e){return def;}}
+function getPassword(){return load(KEYS.pw,DEFAULT_PW);}
 function getSubs(){return load(KEYS.subs,[]);}
+function getFares(){return load(KEYS.fares,[
+  {id:'f1',type:'Taxi',base:15,perKm:3.5,svc:10},
+  {id:'f2',type:'Motorbike',base:10,perKm:2.5,svc:8},
+  {id:'f3',type:'Tour Operator',base:30,perKm:5.0,svc:12},
+]);}
 function getZones(){return load(KEYS.zones,[
   {id:'z1',name:'Mansa Central',desc:'Town centre area',mult:1.0},
   {id:'z2',name:'Mansa North',desc:'Residential north area',mult:1.2},
   {id:'z3',name:'Mansa Market',desc:'Busy market zone',mult:1.5},
 ]);}
+function getSettings(){return load(KEYS.settings,{adminName:'Admin User',currency:'ZMW',warnDays:7});}
+
+function applySettings(){
+  const s=getSettings();
+  state.currency=s.currency||'ZMW';
+  state.warnDays=s.warnDays||7;
+  state.adminName=s.adminName||'Admin User';
+  document.getElementById('currencySelect').value=state.currency;
+  document.getElementById('adminNameInput').value=state.adminName;
+  document.getElementById('defaultCurrency').value=state.currency;
+  document.getElementById('warnDays').value=state.warnDays;
+  document.getElementById('adminNameDisplay').textContent=state.adminName;
+  document.getElementById('avatarInitial').textContent=state.adminName.charAt(0).toUpperCase();
+}
+
 // ══════════════════════════════════════════════════════
-//  EXPIRY HELPERS (used by the public application form)
+//  AUTO-EXPIRE: run on every load — mark subs past expiry
+// ══════════════════════════════════════════════════════
+function autoExpireSubs(){
+  const today=new Date(); today.setHours(0,0,0,0);
+  const subs=getSubs();
+  let changed=false;
+  subs.forEach(s=>{
+    if(s.status==='active' && s.expiry){
+      const exp=new Date(s.expiry);
+      if(exp<today){s.status='expired';changed=true;}
+    }
+  });
+  if(changed) save(KEYS.subs,subs);
+}
+
+// ══════════════════════════════════════════════════════
+//  AUTH
+// ══════════════════════════════════════════════════════
+function doLogin(){
+  const pw=document.getElementById('loginPw').value;
+  if(pw===getPassword()){
+    hideAllPages();
+    document.getElementById('app').style.display='block';
+    document.getElementById('loginPw').value='';
+    document.getElementById('loginErr').style.display='none';
+    applySettings();
+    autoExpireSubs();
+    renderAll();
+    buildNotifications();
+  } else {
+    document.getElementById('loginErr').style.display='block';
+  }
+}
+document.getElementById('loginPw').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+
+function doLogout(){
+  hideAllPages();
+  showPublicPage();
+}
+
+function changePassword(){
+  const cur=document.getElementById('curPw').value;
+  const nw=document.getElementById('newPw').value;
+  const conf=document.getElementById('confPw').value;
+  const msg=document.getElementById('pwMsg');
+  const show=(txt,cls)=>{msg.textContent=txt;msg.className='alert '+cls;msg.style.display='block';};
+  if(cur!==getPassword()){show('Current password is incorrect.','alert-err');return;}
+  if(nw.length<6){show('New password must be at least 6 characters.','alert-err');return;}
+  if(nw!==conf){show('New passwords do not match.','alert-err');return;}
+  save(KEYS.pw,nw);
+  show('Password updated successfully.','alert-ok');
+  ['curPw','newPw','confPw'].forEach(id=>document.getElementById(id).value='');
+}
+
+// ══════════════════════════════════════════════════════
+//  NAVIGATION
+// ══════════════════════════════════════════════════════
+const pageTitles={dashboard:'Dashboard',subscriptions:'All Subscriptions',fares:'Fares & Rates',locations:'Location Zones',reports:'Reports',settings:'Settings',applications:'Rider Applications'};
+
+function showPage(id,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  if(el) el.classList.add('active');
+  else document.querySelectorAll('.nav-item').forEach(n=>{if(n.textContent.trim().toLowerCase().includes(id))n.classList.add('active');});
+  document.getElementById('pageTitle').textContent=pageTitles[id]||id;
+  if(window.innerWidth<=768)closeSidebar();
+  if(id==='reports')renderReports();
+  if(id==='fares'){renderFares();calcFare();}
+  if(id==='locations')renderZones();
+  if(id==='subscriptions')renderSubs();
+  if(id==='dashboard'){renderStats();renderRecentSubs();}
+  if(id==='applications'){renderApplications();updateAppBadge();}
+}
+
+function setBottomNav(id){
+  document.querySelectorAll('.bnav-item').forEach(b=>b.classList.remove('active'));
+  const el=document.getElementById('bn-'+id);
+  if(el)el.classList.add('active');
+}
+
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');}
+
+// ══════════════════════════════════════════════════════
+//  CURRENCY
+// ══════════════════════════════════════════════════════
+function setCurrency(v){state.currency=v;renderStats();renderRecentSubs();renderSubs();calcFare();renderReports();}
+function fmt(zmw){
+  const r=RATES[state.currency]||1;
+  const s={ZMW:'K',USD:'$',EUR:'€',GBP:'£',ZAR:'R'}[state.currency]||'K';
+  return s+(zmw*r).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+
+// ══════════════════════════════════════════════════════
+//  MODALS
+// ══════════════════════════════════════════════════════
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
+
+// ══════════════════════════════════════════════════════
+//  EXPIRY AUTO-CALCULATION
 // ══════════════════════════════════════════════════════
 function toDateStr(d){return d.toISOString().split('T')[0];}
 function todayStr(){return toDateStr(new Date());}
+
+function calcExpiry(){
+  const dur=parseInt(document.getElementById('subDuration').value)||0;
+  if(dur===0)return; // custom — don't overwrite
+  const startVal=document.getElementById('subStart').value||todayStr();
+  const start=new Date(startVal);
+  start.setMonth(start.getMonth()+dur);
+  document.getElementById('subExpiry').value=toDateStr(start);
+}
+
+// ══════════════════════════════════════════════════════
+//  SUBSCRIPTIONS
+// ══════════════════════════════════════════════════════
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
 
+function populateSubZones(selectedZone){
+  const sel=document.getElementById('subZone');
+  if(!sel)return;
+  sel.innerHTML='<option value="">— Select Zone —</option>'+getZones().map(z=>`<option value="${z.name}" ${z.name===selectedZone?'selected':''}>${z.name}</option>`).join('');
+}
+
+function openNewSub(){
+  document.getElementById('subEditId').value='';
+  document.getElementById('subModalTitle').textContent='New Subscription';
+  ['subName','subPhone','subNotes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('subType').value='Taxi';
+  document.getElementById('subPlan').value='Basic';
+  document.getElementById('subPrice').value='';
+  document.getElementById('subStatus').value='active';
+  document.getElementById('subDuration').value='1';
+  document.getElementById('subStart').value=todayStr();
+  document.getElementById('subAvailability').value='available';
+  populateSubZones('');
+  calcExpiry();
+  openModal('subModal');
+}
+
+function saveSub(){
+  const id=document.getElementById('subEditId').value;
+  const name=document.getElementById('subName').value.trim();
+  const phone=document.getElementById('subPhone').value.trim();
+  const type=document.getElementById('subType').value;
+  const plan=document.getElementById('subPlan').value;
+  const price=parseFloat(document.getElementById('subPrice').value)||0;
+  const expiry=document.getElementById('subExpiry').value;
+  const start=document.getElementById('subStart').value;
+  const duration=document.getElementById('subDuration').value;
+  const status=document.getElementById('subStatus').value;
+  const notes=document.getElementById('subNotes').value.trim();
+  const zone=document.getElementById('subZone')?.value||'';
+  const availability=document.getElementById('subAvailability')?.value||'available';
+  if(!name){alert('Operator name is required.');return;}
+  if(!expiry){alert('Expiry date is required. Select a duration or pick a custom date.');return;}
+  const subs=getSubs();
+  if(id){
+    const i=subs.findIndex(s=>s.id===id);
+    if(i>-1)subs[i]={...subs[i],name,phone,type,plan,price,expiry,start,duration,status,notes,zone,availability};
+  } else {
+    subs.push({id:uid(),name,phone,type,plan,price,expiry,start,duration,status,notes,zone,availability,created:new Date().toISOString()});
+  }
+  save(KEYS.subs,subs);
+  closeModal('subModal');
+  renderStats();
+  renderRecentSubs();
+  renderSubs();
+  buildNotifications();
+}
+
+function editSub(id){
+  const subs=getSubs();
+  const s=subs.find(x=>x.id===id);
+  if(!s)return;
+  document.getElementById('subEditId').value=s.id;
+  document.getElementById('subModalTitle').textContent='Edit Subscription';
+  document.getElementById('subName').value=s.name;
+  document.getElementById('subPhone').value=s.phone||'';
+  document.getElementById('subType').value=s.type;
+  document.getElementById('subPlan').value=s.plan;
+  document.getElementById('subPrice').value=s.price;
+  document.getElementById('subStart').value=s.start||s.created?.split('T')[0]||todayStr();
+  document.getElementById('subDuration').value=s.duration||'1';
+  document.getElementById('subExpiry').value=s.expiry||'';
+  document.getElementById('subStatus').value=s.status;
+  document.getElementById('subNotes').value=s.notes||'';
+  document.getElementById('subAvailability').value=s.availability||'available';
+  populateSubZones(s.zone||'');
+  openModal('subModal');
+}
+
+function renewSub(id){
+  const subs=getSubs();
+  const s=subs.find(x=>x.id===id);
+  if(!s)return;
+  // Start renewal from today or current expiry (whichever is later)
+  const today=new Date();
+  const curExp=s.expiry?new Date(s.expiry):today;
+  const startFrom=curExp>today?curExp:today;
+  const dur=parseInt(s.duration)||1;
+  const newExp=new Date(startFrom);
+  newExp.setMonth(newExp.getMonth()+dur);
+  const i=subs.findIndex(x=>x.id===id);
+  subs[i]={...s,status:'active',expiry:toDateStr(newExp),start:toDateStr(startFrom)};
+  save(KEYS.subs,subs);
+  renderStats();renderRecentSubs();renderSubs();buildNotifications();
+}
+
+function deleteSub(id){
+  const subs=getSubs();
+  const s=subs.find(x=>x.id===id);
+  document.getElementById('confirmMsg').textContent=`Delete subscription for "${s?.name||id}"? This cannot be undone.`;
+  document.getElementById('confirmOkBtn').onclick=()=>{
+    save(KEYS.subs,subs.filter(x=>x.id!==id));
+    closeModal('confirmModal');
+    renderStats();renderRecentSubs();renderSubs();buildNotifications();
+  };
+  openModal('confirmModal');
+}
+
+function subStatusBadge(s,expiry){
+  const today=new Date();today.setHours(0,0,0,0);
+  const exp=expiry?new Date(expiry):null;
+  if(s==='expired'||(exp&&exp<today))return '<span class="badge badge-expired">Expired</span>';
+  if(s==='pending')return '<span class="badge badge-pending">Pending</span>';
+  if(exp){
+    const diff=Math.ceil((exp-today)/(1000*60*60*24));
+    if(diff<=state.warnDays)return `<span class="badge badge-expiring">Expiring ${diff}d</span>`;
+  }
+  return '<span class="badge badge-active">Active</span>';
+}
+
+function daysLeft(expiry){
+  if(!expiry)return null;
+  const today=new Date();today.setHours(0,0,0,0);
+  const exp=new Date(expiry);
+  return Math.ceil((exp-today)/(1000*60*60*24));
+}
+
+function renderRecentSubs(){
+  const subs=getSubs().slice().reverse().slice(0,5);
+  const tbody=document.getElementById('recentSubsBody');
+  if(!subs.length){tbody.innerHTML='<tr><td colspan="5" class="empty">No subscriptions yet.</td></tr>';return;}
+  tbody.innerHTML=subs.map(s=>`
+    <tr>
+      <td class="bold">${esc(s.name)}</td>
+      <td>${esc(s.type)}</td>
+      <td><span class="pill">${esc(s.plan)}</span></td>
+      <td>${s.expiry||'—'}</td>
+      <td>${subStatusBadge(s.status,s.expiry)}</td>
+    </tr>`).join('');
+}
+
+function renderSubs(){
+  const search=(document.getElementById('subSearch')?.value||'').toLowerCase();
+  const fStatus=document.getElementById('subFilterStatus')?.value||'';
+  const fType=document.getElementById('subFilterType')?.value||'';
+  let subs=getSubs().slice().reverse();
+  if(search)subs=subs.filter(s=>(s.name+s.phone).toLowerCase().includes(search));
+  if(fStatus)subs=subs.filter(s=>{
+    if(fStatus==='expired'){const d=daysLeft(s.expiry);return s.status==='expired'||(d!==null&&d<0);}
+    return s.status===fStatus;
+  });
+  if(fType)subs=subs.filter(s=>s.type===fType);
+  const tbody=document.getElementById('allSubsBody');
+  if(!subs.length){tbody.innerHTML='<tr><td colspan="10" class="empty">No subscriptions match your filter.</td></tr>';return;}
+  tbody.innerHTML=subs.map((s,i)=>{
+    const dl=daysLeft(s.expiry);
+    const isExp=s.status==='expired'||(dl!==null&&dl<0);
+    return `<tr>
+      <td class="text-muted">${i+1}</td>
+      <td class="bold">${esc(s.name)}</td>
+      <td>${esc(s.phone||'—')}</td>
+      <td>${esc(s.type)}</td>
+      <td><span class="text-muted" style="font-size:.8rem">${esc(s.zone||'—')}</span></td>
+      <td><span class="pill">${esc(s.plan)}</span></td>
+      <td>${fmt(s.price)}</td>
+      <td><div class="avail-toggle">
+        <button class="avail-btn ${(s.availability||'available')==='available'?'sel-available':''}" onclick="setAvailability('${s.id}','available')" title="Available">✅</button>
+        <button class="avail-btn ${s.availability==='busy'?'sel-busy':''}" onclick="setAvailability('${s.id}','busy')" title="Busy">⏳</button>
+        <button class="avail-btn ${s.availability==='offline'?'sel-offline':''}" onclick="setAvailability('${s.id}','offline')" title="Offline">⚫</button>
+      </div></td>
+      <td>${s.expiry||'—'}${dl!==null&&dl>=0&&dl<=state.warnDays?`<br><small style="color:var(--warn);font-size:.7rem">${dl}d left</small>`:''}</td>
+      <td>${subStatusBadge(s.status,s.expiry)}</td>
+      <td><div class="row-actions">
+        <button class="btn btn-ghost btn-sm" onclick="editSub('${s.id}')" title="Edit">✏️</button>
+        ${isExp?`<button class="btn btn-success btn-sm" onclick="renewSub('${s.id}')" title="Renew">🔄 Renew</button>`:''}
+        <button class="btn btn-ghost btn-sm" onclick="showRiderCard('${s.id}')" title="ID Card">🆔</button>
+        <button class="btn btn-ghost btn-sm" onclick="remindRider('${s.id}')" title="WhatsApp Reminder">💬</button>
+        <button class="btn btn-ghost btn-sm" onclick="showInvoice('${s.id}')" title="Invoice">🧾</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteSub('${s.id}')" title="Delete">🗑</button>
+      </div></td>
+    </tr>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════════
+//  STATS
+// ══════════════════════════════════════════════════════
+function renderStats(){
+  const subs=getSubs();
+  const today=new Date();today.setHours(0,0,0,0);
+  const active=subs.filter(s=>s.status==='active'&&(!s.expiry||new Date(s.expiry)>=today));
+  const pending=subs.filter(s=>s.status==='pending');
+  const expiring=subs.filter(s=>{
+    if(s.status!=='active'||!s.expiry)return false;
+    const diff=daysLeft(s.expiry);
+    return diff!==null&&diff>=0&&diff<=state.warnDays;
+  });
+  const revenue=active.reduce((a,s)=>a+(s.price||0),0);
+  document.getElementById('statRevenue').textContent=fmt(revenue);
+  document.getElementById('statActive').textContent=active.length;
+  document.getElementById('statExpiring').textContent=expiring.length;
+  document.getElementById('statPending').textContent=pending.length;
+  document.getElementById('statZones').textContent=getZones().length;
+}
+
+function renderReports(){
+  const subs=getSubs();
+  const today=new Date();today.setHours(0,0,0,0);
+  const active=subs.filter(s=>s.status==='active'&&(!s.expiry||new Date(s.expiry)>=today));
+  const expired=subs.filter(s=>s.status==='expired'||(s.expiry&&new Date(s.expiry)<today));
+  const pending=subs.filter(s=>s.status==='pending');
+  const total=active.reduce((a,s)=>a+(s.price||0),0);
+  document.getElementById('rptTotal').textContent=fmt(total);
+  document.getElementById('rptActive').textContent=active.length;
+  document.getElementById('rptExpired').textContent=expired.length;
+  document.getElementById('rptPending').textContent=pending.length;
+}
+
+// ══════════════════════════════════════════════════════
+//  FARES
+// ══════════════════════════════════════════════════════
+function renderFares(){
+  const fares=getFares();
+  const tbody=document.getElementById('fareBody');
+  tbody.innerHTML=fares.map(f=>`
+    <tr>
+      <td class="bold">${esc(f.type)}</td>
+      <td>${fmt(f.base)}</td>
+      <td>${fmt(f.perKm)}</td>
+      <td>${f.svc}%</td>
+      <td><div class="row-actions">
+        <button class="btn btn-ghost btn-sm" onclick="editFare('${f.id}')">✏️</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteFare('${f.id}')">🗑</button>
+      </div></td>
+    </tr>`).join('');
+}
+
+function editFare(id){
+  const f=getFares().find(x=>x.id===id);
+  if(!f)return;
+  document.getElementById('fareEditId').value=f.id;
+  document.getElementById('fareType').value=f.type;
+  document.getElementById('fareBase').value=f.base;
+  document.getElementById('farePerKm').value=f.perKm;
+  document.getElementById('fareSvc').value=f.svc;
+  document.getElementById('fareModalTitle').textContent='Edit Fare';
+  openModal('fareModal');
+}
+
+function saveFare(){
+  const id=document.getElementById('fareEditId').value;
+  const type=document.getElementById('fareType').value.trim();
+  const base=parseFloat(document.getElementById('fareBase').value)||0;
+  const perKm=parseFloat(document.getElementById('farePerKm').value)||0;
+  const svc=parseFloat(document.getElementById('fareSvc').value)||0;
+  if(!type){alert('Vehicle type is required.');return;}
+  const fares=getFares();
+  if(id){const i=fares.findIndex(f=>f.id===id);if(i>-1)fares[i]={...fares[i],type,base,perKm,svc};}
+  else fares.push({id:uid(),type,base,perKm,svc});
+  save(KEYS.fares,fares);
+  closeModal('fareModal');
+  renderFares();calcFare();
+}
+
+function deleteFare(id){
+  document.getElementById('confirmMsg').textContent='Delete this fare configuration?';
+  document.getElementById('confirmOkBtn').onclick=()=>{save(KEYS.fares,getFares().filter(f=>f.id!==id));closeModal('confirmModal');renderFares();};
+  openModal('confirmModal');
+}
+
+function openFareModal(){
+  document.getElementById('fareEditId').value='';
+  document.getElementById('fareModalTitle').textContent='Add Fare';
+  ['fareType','fareBase','farePerKm','fareSvc'].forEach(id=>document.getElementById(id).value='');
+  openModal('fareModal');
+}
+
+function calcFare(){
+  const type=document.getElementById('estType')?.value;
+  const dist=parseFloat(document.getElementById('estDist')?.value)||0;
+  const mult=parseFloat(document.getElementById('estMult')?.value)||1;
+  const fare=getFares().find(f=>f.type===type);
+  const el=document.getElementById('fareResult');
+  if(!fare){el.textContent='No fare data';return;}
+  const raw=(fare.base+fare.perKm*dist)*mult;
+  const total=raw+raw*(fare.svc/100);
+  el.textContent=fmt(total)+` (incl. ${fare.svc}% svc)`;
+}
+
+// ══════════════════════════════════════════════════════
+//  ZONES
+// ══════════════════════════════════════════════════════
+function renderZones(){
+  const zones=getZones();
+  const tbody=document.getElementById('zoneBody');
+  if(!zones.length){tbody.innerHTML='<tr><td colspan="4" class="empty">No zones yet.</td></tr>';return;}
+  tbody.innerHTML=zones.map(z=>`
+    <tr>
+      <td class="bold">${esc(z.name)}</td>
+      <td>${esc(z.desc||'—')}</td>
+      <td><span class="pill">${z.mult}×</span></td>
+      <td><div class="row-actions">
+        <button class="btn btn-ghost btn-sm" onclick="editZone('${z.id}')">✏️</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteZone('${z.id}')">🗑</button>
+      </div></td>
+    </tr>`).join('');
+}
+
+function editZone(id){
+  const z=getZones().find(x=>x.id===id);
+  if(!z)return;
+  document.getElementById('zoneEditId').value=z.id;
+  document.getElementById('zoneName').value=z.name;
+  document.getElementById('zoneDesc').value=z.desc||'';
+  document.getElementById('zoneMult').value=z.mult;
+  document.getElementById('zoneModalTitle').textContent='Edit Zone';
+  openModal('zoneModal');
+}
+
+function saveZone(){
+  const id=document.getElementById('zoneEditId').value;
+  const name=document.getElementById('zoneName').value.trim();
+  const desc=document.getElementById('zoneDesc').value.trim();
+  const mult=document.getElementById('zoneMult').value;
+  if(!name){alert('Zone name is required.');return;}
+  const zones=getZones();
+  if(id){const i=zones.findIndex(z=>z.id===id);if(i>-1)zones[i]={...zones[i],name,desc,mult};}
+  else zones.push({id:uid(),name,desc,mult});
+  save(KEYS.zones,zones);
+  closeModal('zoneModal');
+  renderZones();
+  renderStats();
+}
+
+function deleteZone(id){
+  document.getElementById('confirmMsg').textContent='Delete this zone?';
+  document.getElementById('confirmOkBtn').onclick=()=>{save(KEYS.zones,getZones().filter(z=>z.id!==id));closeModal('confirmModal');renderZones();renderStats();};
+  openModal('confirmModal');
+}
+
+function openZoneModal(){
+  document.getElementById('zoneEditId').value='';
+  document.getElementById('zoneModalTitle').textContent='Add Zone';
+  ['zoneName','zoneDesc'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('zoneMult').value='1.0';
+  openModal('zoneModal');
+}
+
+// ══════════════════════════════════════════════════════
+//  NOTIFICATIONS
+// ══════════════════════════════════════════════════════
+function buildNotifications(){
+  const subs=getSubs();
+  const today=new Date();today.setHours(0,0,0,0);
+  const items=[];
+  subs.forEach(s=>{
+    if(!s.expiry)return;
+    const diff=daysLeft(s.expiry);
+    if(diff===null)return;
+    if(diff>=0&&diff<=state.warnDays&&s.status==='active'){
+      items.push({cls:'warn',title:`${s.name} — expiring in ${diff} day${diff!==1?'s':''}`,body:`${s.type} · ${s.plan} plan · ${fmt(s.price)}/mo`});
+    } else if(diff<0&&s.status!=='expired'){
+      items.push({cls:'danger',title:`${s.name} — EXPIRED ${Math.abs(diff)} days ago`,body:'Please renew or archive this subscription.'});
+    }
+  });
+  const list=document.getElementById('notifList');
+  const badge=document.getElementById('notifBadge');
+  if(!items.length){
+    list.innerHTML='<p class="text-muted" style="font-size:.82rem">No alerts right now. ✅</p>';
+    badge.style.display='none';
+  } else {
+    list.innerHTML=items.map(i=>`<div class="notif-item ${i.cls}"><strong>${esc(i.title)}</strong>${esc(i.body)}</div>`).join('');
+    badge.textContent=items.length;
+    badge.style.display='flex';
+  }
+}
+
+function toggleNotifPanel(){document.getElementById('notifPanel').classList.toggle('open');}
+
+// ══════════════════════════════════════════════════════
+//  INVOICE
+// ══════════════════════════════════════════════════════
+function showInvoice(id){
+  const s=getSubs().find(x=>x.id===id);
+  if(!s)return;
+  const now=new Date().toLocaleDateString('en-ZM',{year:'numeric',month:'long',day:'numeric'});
+  const dl=daysLeft(s.expiry);
+  document.getElementById('invoiceBody').innerHTML=`
+    <div style="font-size:.85rem;line-height:1.7">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem">
+        <div><strong style="font-size:1.1rem;color:#1e3a5f">🏍️ MotoConnect Mansa</strong><br><small style="color:var(--muted)">Transport Platform · Mansa, Luapula</small></div>
+        <div style="text-align:right"><small style="color:var(--muted)">Invoice Date</small><br>${now}</div>
+      </div>
+      <div class="divider"></div>
+      <table style="width:100%;font-size:.85rem">
+        <tr><td style="color:var(--muted);padding:.3rem 0">Operator</td><td class="bold">${esc(s.name)}</td></tr>
+        <tr><td style="color:var(--muted);padding:.3rem 0">Phone</td><td>${esc(s.phone||'—')}</td></tr>
+        <tr><td style="color:var(--muted);padding:.3rem 0">Vehicle Type</td><td>${esc(s.type)}</td></tr>
+        <tr><td style="color:var(--muted);padding:.3rem 0">Plan</td><td>${esc(s.plan)}</td></tr>
+        <tr><td style="color:var(--muted);padding:.3rem 0">Duration</td><td>${s.duration?s.duration+' month(s)':'—'}</td></tr>
+        <tr><td style="color:var(--muted);padding:.3rem 0">Start Date</td><td>${s.start||'—'}</td></tr>
+        <tr><td style="color:var(--muted);padding:.3rem 0">Expiry Date</td><td>${s.expiry||'—'}${dl!==null&&dl>=0?` <small style="color:var(--warn)">(${dl}d remaining)</small>`:''}</td></tr>
+        <tr><td style="color:var(--muted);padding:.3rem 0">Status</td><td>${subStatusBadge(s.status,s.expiry)}</td></tr>
+      </table>
+      <div class="divider"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.5rem">
+        <span style="color:var(--muted)">Monthly Subscription Fee</span>
+        <span style="font-size:1.3rem;font-weight:700;color:var(--accent)">${fmt(s.price)}</span>
+      </div>
+      ${s.notes?`<div style="margin-top:.75rem;background:#f7f9ff;border-radius:8px;padding:.65rem;font-size:.78rem;color:var(--muted)">📝 ${esc(s.notes)}</div>`:''}
+      <div style="margin-top:1rem;font-size:.72rem;color:var(--muted);text-align:center">Thank you for using MotoConnect Mansa</div>
+    </div>`;
+  openModal('invoiceModal');
+}
+
+function printInvoice(){
+  const content=document.getElementById('invoiceBody').innerHTML;
+  const win=window.open('','_blank');
+  win.document.write(`<html><head><title>MotoConnect Invoice</title><style>body{font-family:system-ui,sans-serif;padding:2rem;max-width:500px;margin:auto;color:#111}table{width:100%;border-collapse:collapse}td{padding:.4rem .3rem}.divider{border-top:1px solid #ddd;margin:1rem 0}.badge{padding:.15rem .4rem;border-radius:12px;font-size:.72rem;font-weight:600}</style></head><body>${content}</body></html>`);
+  win.document.close();
+  win.print();
+}
+
+// ══════════════════════════════════════════════════════
+//  SETTINGS
+// ══════════════════════════════════════════════════════
+function saveSettings(){
+  const adminName=document.getElementById('adminNameInput').value.trim()||'Admin User';
+  const currency=document.getElementById('defaultCurrency').value;
+  const warnDays=parseInt(document.getElementById('warnDays').value)||7;
+  save(KEYS.settings,{adminName,currency,warnDays});
+  state.adminName=adminName;state.currency=currency;state.warnDays=warnDays;
+  document.getElementById('currencySelect').value=currency;
+  document.getElementById('adminNameDisplay').textContent=adminName;
+  document.getElementById('avatarInitial').textContent=adminName.charAt(0).toUpperCase();
+  const msg=document.getElementById('settingsMsg');
+  msg.textContent='Settings saved.';msg.className='alert alert-ok';msg.style.display='block';
+  setTimeout(()=>msg.style.display='none',3000);
+  renderStats();
+}
+
+function clearAllData(){
+  document.getElementById('confirmMsg').textContent='Delete ALL subscription data permanently? This cannot be undone.';
+  document.getElementById('confirmOkBtn').onclick=()=>{
+    save(KEYS.subs,[]);
+    closeModal('confirmModal');
+    renderStats();renderRecentSubs();renderSubs();buildNotifications();
+  };
+  openModal('confirmModal');
+}
+
+// ══════════════════════════════════════════════════════
+//  EXPORT / IMPORT
+// ══════════════════════════════════════════════════════
+function exportCSV(){
+  const subs=getSubs();
+  if(!subs.length){alert('No subscriptions to export.');return;}
+  const h=['ID','Name','Phone','Type','Plan','Price (ZMW)','Start','Expiry','Duration (mo)','Status','Notes','Created'];
+  const rows=subs.map(s=>[s.id,s.name,s.phone||'',s.type,s.plan,s.price,s.start||'',s.expiry||'',s.duration||'',s.status,s.notes||'',s.created||''].map(v=>`"${String(v).replace(/"/g,'""')}"`).join(','));
+  dl('motoconnect_subscriptions.csv',[h.join(','),...rows].join('\n'),'text/csv');
+}
+function exportFaresCSV(){
+  const fares=getFares();
+  const h=['ID','Type','Base Fare (ZMW)','Per KM (ZMW)','Service Fee %'];
+  const rows=fares.map(f=>[f.id,f.type,f.base,f.perKm,f.svc].join(','));
+  dl('motoconnect_fares.csv',[h.join(','),...rows].join('\n'),'text/csv');
+}
+function exportZonesCSV(){
+  const zones=getZones();
+  const h=['ID','Zone Name','Description','Multiplier'];
+  const rows=zones.map(z=>[z.id,z.name,z.desc,z.mult].join(','));
+  dl('motoconnect_zones.csv',[h.join(','),...rows].join('\n'),'text/csv');
+}
+function exportJSON(){
+  const data={exported:new Date().toISOString(),subscriptions:getSubs(),fares:getFares(),zones:getZones(),settings:getSettings()};
+  dl('motoconnect_backup.json',JSON.stringify(data,null,2),'application/json');
+}
+function importJSON(e){
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    try{
+      const data=JSON.parse(ev.target.result);
+      if(data.subscriptions)save(KEYS.subs,data.subscriptions);
+      if(data.fares)save(KEYS.fares,data.fares);
+      if(data.zones)save(KEYS.zones,data.zones);
+      if(data.settings)save(KEYS.settings,data.settings);
+      applySettings();renderAll();buildNotifications();
+      alert('✅ Backup imported successfully!');
+    }catch(err){alert('❌ Invalid backup file.');}
+  };
+  r.readAsText(f);e.target.value='';
+}
+function dl(name,content,type){
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([content],{type}));
+  a.download=name;a.click();
+}
 
 // ══════════════════════════════════════════════════════
 //  HELPERS
 // ══════════════════════════════════════════════════════
 function esc(s){const d=document.createElement('div');d.textContent=String(s||'');return d.innerHTML;}
+function togglePw(inputId,btn){
+  const el=document.getElementById(inputId);
+  if(el.type==='password'){el.type='text';btn.textContent='🙈';}
+  else{el.type='password';btn.textContent='👁';}
+}
+
+function renderAll(){
+  renderStats();
+  renderRecentSubs();
+  renderSubs();
+  updateAppBadge();
+  // only re-render fares/zones if their page is active to avoid stomping fare estimator
+  if(document.getElementById('page-fares').classList.contains('active')){renderFares();calcFare();}
+  if(document.getElementById('page-locations').classList.contains('active'))renderZones();
+}
+
+// Fix button onclick wiring that points to openModal directly
+document.querySelectorAll('button').forEach(b=>{
+  if(b.getAttribute('onclick')==="openModal('fareModal')")b.setAttribute('onclick','openFareModal()');
+  if(b.getAttribute('onclick')==="openModal('subModal')")b.setAttribute('onclick','openNewSub()');
+  if(b.getAttribute('onclick')==="openModal('zoneModal')")b.setAttribute('onclick','openZoneModal()');
+});
 
 // ══════════════════════════════════════════════════════
-//  PHASE 1: PAGE ROUTING (Public / Apply)
+//  PHASE 1: PAGE ROUTING (Public / Apply / Admin)
 // ══════════════════════════════════════════════════════
-const PAGES=['publicPage','applyPage'];
+const PAGES=['publicPage','applyPage','landingPage','loginPage','app'];
 function hideAllPages(){PAGES.forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});}
 
 function showPublicPage(){
@@ -699,6 +2094,15 @@ function showApplyPage(){
   setApplyStep(1);
   const zoneSelect=document.getElementById('appZone');
   zoneSelect.innerHTML='<option value="">— Select Zone —</option>'+getZones().map(z=>`<option value="${esc(z.name)}">${esc(z.name)}</option>`).join('');
+}
+
+function showLoginPage(){
+  hideAllPages();
+  document.getElementById('loginPage').style.display='flex';
+}
+
+function showLandingFromPublic(){
+  showLanding();
 }
 
 // On initial load: show public directory
@@ -885,6 +2289,214 @@ function submitApplication(){
   save(KEYS.subs,subs);
   document.getElementById('appRefDisplay').textContent=ref;
   setApplyStep(4);
+  buildNotifications();
+  updateAppBadge();
+}
+
+// ══════════════════════════════════════════════════════
+//  ADMIN: APPLICATIONS QUEUE
+// ══════════════════════════════════════════════════════
+function updateAppBadge(){
+  const pending=getSubs().filter(s=>s.status==='pending');
+  const badge=document.getElementById('appNavBadge');
+  const statPending=document.getElementById('statPending');
+  if(badge){badge.textContent=pending.length;badge.style.display=pending.length?'inline-flex':'none';}
+  if(statPending)statPending.textContent=pending.length;
+}
+
+function renderApplications(){
+  const search=(document.getElementById('appSearch')?.value||'').toLowerCase();
+  const filterStatus=document.getElementById('appFilterStatus')?.value||'';
+  let apps=getSubs().filter(s=>s.isApplication||s.status==='pending');
+  if(search)apps=apps.filter(a=>(a.name+a.phone+a.ref).toLowerCase().includes(search));
+  if(filterStatus)apps=apps.filter(a=>a.status===filterStatus);
+  apps=apps.slice().reverse();
+
+  const container=document.getElementById('appQueueList');
+  if(!apps.length){
+    container.innerHTML=`<div class="empty" style="background:#fff;border-radius:10px;padding:2rem"><div style="font-size:2rem;margin-bottom:.5rem">📋</div><p>No applications yet.</p><p style="font-size:.78rem;margin-top:.3rem">When riders apply via the public directory, they appear here.</p></div>`;
+    return;
+  }
+
+  container.innerHTML=apps.map(a=>{
+    const statusColor={pending:'#fff3cd',active:'#d1fae5',rejected:'#fee2e2'}[a.status]||'#fff3cd';
+    const statusBorder={pending:'#ffc107',active:'#10b981',rejected:'#ef4444'}[a.status]||'#ffc107';
+    const dateStr=a.created?new Date(a.created).toLocaleDateString('en-ZM',{day:'numeric',month:'short',year:'numeric'}):'—';
+    return `<div class="app-queue-card" style="background:${statusColor};border-color:${statusBorder}">
+      <div class="app-queue-icon">${vehicleIcon(a.type)}</div>
+      <div class="app-queue-info">
+        <div class="app-queue-name">${esc(a.name)}</div>
+        <div class="app-queue-meta">
+          📞 ${esc(a.phone||'—')} &nbsp;·&nbsp; ${esc(a.type||'—')} &nbsp;·&nbsp; Zone: ${esc(a.zone||'—')}<br>
+          Plan: <strong>${esc(a.plan)}</strong> &nbsp;·&nbsp; Applied: ${dateStr}
+          ${a.nrc?`<br>NRC: ${esc(a.nrc)}`:''}
+          ${a.notes?`<br>Notes: ${esc(a.notes)}`:''}
+        </div>
+        <div class="app-queue-ref">${esc(a.ref||a.id)}</div>
+      </div>
+      <div class="app-queue-actions">
+        ${a.status==='pending'?`
+          <button class="btn btn-success btn-sm" onclick="openApproveModal('${a.id}')">✅ Approve</button>
+          <button class="btn btn-danger btn-sm" onclick="rejectApp('${a.id}')">✗ Reject</button>
+        `:''}
+        ${a.status==='active'?`
+          <button class="btn btn-ghost btn-sm" onclick="showRiderCard('${a.id}')">🆔 ID Card</button>
+          <span class="badge badge-active">Approved</span>
+        `:''}
+        ${a.status==='rejected'?`<span class="badge badge-expired">Rejected</span>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openApproveModal(appId){
+  document.getElementById('approveAppId').value=appId;
+  const today=todayStr();
+  document.getElementById('approveStart').value=today;
+  document.getElementById('approvePrice').value='';
+  document.getElementById('approveDuration').value='1';
+  openModal('approveModal');
+}
+
+function confirmApprove(){
+  const appId=document.getElementById('approveAppId').value;
+  const price=parseFloat(document.getElementById('approvePrice').value)||0;
+  const duration=document.getElementById('approveDuration').value;
+  const start=document.getElementById('approveStart').value||todayStr();
+  if(!price){alert('Please set a monthly price.');return;}
+  const subs=getSubs();
+  const i=subs.findIndex(s=>s.id===appId);
+  if(i<0)return;
+  const startDate=new Date(start);
+  const expDate=new Date(start);
+  expDate.setMonth(expDate.getMonth()+parseInt(duration));
+  subs[i]={...subs[i],status:'active',price,duration,start,expiry:toDateStr(expDate),availability:'available'};
+  save(KEYS.subs,subs);
+  closeModal('approveModal');
+  renderApplications();
+  renderStats();
+  buildNotifications();
+  updateAppBadge();
+  renderPublicDirectory();
+  alert('✅ Rider activated! They now appear in the public directory.');
+}
+
+function rejectApp(appId){
+  document.getElementById('confirmMsg').textContent='Reject this application? The applicant will need to re-apply.';
+  document.getElementById('confirmOkBtn').textContent='Reject';
+  document.getElementById('confirmOkBtn').onclick=()=>{
+    const subs=getSubs();
+    const i=subs.findIndex(s=>s.id===appId);
+    if(i>-1){subs[i]={...subs[i],status:'rejected'};}
+    save(KEYS.subs,subs);
+    closeModal('confirmModal');
+    document.getElementById('confirmOkBtn').textContent='Delete';
+    renderApplications();
+    updateAppBadge();
+  };
+  openModal('confirmModal');
+}
+
+// ══════════════════════════════════════════════════════
+//  RIDER ID CARD
+// ══════════════════════════════════════════════════════
+function showRiderCard(id){
+  const s=getSubs().find(x=>x.id===id);
+  if(!s)return;
+  const riderId='MCM-'+s.id.slice(-4).toUpperCase();
+  const avail=s.availability||'available';
+  const dl=daysLeft(s.expiry);
+  document.getElementById('riderCardBody').innerHTML=`
+    <div class="id-card">
+      <div class="id-card-top">
+        <div class="id-card-avatar">${esc(s.name.charAt(0).toUpperCase())}</div>
+        <div class="id-card-title">
+          <h3>${esc(s.name)}</h3>
+          <small>${vehicleIcon(s.type)} ${esc(s.type)} Operator</small>
+        </div>
+        <div class="id-card-logo"><strong>MotoConnect</strong>Mansa, Luapula</div>
+      </div>
+      <div class="id-card-fields">
+        <div class="id-field"><label>Zone</label><span>${esc(s.zone||'Mansa')}</span></div>
+        <div class="id-field"><label>Plan</label><span>${esc(s.plan)}</span></div>
+        <div class="id-field"><label>Phone</label><span>${esc(s.phone||'—')}</span></div>
+        <div class="id-field"><label>Expires</label><span>${s.expiry||'—'}${dl!==null&&dl>=0?` (${dl}d)`:''}</span></div>
+      </div>
+      <div class="id-card-footer">
+        <span class="id-num">${riderId}</span>
+        <div class="avail-dot ${avail}" style="position:relative;top:0;right:0">${availLabel(avail)}</div>
+      </div>
+    </div>
+    <div style="margin-bottom:.5rem">
+      <p style="font-size:.8rem;color:var(--muted);margin-bottom:.5rem">Quick Contact</p>
+      <div style="display:flex;gap:.5rem">
+        ${s.phone?`<a class="btn-call" href="tel:+${zamPhone(s.phone)}" style="flex:1;padding:.55rem;text-decoration:none">📞 Call</a>`:''}
+        ${s.phone?`<a class="btn-wa" href="https://wa.me/${zamPhone(s.phone)}?text=${encodeURIComponent('Hi '+s.name+', I found you on MotoConnect Mansa!')}" target="_blank" style="flex:1;padding:.55rem;text-decoration:none">💬 WhatsApp</a>`:''}
+      </div>
+    </div>
+  `;
+  openModal('riderCardModal');
+}
+
+function printRiderCard(){
+  const content=document.getElementById('riderCardBody').innerHTML;
+  const win=window.open('','_blank');
+  win.document.write(`<html><head><title>MotoConnect Rider ID</title><style>
+    body{font-family:system-ui,sans-serif;padding:1.5rem;max-width:400px;margin:auto}
+    .id-card{background:linear-gradient(135deg,#1e3a5f,#2d5a8e);border-radius:14px;padding:1.25rem;color:#fff;margin-bottom:1rem}
+    .id-card-top{display:flex;align-items:center;gap:.8rem;margin-bottom:1rem}
+    .id-card-avatar{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#fbbf24,#e8820c);color:#000;font-weight:800;font-size:1.3rem;display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,.3)}
+    .id-card-title h3{color:#fff;font-size:1rem;font-weight:800;margin:0 0 .2rem}
+    .id-card-title small{color:rgba(255,255,255,.6);font-size:.75rem}
+    .id-card-logo{margin-left:auto;text-align:right;font-size:.7rem;color:rgba(255,255,255,.5)}
+    .id-card-logo strong{display:block;color:#fbbf24;font-size:.82rem}
+    .id-card-fields{display:grid;grid-template-columns:1fr 1fr;gap:.4rem .75rem;font-size:.78rem}
+    .id-field label{display:block;color:rgba(255,255,255,.55);font-size:.65rem;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.1rem}
+    .id-field span{color:#fff;font-weight:600}
+    .id-card-footer{margin-top:1rem;padding-top:.75rem;border-top:1px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:space-between}
+    .id-num{font-family:monospace;font-size:.85rem;color:#fbbf24;font-weight:700}
+    .avail-dot{font-size:.72rem;font-weight:700;padding:.2rem .55rem;border-radius:20px;display:inline-flex;align-items:center;gap:.3rem}
+    .available{background:#d1fae5;color:#065f46}.busy{background:#ffedd5;color:#92400e}.offline{background:#f1f5f9;color:#64748b}
+    .btn-call{background:#1e3a5f;color:#fff;border-radius:8px;padding:.6rem;text-align:center;font-weight:700;margin:.2rem;display:inline-block}
+    .btn-wa{background:#25d366;color:#fff;border-radius:8px;padding:.6rem;text-align:center;font-weight:700;margin:.2rem;display:inline-block}
+  </style></head><body>${content}</body></html>`);
+  win.document.close();win.print();
+}
+
+function shareRiderCard(){
+  const s=getSubs().find(x=>x.id===document.querySelector('#riderCardBody .id-num')?.textContent?.replace('MCM-','').toLowerCase());
+  const text=`🏍️ MotoConnect Mansa Verified Rider\nCheck out this rider on MotoConnect Mansa!`;
+  if(navigator.share){
+    navigator.share({title:'MotoConnect Rider',text}).catch(()=>{});
+  } else {
+    navigator.clipboard?.writeText(text).then(()=>alert('Rider info copied to clipboard!'));
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  AVAILABILITY TOGGLE (in admin subscriptions table)
+// ══════════════════════════════════════════════════════
+function setAvailability(id,avail){
+  const subs=getSubs();
+  const i=subs.findIndex(s=>s.id===id);
+  if(i>-1){subs[i].availability=avail;}
+  save(KEYS.subs,subs);
+  renderSubs();
+  renderPublicDirectory();
+}
+
+// ══════════════════════════════════════════════════════
+//  RENEWAL REMINDER via WhatsApp
+// ══════════════════════════════════════════════════════
+function remindRider(id){
+  const s=getSubs().find(x=>x.id===id);
+  if(!s||!s.phone)return alert('No phone number on record for this rider.');
+  const phone=zamPhone(s.phone);
+  const msg=encodeURIComponent(
+    'Hi '+s.name+', your MotoConnect Mansa subscription expires on '+s.expiry+'. '
+    +'Please renew to stay listed on the platform. Ref: MCM-'+s.id.slice(-4).toUpperCase()
+  );
+  window.open('https://wa.me/'+phone+'?text='+msg,'_blank');
 }
 
 </script>
