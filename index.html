@@ -1308,9 +1308,14 @@
     </div>
     <div class="modal-body">
       <input type="hidden" id="approveAppId"/>
+      <div id="approveRiderInfo" style="background:var(--surface2);border-radius:8px;padding:.75rem;margin-bottom:1rem;font-size:.85rem;display:none"></div>
       <p style="font-size:.85rem;color:var(--muted);margin-bottom:1rem">Set subscription details for this rider before activating.</p>
       <div class="two-col">
+        <div class="form-row"><label>Plan</label>
+          <select id="approvePlan"><option>Basic</option><option>Standard</option><option>Premium</option></select>
+        </div>
         <div class="form-row"><label>Monthly Price (ZMW)</label><input type="number" id="approvePrice" placeholder="e.g. 150" min="0"/></div>
+        <div class="form-row"><label>Start Date</label><input type="date" id="approveStart"/></div>
         <div class="form-row"><label>Duration</label>
           <select id="approveDuration">
             <option value="1">1 Month</option>
@@ -1320,7 +1325,7 @@
           </select>
         </div>
       </div>
-      <div class="form-row"><label>Start Date</label><input type="date" id="approveStart"/></div>
+      <div class="form-row"><label>Notes (optional)</label><textarea id="approveNotes" rows="2" placeholder="Any notes for this rider…"></textarea></div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost btn-sm" onclick="closeModal('approveModal')">Cancel</button>
@@ -1598,6 +1603,9 @@ function saveSub(){
     subs.push({id:uid(),name,phone,type,plan,price,expiry,start,duration,status,notes,zone,availability,created:new Date().toISOString()});
   }
   save(KEYS.subs,subs);
+  // Sync the changed/new record to Firebase
+  const changed=id?subs.find(s=>s.id===id):subs[subs.length-1];
+  if(changed)fbRestWrite(changed);
   closeModal('subModal');
   renderStats();
   renderRecentSubs();
@@ -1640,6 +1648,7 @@ function renewSub(id){
   const i=subs.findIndex(x=>x.id===id);
   subs[i]={...s,status:'active',expiry:toDateStr(newExp),start:toDateStr(startFrom)};
   save(KEYS.subs,subs);
+  fbRestWrite(subs[i]);
   renderStats();renderRecentSubs();renderSubs();buildNotifications();
 }
 
@@ -1649,6 +1658,13 @@ function deleteSub(id){
   document.getElementById('confirmMsg').textContent=`Delete subscription for "${s?.name||id}"? This cannot be undone.`;
   document.getElementById('confirmOkBtn').onclick=()=>{
     save(KEYS.subs,subs.filter(x=>x.id!==id));
+    // Delete from Firebase
+    try{
+      const cfg=JSON.parse(localStorage.getItem('mc_fb_config')||'null');
+      if(cfg&&cfg.databaseURL){
+        fetch(cfg.databaseURL.replace(/\/$/,'')+'/motoconnect_mansa/subscriptions/'+id+'.json',{method:'DELETE'}).catch(()=>{});
+      }
+    }catch(e){}
     closeModal('confirmModal');
     renderStats();renderRecentSubs();renderSubs();buildNotifications();
   };
@@ -2143,7 +2159,11 @@ function availLabel(a){
 }
 
 function vehicleIcon(type){
-  const map={Motorbike:'🏍️',Taxi:'🚖','Tour Operator':'🚌'};
+  const map={
+    'Motorbike':'🏍️','Taxi':'🚖','Tour Operator':'🚌',
+    'Motorcycle Taxi':'🏍️','Bicycle Taxi':'🚲','Tricycle (Tuk-tuk)':'🛺',
+    'Mini-bus':'🚌','Car Hire':'🚗'
+  };
   return map[type]||'🚗';
 }
 
@@ -2263,9 +2283,10 @@ function applyBack(fromStep){
 }
 
 function submitApplication(){
-  const ref='MCM-'+uid().slice(-6).toUpperCase();
+  const appId=uid();
+  const ref='MCM-'+appId.slice(-6).toUpperCase();
   const app={
-    id:uid(),
+    id:appId,
     ref,
     name:document.getElementById('appName').value.trim(),
     phone:document.getElementById('appPhone').value.trim(),
@@ -2291,6 +2312,15 @@ function submitApplication(){
   setApplyStep(4);
   buildNotifications();
   updateAppBadge();
+  // Push to Firebase if config is available (so Admin panel on another device receives it)
+  try{
+    const cfg=JSON.parse(localStorage.getItem('mc_fb_config')||'null');
+    if(cfg&&cfg.databaseURL){
+      const url=cfg.databaseURL.replace(/\/$/,'')+'/motoconnect_mansa/subscriptions/'+appId+'.json';
+      fetch(url,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(app)})
+        .catch(()=>{/* offline – Admin will sync on next login if on same device */});
+    }
+  }catch(e){}
 }
 
 // ══════════════════════════════════════════════════════
@@ -2308,7 +2338,7 @@ function renderApplications(){
   const search=(document.getElementById('appSearch')?.value||'').toLowerCase();
   const filterStatus=document.getElementById('appFilterStatus')?.value||'';
   let apps=getSubs().filter(s=>s.isApplication||s.status==='pending');
-  if(search)apps=apps.filter(a=>(a.name+a.phone+a.ref).toLowerCase().includes(search));
+  if(search)apps=apps.filter(a=>(a.name+(a.phone||'')+(a.ref||'')).toLowerCase().includes(search));
   if(filterStatus)apps=apps.filter(a=>a.status===filterStatus);
   apps=apps.slice().reverse();
 
@@ -2350,28 +2380,40 @@ function renderApplications(){
 }
 
 function openApproveModal(appId){
+  const a=getSubs().find(s=>s.id===appId);
+  if(!a)return;
   document.getElementById('approveAppId').value=appId;
-  const today=todayStr();
-  document.getElementById('approveStart').value=today;
+  document.getElementById('approveStart').value=todayStr();
   document.getElementById('approvePrice').value='';
   document.getElementById('approveDuration').value='1';
+  document.getElementById('approveNotes').value=a.notes||'';
+  if(a.plan){document.getElementById('approvePlan').value=a.plan;}
+  const infoEl=document.getElementById('approveRiderInfo');
+  if(infoEl){
+    infoEl.style.display='block';
+    infoEl.innerHTML=`<strong>${esc(a.name)}</strong> · ${vehicleIcon(a.type)} ${esc(a.type||'')}<br>
+    <span style="color:var(--muted);font-size:.78rem">📞 ${esc(a.phone||'—')} &nbsp;·&nbsp; Zone: ${esc(a.zone||'—')} &nbsp;·&nbsp; Ref: <code>${esc(a.ref||a.id)}</code></span>`;
+  }
   openModal('approveModal');
 }
 
 function confirmApprove(){
   const appId=document.getElementById('approveAppId').value;
   const price=parseFloat(document.getElementById('approvePrice').value)||0;
+  const plan=document.getElementById('approvePlan').value;
   const duration=document.getElementById('approveDuration').value;
   const start=document.getElementById('approveStart').value||todayStr();
+  const notes=document.getElementById('approveNotes').value.trim();
   if(!price){alert('Please set a monthly price.');return;}
   const subs=getSubs();
   const i=subs.findIndex(s=>s.id===appId);
   if(i<0)return;
-  const startDate=new Date(start);
   const expDate=new Date(start);
   expDate.setMonth(expDate.getMonth()+parseInt(duration));
-  subs[i]={...subs[i],status:'active',price,duration,start,expiry:toDateStr(expDate),availability:'available'};
+  subs[i]={...subs[i],status:'active',price,plan,duration,start,expiry:toDateStr(expDate),availability:'available',
+    notes:notes||subs[i].notes,approvedAt:new Date().toISOString()};
   save(KEYS.subs,subs);
+  fbRestWrite(subs[i]);
   closeModal('approveModal');
   renderApplications();
   renderStats();
@@ -2387,14 +2429,26 @@ function rejectApp(appId){
   document.getElementById('confirmOkBtn').onclick=()=>{
     const subs=getSubs();
     const i=subs.findIndex(s=>s.id===appId);
-    if(i>-1){subs[i]={...subs[i],status:'rejected'};}
+    if(i>-1){subs[i]={...subs[i],status:'rejected',rejectedAt:new Date().toISOString()};}
     save(KEYS.subs,subs);
+    if(i>-1)fbRestWrite(subs[i]);
     closeModal('confirmModal');
     document.getElementById('confirmOkBtn').textContent='Delete';
     renderApplications();
     updateAppBadge();
   };
   openModal('confirmModal');
+}
+
+// Lightweight Firebase REST write used in Mansa (no SDK)
+function fbRestWrite(item){
+  try{
+    const cfg=JSON.parse(localStorage.getItem('mc_fb_config')||'null');
+    if(!cfg||!cfg.databaseURL||!item||!item.id)return;
+    const url=cfg.databaseURL.replace(/\/$/,'')+'/motoconnect_mansa/subscriptions/'+item.id+'.json';
+    fetch(url,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(item)})
+      .catch(()=>{});
+  }catch(e){}
 }
 
 // ══════════════════════════════════════════════════════
@@ -2479,7 +2533,7 @@ function shareRiderCard(){
 function setAvailability(id,avail){
   const subs=getSubs();
   const i=subs.findIndex(s=>s.id===id);
-  if(i>-1){subs[i].availability=avail;}
+  if(i>-1){subs[i].availability=avail;fbRestWrite(subs[i]);}
   save(KEYS.subs,subs);
   renderSubs();
   renderPublicDirectory();
