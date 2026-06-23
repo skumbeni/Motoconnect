@@ -635,7 +635,8 @@
             <h3>Application Submitted!</h3>
             <p>Thank you for applying to MotoConnect Mansa. Keep your reference number safe — admin will contact you on your phone once reviewed.</p>
             <div class="ref-chip" id="appRefDisplay">MCM-XXXX</div>
-            <p style="font-size:.78rem;margin-top:.5rem">Processing usually takes 1–2 business days.</p>
+            <p id="fbSubmitStatus" style="font-size:.8rem;margin-top:.6rem;font-weight:600">📡 Sending to admin…</p>
+            <p style="font-size:.78rem;margin-top:.3rem;color:var(--muted)">Processing usually takes 1–2 business days.</p>
             <button class="btn btn-primary btn-sm mt1" onclick="showPublicPage()" style="margin-top:1rem">← Back to Directory</button>
           </div>
         </div>
@@ -1475,9 +1476,27 @@ function submitApplication(){
   save(KEYS.subs,subs);
   document.getElementById('appRefDisplay').textContent=ref;
   setApplyStep(4);
-    updateAppBadge();
   // Push to Firebase so Admin panel receives it in real-time
-  fbRestWrite(app);
+  (async()=>{
+    try{
+      const token=await _getAnonToken();
+      const url=_FB_DB_URL+'/motoconnect_mansa/subscriptions/'+app.id+'.json'+(token?'?auth='+token:'');
+      const res=await fetch(url,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(app)});
+      const fbStatusEl=document.getElementById('fbSubmitStatus');
+      if(fbStatusEl){
+        if(res.ok){
+          fbStatusEl.innerHTML='✅ Application received by admin.';
+          fbStatusEl.style.color='#065f46';
+        } else {
+          fbStatusEl.innerHTML='⚠️ Saved locally. Admin will receive it when online.';
+          fbStatusEl.style.color='#92400e';
+        }
+      }
+    }catch(e){
+      const fbStatusEl=document.getElementById('fbSubmitStatus');
+      if(fbStatusEl){fbStatusEl.innerHTML='⚠️ Saved locally. Will sync when online.';fbStatusEl.style.color='#92400e';}
+    }
+  })();
 }
 
 // ══════════════════════════════════════════════════════
@@ -1640,7 +1659,7 @@ async function fbRestDelete(id){
   try{
     const token=await _getAnonToken();
     const url=_FB_DB_URL+'/motoconnect_mansa/subscriptions/'+id+'.json'+(token?'?auth='+token:'');
-    fetch(url,{method:'DELETE'}).catch(()=>{});
+    fetch(url,{method:'DELETE',headers:{'Content-Type':'application/json'}}).catch(()=>{});
   }catch(e){}
 }
 
