@@ -432,6 +432,8 @@
   .btn-wa{flex:1;background:#25d366;color:#fff;border:none;border-radius:8px;padding:.6rem;font-size:.82rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.35rem;transition:opacity .15s;text-decoration:none}
   .btn-wa:hover{opacity:.85}
   .pub-empty{text-align:center;padding:3rem 1rem;color:rgba(255,255,255,.6)}
+  .open-now-badge{display:inline-flex;align-items:center;gap:.25rem;background:rgba(16,185,129,.2);border:1px solid rgba(16,185,129,.4);color:#6ee7b7;font-size:.65rem;font-weight:700;padding:.1rem .45rem;border-radius:20px;margin-left:.3rem;vertical-align:middle}
+  .closed-badge{display:inline-flex;align-items:center;gap:.25rem;background:rgba(100,116,139,.15);border:1px solid rgba(100,116,139,.3);color:rgba(255,255,255,.4);font-size:.65rem;font-weight:700;padding:.1rem .45rem;border-radius:20px;margin-left:.3rem;vertical-align:middle}
   .pub-empty div{font-size:3rem;margin-bottom:.75rem}
 
   /* ══ APPLY PAGE ══════════════════════════════════════ */
@@ -561,6 +563,7 @@
   </div>
 
   <div class="pub-zone-tabs" id="pubZoneTabs"></div>
+  <div id="pubZoneGroupBanner" style="display:none;align-items:center;gap:.75rem;margin:0 1.5rem .5rem;padding:.6rem 1rem;background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.3);border-radius:10px;flex-wrap:wrap"></div>
   <div class="pub-stats-row" id="pubStatsRow"></div>
   <div class="pub-grid" id="pubGrid"></div>
 </div>
@@ -602,11 +605,29 @@
               <option value="Tour Operator">🚌 Tour Operator</option>
             </select>
           </div>
-          <div class="form-row"><label>Operating Zone *</label><select id="appZone"></select></div>
+          <div class="form-row"><label>Primary Operating Zone *</label><select id="appZone"></select></div>
+          <div class="form-row"><label>Secondary Zone <span style="font-weight:400;color:rgba(255,255,255,.5);font-size:.75rem">(optional — if you cover a second area)</span></label><select id="appZone2"></select></div>
+          <div class="form-row" style="display:flex;align-items:flex-start;gap:.5rem;padding:.5rem .6rem;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:8px;font-size:.78rem;color:rgba(255,255,255,.65)">
+            <span style="flex-shrink:0">🗺️</span>
+            <span>Standard &amp; Premium riders can cover all zones. Basic riders are shown only in their primary zone.</span>
+          </div>
           <div class="form-row"><label>Preferred Plan</label>
-            <select id="appPlan"><option value="Basic">Basic</option><option value="Standard">Standard</option><option value="Premium">Premium</option></select>
+            <select id="appPlan" onchange="updatePlanInfo()">
+              <option value="Basic">Basic — K50/month</option>
+              <option value="Standard">Standard — K100/month</option>
+              <option value="Premium">Premium — K200/month</option>
+            </select>
+            <div id="planInfoBox" style="margin-top:.6rem;padding:.65rem .85rem;border-radius:8px;font-size:.8rem;line-height:1.7;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.85)"></div>
+          </div>
+          <div class="form-row"><label>Operating Hours <span style="font-weight:400;color:rgba(255,255,255,.5);font-size:.75rem">(optional)</span></label>
+            <input type="text" id="appHours" placeholder="e.g. Mon–Sat 06:00–20:00"/>
           </div>
           <div class="form-row"><label>Additional Notes</label><textarea id="appNotes" rows="2" placeholder="Any info for admin (optional)…"></textarea></div>
+          <div class="form-row">
+            <label>Payment Transaction ID <span style="font-weight:400;color:rgba(255,255,255,.5);font-size:.75rem">(optional — if you have already paid)</span></label>
+            <input type="text" id="appTxnId" placeholder="e.g. AIRTEL-20240623-XXXX or MTN-XXXXXXX"/>
+            <div style="margin-top:.4rem;font-size:.75rem;color:rgba(255,255,255,.5)">💡 Pay via Airtel Money or MTN Mobile Money to <strong style="color:#fbbf24">0977 638790</strong> then enter your transaction ID here.</div>
+          </div>
           <div class="apply-nav">
             <button class="btn btn-ghost btn-sm" onclick="applyBack(2)">← Back</button>
             <button class="btn btn-primary btn-sm" onclick="applyNext(2)">Next →</button>
@@ -942,7 +963,7 @@ function renderSubs(){
       <td class="bold">${esc(s.name)}</td>
       <td>${esc(s.phone||'—')}</td>
       <td>${esc(s.type)}</td>
-      <td><span class="text-muted" style="font-size:.8rem">${esc(s.zone||'—')}</span></td>
+      <td><span class="text-muted" style="font-size:.8rem">${esc(s.zone||'—')}${s.zone2?'<br><span style="font-size:.7rem">+'+esc(s.zone2)+'</span>':''}</span></td>
       <td><span class="pill">${esc(s.plan)}</span></td>
       <td>${fmt(s.price)}</td>
       <td><div class="avail-toggle">
@@ -1276,11 +1297,16 @@ function showPublicPage(){
 function showApplyPage(){
   hideAllPages();
   document.getElementById('applyPage').style.display='block';
-  ['appName','appPhone','appNRC','appArea','appNotes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['appName','appPhone','appNRC','appArea','appNotes','appTxnId','appHours'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  const z2r=document.getElementById('appZone2');if(z2r)z2r.value='';;
   document.getElementById('appType').value='';
   setApplyStep(1);
+  document.getElementById('appPlan').value='Basic';
+  updatePlanInfo();
   const zoneSelect=document.getElementById('appZone');
   zoneSelect.innerHTML='<option value="">— Select Zone —</option>'+getZones().map(z=>`<option value="${esc(z.name)}">${esc(z.name)}</option>`).join('');
+  const zoneSelect2=document.getElementById('appZone2');
+  if(zoneSelect2)zoneSelect2.innerHTML='<option value="">— None —</option>'+getZones().map(z=>`<option value="${esc(z.name)}">${esc(z.name)}</option>`).join('');
 }
 
 
@@ -1335,7 +1361,26 @@ function renderPubZoneTabs(){
   const container=document.getElementById('pubZoneTabs');
   if(!container)return;
   container.innerHTML=`<div class="zone-tab ${_pubZoneFilter===''?'active':''}" onclick="setPubZone('')">All Zones</div>`
-    +zones.map(z=>`<div class="zone-tab ${_pubZoneFilter===z.name?'active':''}" onclick="setPubZone('${esc(z.name)}')">${esc(z.name)}</div>`).join('');
+    +zones.map(z=>{
+      const waLink=z.waGroup?`<a href="${esc(z.waGroup)}" target="_blank" title="Join ${esc(z.name)} WhatsApp group" style="display:inline-flex;align-items:center;gap:.2rem;margin-left:.3rem;background:#25d366;color:#fff;font-size:.65rem;font-weight:700;padding:.1rem .45rem;border-radius:20px;text-decoration:none;vertical-align:middle" onclick="event.stopPropagation()">💬 Group</a>`:'';
+      return `<div class="zone-tab ${_pubZoneFilter===z.name?'active':''}" onclick="setPubZone('${esc(z.name)}')">${esc(z.name)}${waLink}</div>`;
+    }).join('');
+  // Show active zone WA group in a banner below tabs if set
+  if(_pubZoneFilter){
+    const az=zones.find(z=>z.name===_pubZoneFilter);
+    const banner=document.getElementById('pubZoneGroupBanner');
+    if(banner){
+      if(az&&az.waGroup){
+        banner.style.display='flex';
+        banner.innerHTML=`<span style="flex:1;font-size:.8rem">💬 Join the <strong>${esc(az.name)}</strong> riders WhatsApp group to post ride requests</span><a href="${esc(az.waGroup)}" target="_blank" style="background:#25d366;color:#fff;font-weight:700;font-size:.8rem;padding:.4rem .9rem;border-radius:20px;text-decoration:none;white-space:nowrap">Join Group →</a>`;
+      } else {
+        banner.style.display='none';
+      }
+    }
+  } else {
+    const banner=document.getElementById('pubZoneGroupBanner');
+    if(banner)banner.style.display='none';
+  }
 }
 
 function setPubZone(name){
@@ -1366,6 +1411,40 @@ function vehicleIcon(type){
   return map[type]||'🚗';
 }
 
+// Parse "Mon-Sat 06:00-20:00" style hours and check if currently open
+function isOpenNow(hoursStr){
+  if(!hoursStr)return null; // null = unknown
+  try{
+    const now=new Date();
+    const day=now.getDay(); // 0=Sun,1=Mon,...,6=Sat
+    const mins=now.getHours()*60+now.getMinutes();
+    // Extract time range e.g. 06:00-20:00 or 6:00–20:00
+    const timeMatch=hoursStr.match(/(\d{1,2}):(\d{2})\s*[–\-]\s*(\d{1,2}):(\d{2})/);
+    if(!timeMatch)return null;
+    const open=parseInt(timeMatch[1])*60+parseInt(timeMatch[2]);
+    const close=parseInt(timeMatch[3])*60+parseInt(timeMatch[4]);
+    // Check day range e.g. Mon-Fri, Mon–Sat, Daily, Weekdays
+    const h=hoursStr.toLowerCase();
+    const dayNames=['sun','mon','tue','wed','thu','fri','sat'];
+    let dayOk=true;
+    const dayMatch=h.match(/([a-z]{2,3})\s*[–\-]\s*([a-z]{2,3})/);
+    if(dayMatch){
+      const startD=dayNames.findIndex(d=>dayMatch[1].startsWith(d));
+      const endD=dayNames.findIndex(d=>dayMatch[2].startsWith(d));
+      if(startD>=0&&endD>=0){
+        dayOk=startD<=endD?day>=startD&&day<=endD:day>=startD||day<=endD;
+      }
+    } else if(h.includes('daily')||h.includes('everyday')||h.includes('7 days')){
+      dayOk=true;
+    } else if(h.includes('weekday')){
+      dayOk=day>=1&&day<=5;
+    } else if(h.includes('weekend')){
+      dayOk=day===0||day===6;
+    }
+    return dayOk&&mins>=open&&mins<close;
+  }catch(e){return null;}
+}
+
 function renderPublicDirectory(){
   const search=(document.getElementById('pubSearch')?.value||'').toLowerCase();
   const filterType=document.getElementById('pubFilterType')?.value||'';
@@ -1381,7 +1460,7 @@ function renderPublicDirectory(){
   if(search)riders=riders.filter(s=>(s.name+' '+(s.zone||s.notes||'')).toLowerCase().includes(search));
   if(filterType)riders=riders.filter(s=>s.type===filterType);
   if(filterAvail)riders=riders.filter(s=>(s.availability||'available')===filterAvail);
-  if(_pubZoneFilter)riders=riders.filter(s=>(s.zone||'').includes(_pubZoneFilter)||(_pubZoneFilter&&(s.notes||'').toLowerCase().includes(_pubZoneFilter.toLowerCase())));
+  if(_pubZoneFilter)riders=riders.filter(s=>(s.zone||'').includes(_pubZoneFilter)||(s.zone2||'').includes(_pubZoneFilter)||(_pubZoneFilter&&(s.notes||'').toLowerCase().includes(_pubZoneFilter.toLowerCase())));
 
   // Stats row
   const statsEl=document.getElementById('pubStatsRow');
@@ -1416,11 +1495,12 @@ function renderPublicDirectory(){
         <div class="avail-dot ${avail}">${availLabel(avail)}</div>
       </div>
       <div class="rider-card-body">
-        <div class="rider-info-row">📍 <strong>${esc(s.zone||'Mansa')}</strong></div>
+        <div class="rider-info-row">📍 <strong>${esc(s.zone||'Mansa')}${s.zone2?' &amp; '+esc(s.zone2):''}</strong></div>
         ${s.phone?`<div class="rider-info-row">📞 <strong>${esc(s.phone)}</strong></div>`:''}
+        ${s.hours?(()=>{const open=isOpenNow(s.hours);const badge=open===true?'<span class="open-now-badge">● Open</span>':open===false?'<span class="closed-badge">● Closed</span>':'';return `<div class="rider-info-row">🕐 <strong>${esc(s.hours)}</strong>${badge}</div>`;})():''}
         <div class="rider-plan-row">
           <span class="rider-plan-badge">${esc(s.plan)} Plan</span>
-          <span class="rider-id-chip">${riderId}</span>
+          <span class="rider-id-chip" style="display:flex;align-items:center;gap:.3rem">${(s.trips&&s.trips>0)?`<span style="color:#0d9669;font-weight:700;font-size:.72rem">🚀 ${s.trips} trips</span>`:''}${riderId}</span>
         </div>
       </div>
       <div class="rider-card-actions">
@@ -1435,6 +1515,33 @@ function renderPublicDirectory(){
 //  RIDER APPLICATION FORM (3-step)
 // ══════════════════════════════════════════════════════
 let _applyCurrentStep=1;
+
+// ══════════════════════════════════════════════════════
+//  PLAN INFO — shows pricing details when rider picks a plan
+// ══════════════════════════════════════════════════════
+const PLAN_INFO={
+  Basic:{
+    price:'K50/month',
+    features:['✅ Listed in public directory','📞 Call & WhatsApp button','🗺️ One zone only','🆔 Rider ID card']
+  },
+  Standard:{
+    price:'K100/month',
+    features:['✅ All zones coverage','📞 Call & WhatsApp button','⭐ Priority ranking in search','🆔 Rider ID card','🔔 Renewal reminders']
+  },
+  Premium:{
+    price:'K200/month',
+    features:['🏆 Top of directory listing','✅ All zones coverage','🌟 Verified badge on profile','📞 Call & WhatsApp button','🔔 SMS & WhatsApp renewal reminders','🆔 Rider ID card with QR code','📊 Monthly performance report']
+  }
+};
+
+function updatePlanInfo(){
+  const plan=document.getElementById('appPlan')?.value||'Basic';
+  const box=document.getElementById('planInfoBox');
+  if(!box)return;
+  const info=PLAN_INFO[plan]||PLAN_INFO.Basic;
+  box.innerHTML='<strong style="color:#fbbf24;font-size:.85rem">'+plan+' — '+info.price+'</strong><br>'
+    +info.features.map(f=>'<span>'+f+'</span>').join('<br>');
+}
 
 function setApplyStep(step){
   _applyCurrentStep=step;
@@ -1469,9 +1576,12 @@ function applyNext(fromStep){
       <div><span style="color:var(--text);font-weight:600">Phone:</span> ${esc(document.getElementById('appPhone').value)}</div>
       ${document.getElementById('appNRC').value?`<div><span style="color:var(--text);font-weight:600">NRC:</span> ${esc(document.getElementById('appNRC').value)}</div>`:''}
       <div><span style="color:var(--text);font-weight:600">Vehicle:</span> ${vehicleIcon(type)} ${esc(type)}</div>
-      <div><span style="color:var(--text);font-weight:600">Zone:</span> ${esc(zone)}</div>
-      <div><span style="color:var(--text);font-weight:600">Plan:</span> ${esc(document.getElementById('appPlan').value)}</div>
+      ${document.getElementById('appHours').value?`<div><span style="color:var(--text);font-weight:600">🕐 Hours:</span> ${esc(document.getElementById('appHours').value)}</div>`:''}
+      <div><span style="color:var(--text);font-weight:600">Primary Zone:</span> ${esc(zone)}</div>
+      ${document.getElementById('appZone2').value?`<div><span style="color:var(--text);font-weight:600">Secondary Zone:</span> ${esc(document.getElementById('appZone2').value)}</div>`:''}
+      <div><span style="color:var(--text);font-weight:600">Plan:</span> ${esc(document.getElementById('appPlan').value)} <span style="color:var(--accent);font-weight:700">(${({Basic:'K50',Standard:'K100',Premium:'K200'})[document.getElementById('appPlan').value]||''}/mo)</span></div>
       ${document.getElementById('appNotes').value?`<div><span style="color:var(--text);font-weight:600">Notes:</span> ${esc(document.getElementById('appNotes').value)}</div>`:''}
+      ${document.getElementById('appTxnId').value?`<div><span style="color:var(--text);font-weight:600">💳 Transaction ID:</span> <span style="font-family:monospace;color:#0d9669;font-weight:700">${esc(document.getElementById('appTxnId').value)}</span></div>`:''}
     `;
     setApplyStep(3);
   }
@@ -1484,6 +1594,7 @@ function applyBack(fromStep){
 function submitApplication(){
   const appId=uid();
   const ref='MCM-'+appId.slice(-6).toUpperCase();
+  const planRaw=document.getElementById('appPlan').value;
   const app={
     id:appId,
     ref,
@@ -1493,8 +1604,11 @@ function submitApplication(){
     area:document.getElementById('appArea').value.trim(),
     type:document.getElementById('appType').value,
     zone:document.getElementById('appZone').value,
-    plan:document.getElementById('appPlan').value,
+    zone2:document.getElementById('appZone2')?.value.trim()||'',
+    hours:document.getElementById('appHours')?.value.trim()||'',
+    plan:planRaw,
     notes:document.getElementById('appNotes').value.trim(),
+    txnId:document.getElementById('appTxnId').value.trim(),
     status:'pending',
     price:0,
     expiry:'',
@@ -1509,6 +1623,41 @@ function submitApplication(){
   save(KEYS.subs,subs);
   document.getElementById('appRefDisplay').textContent=ref;
   setApplyStep(4);
+
+  // ── Silent admin WhatsApp notification (hidden from applicant) ──
+  // Uses an invisible iframe so no new tab opens for the user.
+  (function(){
+    try{
+      const planPrice={Basic:'K50',Standard:'K100',Premium:'K200'};
+      const msg=encodeURIComponent(
+        '🏍️ *New MotoConnect Mansa Application*\n'+
+        'Ref: '+ref+'\n'+
+        'Name: '+app.name+'\n'+
+        'Phone: '+app.phone+'\n'+
+        'Vehicle: '+app.type+'\n'+
+        'Zone: '+app.zone+'\n'+
+        'Plan: '+app.plan+' ('+( planPrice[app.plan]||'')+'/mo)\n'+
+        (app.nrc?'NRC: '+app.nrc+'\n':'')+
+        (app.txnId?'💳 Txn ID: '+app.txnId+'\n':'')+
+        (app.zone2?'Zone 2: '+app.zone2+'\n':'')+
+        (app.hours?'🕐 Hours: '+app.hours+'\n':'')+
+        'Time: '+new Date().toLocaleString('en-ZM')+'\n'+
+        '---\nOpen admin panel to review & approve.'
+      );
+      const adminPhone='260977638790';
+      // Create a hidden iframe pointing to the wa.me link.
+      // The browser loads it silently; if WhatsApp Web is logged in
+      // it will open the chat in the background. Mobile browsers will
+      // not redirect the main page because it is sandboxed in an iframe.
+      const fr=document.createElement('iframe');
+      fr.style.cssText='position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;border:none;top:-9999px';
+      fr.sandbox='allow-popups allow-popups-to-escape-sandbox';
+      fr.src='https://api.whatsapp.com/send?phone='+adminPhone+'&text='+msg;
+      document.body.appendChild(fr);
+      setTimeout(()=>fr.remove(),8000);
+    }catch(e){}
+  })();
+
   // Push to Firebase so Admin panel receives it in real-time
   (async()=>{
     try{
@@ -1716,7 +1865,7 @@ function showRiderCard(id){
         <div class="id-card-logo"><strong>MotoConnect</strong>Mansa, Luapula</div>
       </div>
       <div class="id-card-fields">
-        <div class="id-field"><label>Zone</label><span>${esc(s.zone||'Mansa')}</span></div>
+        <div class="id-field"><label>Zone</label><span>${esc(s.zone||'Mansa')}${s.zone2?' &amp; '+esc(s.zone2):''}</span></div>
         <div class="id-field"><label>Plan</label><span>${esc(s.plan)}</span></div>
         <div class="id-field"><label>Phone</label><span>${esc(s.phone||'—')}</span></div>
         <div class="id-field"><label>Expires</label><span>${s.expiry||'—'}${dl!==null&&dl>=0?` (${dl}d)`:''}</span></div>
