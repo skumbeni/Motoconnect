@@ -374,6 +374,25 @@
   }
   .pub-filter-select option{background:#1e3a5f;color:#fff}
 
+  .pub-town-bar{
+    display:flex;align-items:center;gap:.6rem;padding:.65rem 1.5rem .3rem;flex-wrap:wrap;
+  }
+  .pub-town-label{color:rgba(255,255,255,.7);font-size:.82rem;font-weight:600;white-space:nowrap}
+  .pub-town-bar select{
+    background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);
+    border-radius:8px;color:#fff;font-size:.85rem;padding:.35rem .7rem;
+    outline:none;cursor:pointer;min-width:140px;
+  }
+  .pub-town-bar select option{background:#1e3a5f;color:#fff}
+  .btn-detect-location{
+    background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.4);
+    border-radius:8px;color:#fbbf24;font-size:.8rem;font-weight:600;
+    padding:.35rem .75rem;cursor:pointer;white-space:nowrap;
+    transition:background .15s,opacity .15s;display:inline-flex;align-items:center;gap:.3rem;
+  }
+  .btn-detect-location:hover{background:rgba(251,191,36,.25)}
+  .btn-detect-location:disabled{opacity:.5;cursor:default}
+
   .pub-zone-tabs{
     display:flex;gap:.5rem;overflow-x:auto;padding:.75rem 1.5rem;
     scrollbar-width:none;
@@ -560,7 +579,7 @@
   </header>
 
   <div class="pub-hero">
-    <h1>Find a <span>Ride</span> in Mansa</h1>
+    <h1 id="pubHeroTitle">Find a <span>Ride</span> in Zambia</h1>
     <p>Browse verified motorbike taxis &amp; operators — tap to call or WhatsApp instantly</p>
     <div class="pub-search-bar">
       <input class="pub-search-input" id="pubSearch" placeholder="🔍  Search by name or zone…" oninput="renderPublicDirectory()"/>
@@ -578,6 +597,16 @@
     </div>
   </div>
 
+  <div class="pub-town-bar" id="pubTownBar">
+    <span class="pub-town-label">📍 Town:</span>
+    <select id="pubTownSelect" onchange="setPubTown(this.value)">
+      <option value="">All Towns</option>
+    </select>
+    <button class="btn-detect-location" id="btnDetectLocation" onclick="detectUserTown()" title="Detect my location">
+      <span id="detectLocationIcon">📍</span> <span id="detectLocationText">Detect</span>
+    </button>
+    <span id="pubTownClearBtn" onclick="setPubTown('')" style="display:none;cursor:pointer;font-size:.8rem;color:#fbbf24;white-space:nowrap">✕ Clear</span>
+  </div>
   <div class="pub-zone-tabs" id="pubZoneTabs"></div>
   <div id="pubZoneGroupBanner" style="display:none;align-items:center;gap:.75rem;margin:0 1.5rem .5rem;padding:.6rem 1rem;background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.3);border-radius:10px;flex-wrap:wrap"></div>
   <div class="pub-stats-row" id="pubStatsRow"></div>
@@ -1458,6 +1487,7 @@ function hideAllPages(){PAGES.forEach(id=>{const el=document.getElementById(id);
 function showPublicPage(){
   hideAllPages();
   document.getElementById('publicPage').style.display='block';
+  initPubTownDropdown();
   renderPublicDirectory();
   renderPubZoneTabs();
 }
@@ -1553,6 +1583,104 @@ window.addEventListener('DOMContentLoaded',()=>{
 //  PUBLIC DIRECTORY
 // ══════════════════════════════════════════════════════
 let _pubZoneFilter='';
+let _pubTownFilter='';
+
+function initPubTownDropdown(){
+  const sel=document.getElementById('pubTownSelect');
+  if(!sel)return;
+  // Build from ZAMBIA_TOWNS + any custom zones already registered
+  const registeredTowns=new Set(getSubs().flatMap(s=>[s.zone,s.zone2]).filter(Boolean).map(z=>z.split(/[\s,]/)[0]));
+  const allTowns=[...new Set([...ZAMBIA_TOWNS,...registeredTowns])].sort();
+  sel.innerHTML='<option value="">All Towns</option>'+allTowns.map(t=>`<option value="${esc(t)}" ${_pubTownFilter===t?'selected':''}>${esc(t)}</option>`).join('');
+}
+
+function setPubTown(town){
+  _pubTownFilter=town;
+  _pubZoneFilter=''; // reset zone filter when town changes
+  const clearBtn=document.getElementById('pubTownClearBtn');
+  if(clearBtn)clearBtn.style.display=town?'inline':'none';
+  const sel=document.getElementById('pubTownSelect');
+  if(sel)sel.value=town;
+  const heroTitle=document.getElementById('pubHeroTitle');
+  if(heroTitle)heroTitle.innerHTML=town?`Find a <span>Ride</span> in ${esc(town)}`:`Find a <span>Ride</span> in Zambia`;
+  renderPubZoneTabs();
+  renderPublicDirectory();
+}
+
+async function detectUserTown(){
+  const btn=document.getElementById('btnDetectLocation');
+  const icon=document.getElementById('detectLocationIcon');
+  const txt=document.getElementById('detectLocationText');
+  if(!navigator.geolocation){
+    alert('Location detection is not supported on your browser. Please select your town manually.');
+    return;
+  }
+  // Set loading state
+  if(btn)btn.disabled=true;
+  if(icon)icon.textContent='⏳';
+  if(txt)txt.textContent='Detecting…';
+
+  navigator.geolocation.getCurrentPosition(
+    async (pos)=>{
+      try{
+        const {latitude:lat,longitude:lon}=pos.coords;
+        // Reverse geocode using Nominatim (free, no API key)
+        const url=`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=10&addressdetails=1`;
+        const res=await fetch(url,{headers:{'Accept-Language':'en','User-Agent':'MotoConnectZambia/1.0'}});
+        const data=await res.json();
+        const addr=data.address||{};
+        // Nominatim returns town/city/county — try each
+        const detected=addr.town||addr.city||addr.county||addr.state_district||addr.state||'';
+        // Try to match against known towns (partial, case-insensitive)
+        const match=ZAMBIA_TOWNS.find(t=>detected.toLowerCase().includes(t.toLowerCase())||t.toLowerCase().includes(detected.toLowerCase()));
+        const resolvedTown=match||detected;
+        if(resolvedTown){
+          // Add to dropdown if not already there
+          initPubTownDropdown();
+          const sel=document.getElementById('pubTownSelect');
+          if(sel&&![...sel.options].some(o=>o.value.toLowerCase()===resolvedTown.toLowerCase())){
+            const opt=document.createElement('option');
+            opt.value=resolvedTown;opt.textContent=resolvedTown;
+            sel.appendChild(opt);
+          }
+          setPubTown(resolvedTown);
+          if(icon)icon.textContent='✅';
+          if(txt)txt.textContent=resolvedTown;
+        } else {
+          if(icon)icon.textContent='📍';
+          if(txt)txt.textContent='Detect';
+          alert('Could not determine your town from your location. Please select manually.');
+        }
+      } catch(e){
+        if(icon)icon.textContent='📍';
+        if(txt)txt.textContent='Detect';
+        alert('Could not fetch location data. Check your internet connection and try again.');
+      } finally {
+        if(btn)btn.disabled=false;
+      }
+    },
+    (err)=>{
+      if(btn)btn.disabled=false;
+      if(icon)icon.textContent='📍';
+      if(txt)txt.textContent='Detect';
+      if(err.code===1){
+        alert('Location access was denied. Please select your town from the dropdown instead.');
+      } else {
+        alert('Could not get your location. Please select your town manually.');
+      }
+    },
+    {timeout:10000,maximumAge:300000}  // 5-min cache — don't re-ask if they already allowed it recently
+  );
+}
+
+// Major Zambian towns & districts for Phase 1 town filter
+const ZAMBIA_TOWNS=[
+  'Chipata','Chingola','Choma','Kabwe','Kafue','Kalulushi','Kapiri Mposhi','Kasama',
+  'Kitwe','Livingstone','Luanshya','Lusaka','Mansa','Mazabuka','Mbala','Mkushi',
+  'Mongu','Monze','Mpika','Mporokoso','Mufulira','Mumbwa','Mwinilunga','Nakonde',
+  'Ndola','Petauke','Samfya','Senanga','Serenje','Siavonga','Sesheke','Solwezi',
+  'Zambezi','Zimba'
+].sort();
 
 function renderPubZoneTabs(){
   const zones=getZones();
@@ -1658,6 +1786,10 @@ function renderPublicDirectory(){
   if(search)riders=riders.filter(s=>(s.name+' '+(s.zone||s.notes||'')).toLowerCase().includes(search));
   if(filterType)riders=riders.filter(s=>s.type===filterType);
   if(filterAvail)riders=riders.filter(s=>(s.availability||'available')===filterAvail);
+  if(_pubTownFilter){
+    const t=_pubTownFilter.toLowerCase();
+    riders=riders.filter(s=>(s.zone||'').toLowerCase().includes(t)||(s.zone2||'').toLowerCase().includes(t));
+  }
   if(_pubZoneFilter)riders=riders.filter(s=>(s.zone||'').includes(_pubZoneFilter)||(s.zone2||'').includes(_pubZoneFilter)||(_pubZoneFilter&&(s.notes||'').toLowerCase().includes(_pubZoneFilter.toLowerCase())));
 
   // Stats row
@@ -1674,7 +1806,8 @@ function renderPublicDirectory(){
 
   const grid=document.getElementById('pubGrid');
   if(!riders.length){
-    grid.innerHTML=`<div class="pub-empty" style="grid-column:1/-1"><div>🏍️</div><p>No riders found matching your search.</p><p style="font-size:.8rem;margin-top:.5rem">Try adjusting your filters or <span style="color:#fbbf24;cursor:pointer" onclick="showApplyPage()">apply as a rider</span>.</p></div>`;
+    const townMsg=_pubTownFilter?` in <strong>${esc(_pubTownFilter)}</strong>`:'';
+    grid.innerHTML=`<div class="pub-empty" style="grid-column:1/-1"><div>🏍️</div><p>No riders found${townMsg}.</p><p style="font-size:.8rem;margin-top:.5rem">${_pubTownFilter?`Be the first rider in ${esc(_pubTownFilter)}! `:'Try adjusting your filters or '}<span style="color:#fbbf24;cursor:pointer" onclick="showApplyPage()">Apply as a rider</span>.</p></div>`;
     return;
   }
 
