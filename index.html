@@ -610,7 +610,8 @@
         <!-- Step 1: Personal Info -->
         <div class="apply-section active" id="applyStep1">
           <div class="form-row"><label>Full Name *</label><input type="text" id="appName" placeholder="e.g. Chanda Mwale"/></div>
-          <div class="form-row"><label>Phone Number *</label><input type="tel" id="appPhone" placeholder="e.g. 0977 123456"/></div>
+          <div class="form-row"><label>Phone Number *</label><input type="tel" id="appPhone" placeholder="e.g. 0977 123456"/><div style="margin-top:.35rem;font-size:.75rem;color:var(--muted)">💬 Customers will use this number to reach you on WhatsApp.</div></div>
+          <div class="form-row"><label>Additional Number <span style="font-weight:400;color:var(--muted);font-size:.75rem">(optional)</span></label><input type="tel" id="appPhone2" placeholder="e.g. 0976 543210"/><div style="margin-top:.35rem;font-size:.75rem;color:var(--muted)">Backup contact in case Number 1 is unreachable.</div></div>
           <div class="form-row"><label>NRC Number</label><input type="text" id="appNRC" placeholder="e.g. 123456/10/1"/></div>
           <div class="form-row"><label>Home Area / Neighbourhood</label><input type="text" id="appArea" placeholder="e.g. Mansa Central"/></div>
           <div class="apply-nav"><span></span><button class="btn btn-primary btn-sm" onclick="applyNext(1)">Next →</button></div>
@@ -631,11 +632,11 @@
             <input type="text" id="appZoneCustom" placeholder="Type the name of your area/region…" style="display:none;margin-top:.5rem" oninput="document.getElementById('appZoneCustomHint').style.display=this.value.trim()?'block':'none'"/>
             <div id="appZoneCustomHint" style="display:none;margin-top:.4rem;font-size:.74rem;color:#fbbf24">⚠️ This is a new region — admin will review and approve it before it becomes official.</div>
           </div>
-          <div class="form-row"><label>Secondary Zone <span style="font-weight:400;color:rgba(255,255,255,.5);font-size:.75rem">(optional — if you cover a second area)</span></label>
+          <div class="form-row"><label>Secondary Zone <span style="font-weight:400;color:var(--muted);font-size:.75rem">(optional — if you cover a second area)</span></label>
             <select id="appZone2" onchange="onApplyZoneChange(2)"></select>
             <input type="text" id="appZone2Custom" placeholder="Type the name of your second area/region…" style="display:none;margin-top:.5rem"/>
           </div>
-          <div class="form-row" style="display:flex;align-items:flex-start;gap:.5rem;padding:.5rem .6rem;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:8px;font-size:.78rem;color:rgba(255,255,255,.65)">
+          <div class="form-row" style="display:flex;align-items:flex-start;gap:.5rem;padding:.5rem .6rem;background:#f0f4f8;border:1px solid var(--border);border-radius:8px;font-size:.78rem;color:var(--muted)">
             <span style="flex-shrink:0">🗺️</span>
             <span>Standard &amp; Premium riders can cover all zones. Basic riders are shown only in their primary zone.</span>
           </div>
@@ -645,16 +646,16 @@
               <option value="Standard">Standard — K100/month</option>
               <option value="Premium">Premium — K200/month</option>
             </select>
-            <div id="planInfoBox" style="margin-top:.6rem;padding:.65rem .85rem;border-radius:8px;font-size:.8rem;line-height:1.7;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.85)"></div>
+            <div id="planInfoBox" style="margin-top:.6rem;padding:.65rem .85rem;border-radius:8px;font-size:.8rem;line-height:1.7;background:#f0f4f8;border:1px solid var(--border);color:var(--text)"></div>
           </div>
-          <div class="form-row"><label>Operating Hours <span style="font-weight:400;color:rgba(255,255,255,.5);font-size:.75rem">(optional)</span></label>
+          <div class="form-row"><label>Operating Hours <span style="font-weight:400;color:var(--muted);font-size:.75rem">(optional)</span></label>
             <input type="text" id="appHours" placeholder="e.g. Mon–Sat 06:00–20:00"/>
           </div>
           <div class="form-row"><label>Additional Notes</label><textarea id="appNotes" rows="2" placeholder="Any info for admin (optional)…"></textarea></div>
           <div class="form-row">
-            <label>Payment Transaction ID <span style="font-weight:400;color:rgba(255,255,255,.5);font-size:.75rem">(optional — if you have already paid)</span></label>
+            <label>Payment Transaction ID <span style="font-weight:400;color:var(--muted);font-size:.75rem">(optional — if you have already paid)</span></label>
             <input type="text" id="appTxnId" placeholder="e.g. AIRTEL-20240623-XXXX or MTN-XXXXXXX"/>
-            <div style="margin-top:.4rem;font-size:.78rem;color:rgba(255,255,255,.85);line-height:1.6">💡 Pay via Airtel Money or MTN Mobile Money to <strong style="color:#fbbf24">0977 638790</strong> or <strong style="color:#fbbf24">0960 271 18</strong> then enter your transaction ID here.</div>
+            <div style="margin-top:.4rem;font-size:.78rem;color:var(--text);line-height:1.6;background:#fffbeb;border:1px solid #fcd34d;border-radius:6px;padding:.5rem .65rem">💡 Pay via Airtel Money or MTN Mobile Money to <strong style="color:var(--accent)">0977 638790</strong> or <strong style="color:var(--accent)">0960271128</strong> then enter your transaction ID here.</div>
           </div>
           <div class="apply-nav">
             <button class="btn btn-ghost btn-sm" onclick="applyBack(2)">← Back</button>
@@ -1464,7 +1465,7 @@ function showPublicPage(){
 function showApplyPage(){
   hideAllPages();
   document.getElementById('applyPage').style.display='block';
-  ['appName','appPhone','appNRC','appArea','appNotes','appTxnId','appHours','appZoneCustom','appZone2Custom'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['appName','appPhone','appPhone2','appNRC','appArea','appNotes','appTxnId','appHours','appZoneCustom','appZone2Custom'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   const z2r=document.getElementById('appZone2');if(z2r)z2r.value='';;
   document.getElementById('appType').value='';
   setApplyStep(1);
@@ -1773,6 +1774,7 @@ function applyNext(fromStep){
     document.getElementById('appReviewContent').innerHTML=`
       <div><span style="color:var(--text);font-weight:600">Name:</span> ${esc(document.getElementById('appName').value)}</div>
       <div><span style="color:var(--text);font-weight:600">Phone:</span> ${esc(document.getElementById('appPhone').value)}</div>
+      ${document.getElementById('appPhone2').value?`<div><span style="color:var(--text);font-weight:600">Additional Number:</span> ${esc(document.getElementById('appPhone2').value)}</div>`:''}
       ${document.getElementById('appNRC').value?`<div><span style="color:var(--text);font-weight:600">NRC:</span> ${esc(document.getElementById('appNRC').value)}</div>`:''}
       <div><span style="color:var(--text);font-weight:600">Vehicle:</span> ${vehicleIcon(type)} ${esc(type)}</div>
       ${document.getElementById('appHours').value?`<div><span style="color:var(--text);font-weight:600">🕐 Hours:</span> ${esc(document.getElementById('appHours').value)}</div>`:''}
@@ -1805,6 +1807,7 @@ function submitApplication(){
     ref,
     name:document.getElementById('appName').value.trim(),
     phone:document.getElementById('appPhone').value.trim(),
+    phone2:document.getElementById('appPhone2')?.value.trim()||'',
     nrc:document.getElementById('appNRC').value.trim(),
     area:document.getElementById('appArea').value.trim(),
     type:document.getElementById('appType').value,
@@ -1841,6 +1844,7 @@ function submitApplication(){
         'Ref: '+ref+'\n'+
         'Name: '+app.name+'\n'+
         'Phone: '+app.phone+'\n'+
+        (app.phone2?'Alt. Number: '+app.phone2+'\n':'')+
         'Vehicle: '+app.type+'\n'+
         'Zone: '+app.zone+(app.zoneCustom?' ⚠️ NEW REGION - needs approval':'')+'\n'+
         'Plan: '+app.plan+' ('+( planPrice[app.plan]||'')+'/mo)\n'+
