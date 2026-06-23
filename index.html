@@ -41,7 +41,6 @@
   body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh}
 
   /* ── LOGIN ── */
-  #loginPage{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:1rem;background:linear-gradient(135deg,#1e3a5f 0%,#2d5a8e 60%,#1a6b55 100%)}
   .login-card{background:#fff;border:1px solid var(--border);border-radius:18px;padding:2.5rem 2rem;width:100%;max-width:380px;box-shadow:0 8px 40px rgba(30,58,95,0.22);text-align:center}
   .login-logo{font-size:2.6rem;margin-bottom:.5rem}
   .login-card h1{font-size:1.6rem;font-weight:700;color:var(--sidebar-bg);letter-spacing:-.5px}
@@ -304,7 +303,6 @@
     .page{padding:1rem}
   }
   /* notch/safe area for login on iPhone */
-  #loginPage{padding-bottom:env(safe-area-inset-bottom)}
 
   /* Install banner */
   #installBanner{display:none;position:fixed;bottom:70px;left:1rem;right:1rem;background:var(--sidebar-bg);color:#fff;border-radius:12px;padding:.85rem 1rem;z-index:300;box-shadow:0 4px 20px rgba(30,58,95,0.3);align-items:center;gap:.75rem}
@@ -335,12 +333,6 @@
     box-shadow:0 2px 12px rgba(245,158,11,.4);transition:transform .15s;
   }
   .btn-pub-apply:hover{transform:translateY(-1px)}
-  .btn-pub-admin{
-    background:rgba(255,255,255,.1);color:#fff;font-size:.82rem;
-    font-weight:600;padding:.5rem 1rem;border:1px solid rgba(255,255,255,.2);
-    border-radius:50px;cursor:pointer;transition:background .15s;
-  }
-  .btn-pub-admin:hover{background:rgba(255,255,255,.18)}
 
   .pub-hero{
     text-align:center;padding:2.5rem 1.5rem 1.5rem;
@@ -546,7 +538,6 @@
     <div class="pub-logo">🏍️ Moto<span>Connect</span> <span style="font-size:.7rem;color:rgba(255,255,255,.5);font-weight:400">Mansa</span></div>
     <div class="pub-header-actions">
       <button class="btn-pub-apply" onclick="showApplyPage()">🚀 Apply as Rider</button>
-      <button class="btn-pub-admin" onclick="showLandingFromPublic()">🔐 Admin</button>
     </div>
   </header>
 
@@ -691,648 +682,10 @@
       <button class="lp-cta" onclick="showPublicPage()">
         🔍 Find a Rider
       </button>
-      <button onclick="enterApp()" style="background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.25);color:#fff;font-size:.82rem;font-weight:600;padding:.5rem 1.4rem;border-radius:50px;cursor:pointer;">
-        🔐 Admin Login
-      </button>
     </div>
   </div>
 </div>
 
-<!-- ══ LOGIN ══════════════════════════════════════════ -->
-<div id="loginPage">
-  <div class="login-card">
-    <div class="login-logo">🏍️</div>
-    <h1>MotoConnect</h1>
-    <p>Mansa Transport Platform — Admin</p>
-    <div class="input-wrap">
-      <label>Password</label>
-      <input type="password" id="loginPw" placeholder="Enter admin password" autocomplete="current-password"/>
-      <button class="toggle-pw" onclick="togglePw('loginPw',this)" type="button">👁</button>
-    </div>
-    <button class="btn btn-primary" onclick="doLogin()">Access Dashboard</button>
-    <div id="loginErr" style="display:none" class="alert alert-err">Incorrect password. Please try again.</div>
-    <p style="font-size:.75rem;color:var(--muted);margin-top:1rem">First-time setup: use the default password, then change it in Settings.</p>
-  </div>
-</div>
-
-<!-- ══ APP ════════════════════════════════════════════ -->
-<div id="app">
-
-  <!-- SIDEBAR -->
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-logo">
-      <h2>🏍️ MotoConnect</h2>
-      <span>Mansa, Luapula</span>
-    </div>
-    <nav>
-      <div class="nav-label">Main</div>
-      <div class="nav-item active" onclick="showPage('dashboard',this)">📊 Dashboard</div>
-      <div class="nav-item" onclick="showPage('subscriptions',this)">📝 Subscriptions</div>
-      <div class="nav-label">Configuration</div>
-      <div class="nav-item" onclick="showPage('fares',this)">🏷️ Fares &amp; Rates</div>
-      <div class="nav-item" onclick="showPage('locations',this)">📍 Locations</div>
-      <div class="nav-label">Admin</div>
-      <div class="nav-item" onclick="showPage('reports',this)">📈 Reports</div>
-      <div class="nav-item" onclick="showPage('applications',this)">📋 Applications <span class="nav-badge" id="appNavBadge" style="display:none">0</span></div>
-      <div class="nav-item" onclick="showPage('settings',this)">⚙️ Settings</div>
-    </nav>
-    <div class="sidebar-footer">
-      <div class="user-row">
-        <div class="avatar" id="avatarInitial">A</div>
-        <div class="user-info">
-          <span class="bold" id="adminNameDisplay">Admin User</span>
-          <small>Platform Manager</small>
-        </div>
-      </div>
-      <div class="sidebar-actions">
-        <button class="btn btn-ghost btn-sm" onclick="doLogout()">🚪 Logout</button>
-      </div>
-    </div>
-  </aside>
-
-  <!-- TOPBAR -->
-  <header class="topbar">
-    <div style="display:flex;align-items:center;gap:.75rem">
-      <button class="hamburger" onclick="toggleSidebar()">☰</button>
-      <span class="topbar-title" id="pageTitle">Dashboard</span>
-    </div>
-    <div class="topbar-right">
-      <select class="currency-select" id="currencySelect" onchange="setCurrency(this.value)">
-        <option value="ZMW">🇿🇲 ZMW</option>
-        <option value="USD">🇺🇸 USD</option>
-        <option value="EUR">🇪🇺 EUR</option>
-        <option value="GBP">🇬🇧 GBP</option>
-        <option value="ZAR">🇿🇦 ZAR</option>
-      </select>
-      <div class="notification-bell" onclick="toggleNotifPanel()" id="bellBtn">
-        🔔<span class="notif-badge" id="notifBadge" style="display:none">0</span>
-      </div>
-    </div>
-  </header>
-
-  <!-- NOTIFICATIONS PANEL -->
-  <div class="notif-panel" id="notifPanel">
-    <h3>🔔 Alerts</h3>
-    <div id="notifList"><p class="text-muted" style="font-size:.82rem">No alerts right now.</p></div>
-  </div>
-
-  <main class="main">
-
-    <!-- ── DASHBOARD ── -->
-    <div class="page active" id="page-dashboard">
-      <div class="page-head">
-        <h2>Overview</h2>
-        <div class="export-row">
-          <button class="btn btn-ghost btn-sm" onclick="exportCSV()">⬇️ Export CSV</button>
-          <button class="btn btn-primary btn-sm" onclick="openModal('subModal')">+ New Subscription</button>
-        </div>
-      </div>
-
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-label">Monthly Revenue</div>
-          <div class="stat-value text-accent" id="statRevenue">—</div>
-          <div class="stat-sub stat-up" id="statRevenueNote">Active subscriptions total</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Active Subscriptions</div>
-          <div class="stat-value" id="statActive">0</div>
-          <div class="stat-sub">Across all vehicle types</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Expiring Soon</div>
-          <div class="stat-value stat-warn" id="statExpiring">0</div>
-          <div class="stat-sub">Within the next 7 days</div>
-        </div>
-        <div class="stat-card" style="cursor:pointer" onclick="showPage('applications',null)">
-          <div class="stat-label">Pending Applications</div>
-          <div class="stat-value stat-warn" id="statPending">0</div>
-          <div class="stat-sub">Tap to review &amp; approve →</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Operating Zones</div>
-          <div class="stat-value" id="statZones">0</div>
-          <div class="stat-sub">Active coverage areas</div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <h3>Recent Subscriptions</h3>
-          <span class="text-muted" style="font-size:.8rem;cursor:pointer" onclick="showPage('subscriptions',null)">View All →</span>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Operator</th><th>Vehicle</th><th>Plan</th><th>Expiry</th><th>Status</th></tr></thead>
-            <tbody id="recentSubsBody"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── SUBSCRIPTIONS ── -->
-    <div class="page" id="page-subscriptions">
-      <div class="page-head">
-        <h2>All Subscriptions</h2>
-        <button class="btn btn-primary btn-sm" onclick="openModal('subModal')">+ New Subscription</button>
-      </div>
-      <div class="toolbar">
-        <input class="search-input" placeholder="🔍  Search operator or phone…" id="subSearch" oninput="renderSubs()"/>
-        <select class="filter-select" id="subFilterStatus" onchange="renderSubs()">
-          <option value="">All Statuses</option>
-          <option value="active">Active</option>
-          <option value="pending">Pending</option>
-          <option value="expired">Expired</option>
-        </select>
-        <select class="filter-select" id="subFilterType" onchange="renderSubs()">
-          <option value="">All Types</option>
-          <option value="Taxi">Taxi</option>
-          <option value="Motorbike">Motorbike</option>
-          <option value="Tour Operator">Tour Operator</option>
-        </select>
-        <button class="btn btn-ghost btn-sm" onclick="exportCSV()">⬇️ Export CSV</button>
-      </div>
-      <div class="card">
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>#</th><th>Operator</th><th>Phone</th><th>Type</th><th>Zone</th><th>Plan</th><th>Price/mo</th><th>Avail</th><th>Expiry</th><th>Status</th><th>Actions</th></tr></thead>
-            <tbody id="allSubsBody"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── FARES ── -->
-    <div class="page" id="page-fares">
-      <div class="page-head">
-        <h2>Fares &amp; Rates</h2>
-        <button class="btn btn-primary btn-sm" onclick="openModal('fareModal')">+ Add Fare</button>
-      </div>
-      <div class="two-col" style="margin-bottom:1.25rem">
-        <div class="card">
-          <div class="card-header"><h3>🧮 Fare Estimator</h3></div>
-          <div class="card-body">
-            <div class="form-row">
-              <label>Vehicle Type</label>
-              <select id="estType" onchange="calcFare()">
-                <option value="Taxi">Taxi</option>
-                <option value="Motorbike">Motorbike</option>
-                <option value="Tour Operator">Tour Operator</option>
-              </select>
-            </div>
-            <div class="form-row">
-              <label>Distance (km)</label>
-              <input type="number" id="estDist" value="1" min="0.1" step="0.5" oninput="calcFare()"/>
-            </div>
-            <div class="form-row">
-              <label>Zone Multiplier</label>
-              <select id="estMult" onchange="calcFare()">
-                <option value="1.0">Standard (1.0×)</option>
-                <option value="1.2">High Demand (1.2×)</option>
-                <option value="1.5">Premium (1.5×)</option>
-              </select>
-            </div>
-            <div class="estimator-result" id="fareResult">—</div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-header"><h3>Fare Configuration</h3></div>
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>Type</th><th>Base</th><th>Per KM</th><th>Svc %</th><th></th></tr></thead>
-              <tbody id="fareBody"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── LOCATIONS ── -->
-    <div class="page" id="page-locations">
-      <div class="page-head">
-        <h2>Location Zones</h2>
-        <button class="btn btn-primary btn-sm" onclick="openModal('zoneModal')">+ Add Zone</button>
-      </div>
-      <div class="card">
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Zone</th><th>Description</th><th>Multiplier</th><th>Actions</th></tr></thead>
-            <tbody id="zoneBody"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── REPORTS ── -->
-    <div class="page" id="page-reports">
-      <div class="page-head"><h2>Reports &amp; Export</h2></div>
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-label">Total Revenue (All Time)</div>
-          <div class="stat-value text-accent" id="rptTotal">—</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Active Operators</div>
-          <div class="stat-value" id="rptActive">0</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Expired / Lapsed</div>
-          <div class="stat-value stat-warn" id="rptExpired">0</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Pending Activations</div>
-          <div class="stat-value" id="rptPending">0</div>
-        </div>
-      </div>
-      <div class="card" style="max-width:480px">
-        <div class="card-header"><h3>Export Data</h3></div>
-        <div class="card-body">
-          <p style="font-size:.85rem;color:var(--muted);margin-bottom:1rem">Download your data as CSV for use in Excel, Google Sheets, or for backup.</p>
-          <div class="export-row">
-            <button class="btn btn-success btn-sm" onclick="exportCSV()">⬇️ Subscriptions CSV</button>
-            <button class="btn btn-ghost btn-sm" onclick="exportFaresCSV()">⬇️ Fares CSV</button>
-            <button class="btn btn-ghost btn-sm" onclick="exportZonesCSV()">⬇️ Zones CSV</button>
-          </div>
-          <div class="divider"></div>
-          <p style="font-size:.85rem;color:var(--muted);margin-bottom:1rem">Full JSON backup — import this to restore all data.</p>
-          <div class="export-row">
-            <button class="btn btn-primary btn-sm" onclick="exportJSON()">📦 Full Backup (JSON)</button>
-            <label class="btn btn-ghost btn-sm" style="cursor:pointer">📂 Import Backup<input type="file" accept=".json" style="display:none" onchange="importJSON(event)"/></label>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── SETTINGS ── -->
-    <div class="page" id="page-settings">
-      <div class="page-head"><h2>Settings</h2></div>
-
-      <div class="settings-card">
-        <h3>🔐 Change Password</h3>
-        <div class="form-row">
-          <label>Current Password</label>
-          <div class="input-wrap" style="margin-bottom:0">
-            <input type="password" id="curPw" placeholder="Enter current password"/>
-            <button class="toggle-pw" onclick="togglePw('curPw',this)" type="button">👁</button>
-          </div>
-        </div>
-        <div class="form-row">
-          <label>New Password</label>
-          <div class="input-wrap" style="margin-bottom:0">
-            <input type="password" id="newPw" placeholder="At least 6 characters"/>
-            <button class="toggle-pw" onclick="togglePw('newPw',this)" type="button">👁</button>
-          </div>
-        </div>
-        <div class="form-row">
-          <label>Confirm New Password</label>
-          <div class="input-wrap" style="margin-bottom:0">
-            <input type="password" id="confPw" placeholder="Repeat new password"/>
-            <button class="toggle-pw" onclick="togglePw('confPw',this)" type="button">👁</button>
-          </div>
-        </div>
-        <div id="pwMsg" style="display:none" class="alert"></div>
-        <button class="btn btn-primary btn-sm mt1" onclick="changePassword()">Update Password</button>
-      </div>
-
-      <div class="settings-card">
-        <h3>🏢 Platform Settings</h3>
-        <div class="form-row">
-          <label>Admin Display Name</label>
-          <input type="text" id="adminNameInput" placeholder="e.g. Chanda Mwale"/>
-        </div>
-        <div class="form-row">
-          <label>Default Currency</label>
-          <select id="defaultCurrency">
-            <option value="ZMW">ZMW — Zambian Kwacha</option>
-            <option value="USD">USD — US Dollar</option>
-            <option value="EUR">EUR — Euro</option>
-            <option value="GBP">GBP — Pound Sterling</option>
-            <option value="ZAR">ZAR — South African Rand</option>
-          </select>
-        </div>
-        <div class="form-row">
-          <label>Expiry Warning (days before)</label>
-          <input type="number" id="warnDays" value="7" min="1" max="30"/>
-        </div>
-        <div id="settingsMsg" style="display:none" class="alert"></div>
-        <button class="btn btn-primary btn-sm mt1" onclick="saveSettings()">Save Settings</button>
-      </div>
-
-      <div class="settings-card" style="border-color:#fca5a5;background:#fff5f5">
-        <h3 style="color:var(--danger)">⚠️ Danger Zone</h3>
-        <p style="font-size:.82rem;color:var(--muted);margin-bottom:.75rem">Permanently clear all subscription data. Cannot be undone.</p>
-        <button class="btn btn-danger btn-sm" onclick="clearAllData()">🗑️ Clear All Subscriptions</button>
-      </div>
-    </div>
-
-
-    <!-- ── APPLICATIONS ── -->
-    <div class="page" id="page-applications">
-      <div class="page-head">
-        <h2>Rider Applications</h2>
-        <span class="text-muted" style="font-size:.82rem">Review and approve rider subscription applications</span>
-      </div>
-      <div class="toolbar">
-        <input class="search-input" placeholder="🔍 Search applicant…" id="appSearch" oninput="renderApplications()"/>
-        <select class="filter-select" id="appFilterStatus" onchange="renderApplications()">
-          <option value="">All</option>
-          <option value="pending">Pending</option>
-          <option value="active">Approved</option>
-          <option value="rejected">Rejected</option>
-        </select>
-      </div>
-      <div id="appQueueList"></div>
-    </div>
-
-  </main>
-
-  <!-- MOBILE BOTTOM NAV -->
-  <nav class="bottom-nav">
-    <div class="bottom-nav-items">
-      <button class="bnav-item active" id="bn-dashboard" onclick="showPage('dashboard',null);setBottomNav('dashboard')">
-        <span class="bnav-icon">📊</span>Dashboard
-      </button>
-      <button class="bnav-item" id="bn-subscriptions" onclick="showPage('subscriptions',null);setBottomNav('subscriptions')">
-        <span class="bnav-icon">📝</span>Subs
-      </button>
-      <button class="bnav-item" id="bn-fares" onclick="showPage('fares',null);setBottomNav('fares')">
-        <span class="bnav-icon">🏷️</span>Fares
-      </button>
-      <button class="bnav-item" id="bn-reports" onclick="showPage('reports',null);setBottomNav('reports')">
-        <span class="bnav-icon">📈</span>Reports
-      </button>
-      <button class="bnav-item" id="bn-applications" onclick="showPage('applications',null);setBottomNav('applications')">
-        <span class="bnav-icon">📋</span>Apply
-      </button>
-      <button class="bnav-item" id="bn-settings" onclick="showPage('settings',null);setBottomNav('settings')">
-        <span class="bnav-icon">⚙️</span>Settings
-      </button>
-    </div>
-  </nav>
-
-</div>
-
-<!-- INSTALL BANNER -->
-<div id="installBanner">
-  <p><strong>Add to Home Screen</strong><br/>Install MotoConnect for quick offline access</p>
-  <div class="install-actions">
-    <button class="btn btn-ghost btn-sm" style="border-color:rgba(255,255,255,.3);color:#fff" onclick="dismissInstall()">Later</button>
-    <button class="btn btn-sm" style="background:#fbbf24;color:#000" onclick="doInstall()">Install</button>
-  </div>
-</div>
-
-<!-- ══ MODALS ═══════════════════════════════════════════ -->
-
-<!-- NEW / EDIT SUBSCRIPTION -->
-<div class="overlay" id="subModal">
-  <div class="modal">
-    <div class="modal-header">
-      <h3 id="subModalTitle">New Subscription</h3>
-      <button class="close-btn" onclick="closeModal('subModal')">✕</button>
-    </div>
-    <div class="modal-body">
-      <input type="hidden" id="subEditId"/>
-      <div class="two-col">
-        <div class="form-row">
-          <label>Operator Name</label>
-          <input type="text" id="subName" placeholder="Full name or company"/>
-        </div>
-        <div class="form-row">
-          <label>Phone Number</label>
-          <input type="tel" id="subPhone" placeholder="e.g. 0977 123456"/>
-        </div>
-      </div>
-      <div class="two-col">
-        <div class="form-row">
-          <label>Vehicle Type</label>
-          <select id="subType">
-            <option>Taxi</option>
-            <option>Motorbike</option>
-            <option>Tour Operator</option>
-          </select>
-        </div>
-        <div class="form-row">
-          <label>Plan</label>
-          <select id="subPlan">
-            <option>Basic</option>
-            <option>Standard</option>
-            <option>Premium</option>
-          </select>
-        </div>
-      </div>
-      <div class="two-col">
-        <div class="form-row">
-          <label>Monthly Price (ZMW)</label>
-          <input type="number" id="subPrice" placeholder="e.g. 150" min="0"/>
-        </div>
-        <div class="form-row">
-          <label>Subscription Duration</label>
-          <select id="subDuration" onchange="calcExpiry()">
-            <option value="1">1 Month</option>
-            <option value="3">3 Months</option>
-            <option value="6">6 Months</option>
-            <option value="12">1 Year</option>
-            <option value="0">Custom date</option>
-          </select>
-        </div>
-      </div>
-      <div class="two-col">
-        <div class="form-row">
-          <label>Start Date</label>
-          <input type="date" id="subStart" oninput="calcExpiry()"/>
-        </div>
-        <div class="form-row">
-          <label>Expiry Date <span style="font-size:.7rem;color:var(--accent)">(auto-calculated)</span></label>
-          <input type="date" id="subExpiry"/>
-        </div>
-      </div>
-      <div class="form-row">
-        <label>Status</label>
-        <select id="subStatus">
-          <option value="active">Active</option>
-          <option value="pending">Pending</option>
-          <option value="expired">Expired</option>
-        </select>
-      </div>
-      <div class="two-col">
-        <div class="form-row">
-          <label>Operating Zone</label>
-          <select id="subZone">
-            <option value="">— Select Zone —</option>
-          </select>
-        </div>
-        <div class="form-row">
-          <label>Availability</label>
-          <select id="subAvailability">
-            <option value="available">✅ Available</option>
-            <option value="busy">⏳ Busy</option>
-            <option value="offline">Offline</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-row">
-        <label>Notes (optional)</label>
-        <textarea id="subNotes" rows="2" placeholder="Any additional info…"></textarea>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost btn-sm" onclick="closeModal('subModal')">Cancel</button>
-      <button class="btn btn-primary btn-sm" onclick="saveSub()">Save Subscription</button>
-    </div>
-  </div>
-</div>
-
-<!-- EDIT FARE -->
-<div class="overlay" id="fareModal">
-  <div class="modal">
-    <div class="modal-header">
-      <h3 id="fareModalTitle">Add / Edit Fare</h3>
-      <button class="close-btn" onclick="closeModal('fareModal')">✕</button>
-    </div>
-    <div class="modal-body">
-      <input type="hidden" id="fareEditId"/>
-      <div class="form-row">
-        <label>Vehicle Type</label>
-        <input type="text" id="fareType" placeholder="e.g. Taxi"/>
-      </div>
-      <div class="two-col">
-        <div class="form-row">
-          <label>Base Fare (ZMW)</label>
-          <input type="number" id="fareBase" placeholder="0.00" min="0" step="0.5"/>
-        </div>
-        <div class="form-row">
-          <label>Per KM (ZMW)</label>
-          <input type="number" id="farePerKm" placeholder="0.00" min="0" step="0.5"/>
-        </div>
-      </div>
-      <div class="form-row">
-        <label>Service Fee (%)</label>
-        <input type="number" id="fareSvc" placeholder="e.g. 10" min="0" max="100"/>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost btn-sm" onclick="closeModal('fareModal')">Cancel</button>
-      <button class="btn btn-primary btn-sm" onclick="saveFare()">Save Fare</button>
-    </div>
-  </div>
-</div>
-
-<!-- ADD / EDIT ZONE -->
-<div class="overlay" id="zoneModal">
-  <div class="modal">
-    <div class="modal-header">
-      <h3 id="zoneModalTitle">Add Zone</h3>
-      <button class="close-btn" onclick="closeModal('zoneModal')">✕</button>
-    </div>
-    <div class="modal-body">
-      <input type="hidden" id="zoneEditId"/>
-      <div class="form-row">
-        <label>Zone Name</label>
-        <input type="text" id="zoneName" placeholder="e.g. Mansa Central"/>
-      </div>
-      <div class="form-row">
-        <label>Description</label>
-        <input type="text" id="zoneDesc" placeholder="Brief description"/>
-      </div>
-      <div class="form-row">
-        <label>Rate Multiplier</label>
-        <select id="zoneMult">
-          <option value="1.0">Standard (1.0×)</option>
-          <option value="1.2">High Demand (1.2×)</option>
-          <option value="1.5">Premium (1.5×)</option>
-        </select>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost btn-sm" onclick="closeModal('zoneModal')">Cancel</button>
-      <button class="btn btn-primary btn-sm" onclick="saveZone()">Save Zone</button>
-    </div>
-  </div>
-</div>
-
-<!-- INVOICE MODAL -->
-<div class="overlay" id="invoiceModal">
-  <div class="modal" style="max-width:520px">
-    <div class="modal-header">
-      <h3>🧾 Subscription Invoice</h3>
-      <button class="close-btn" onclick="closeModal('invoiceModal')">✕</button>
-    </div>
-    <div class="modal-body" id="invoiceBody"></div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost btn-sm" onclick="closeModal('invoiceModal')">Close</button>
-      <button class="btn btn-primary btn-sm" onclick="printInvoice()">🖨️ Print</button>
-    </div>
-  </div>
-</div>
-
-<!-- CONFIRM DELETE -->
-<div class="overlay" id="confirmModal">
-  <div class="modal" style="max-width:360px">
-    <div class="modal-header">
-      <h3>Confirm Delete</h3>
-      <button class="close-btn" onclick="closeModal('confirmModal')">✕</button>
-    </div>
-    <div class="modal-body">
-      <p id="confirmMsg" style="font-size:.9rem;color:var(--muted)">Are you sure you want to delete this item?</p>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost btn-sm" onclick="closeModal('confirmModal')">Cancel</button>
-      <button class="btn btn-danger btn-sm" id="confirmOkBtn">Delete</button>
-    </div>
-  </div>
-</div>
-
-
-<!-- RIDER ID CARD MODAL -->
-<div class="overlay" id="riderCardModal">
-  <div class="modal" style="max-width:420px">
-    <div class="modal-header">
-      <h3>🆔 Rider ID Card</h3>
-      <button class="close-btn" onclick="closeModal('riderCardModal')">✕</button>
-    </div>
-    <div class="modal-body" id="riderCardBody"></div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost btn-sm" onclick="closeModal('riderCardModal')">Close</button>
-      <button class="btn btn-primary btn-sm" onclick="printRiderCard()">🖨️ Print</button>
-      <button class="btn btn-success btn-sm" onclick="shareRiderCard()">📤 Share</button>
-    </div>
-  </div>
-</div>
-
-<!-- APPROVE APPLICATION MODAL -->
-<div class="overlay" id="approveModal">
-  <div class="modal" style="max-width:400px">
-    <div class="modal-header">
-      <h3>✅ Approve Application</h3>
-      <button class="close-btn" onclick="closeModal('approveModal')">✕</button>
-    </div>
-    <div class="modal-body">
-      <input type="hidden" id="approveAppId"/>
-      <div id="approveRiderInfo" style="background:var(--surface2);border-radius:8px;padding:.75rem;margin-bottom:1rem;font-size:.85rem;display:none"></div>
-      <p style="font-size:.85rem;color:var(--muted);margin-bottom:1rem">Set subscription details for this rider before activating.</p>
-      <div class="two-col">
-        <div class="form-row"><label>Plan</label>
-          <select id="approvePlan"><option>Basic</option><option>Standard</option><option>Premium</option></select>
-        </div>
-        <div class="form-row"><label>Monthly Price (ZMW)</label><input type="number" id="approvePrice" placeholder="e.g. 150" min="0"/></div>
-        <div class="form-row"><label>Start Date</label><input type="date" id="approveStart"/></div>
-        <div class="form-row"><label>Duration</label>
-          <select id="approveDuration">
-            <option value="1">1 Month</option>
-            <option value="3">3 Months</option>
-            <option value="6">6 Months</option>
-            <option value="12">1 Year</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-row"><label>Notes (optional)</label><textarea id="approveNotes" rows="2" placeholder="Any notes for this rider…"></textarea></div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost btn-sm" onclick="closeModal('approveModal')">Cancel</button>
-      <button class="btn btn-success btn-sm" onclick="confirmApprove()">✅ Activate Rider</button>
-    </div>
-  </div>
-</div>
 
 <script>
 // ══════════════════════════════════════════════════════
@@ -1344,15 +697,7 @@ function showLanding(){
   lp.style.display='flex';
   lp.classList.remove('hide');
 }
-function enterApp(){
-  // "Admin Login" from landing → go to login page
-  const lp=document.getElementById('landingPage');
-  lp.classList.add('hide');
-  setTimeout(()=>{
-    lp.style.display='none';
-    showLoginPage();
-  },650);
-}
+
 
 // ══════════════════════════════════════════════════════
 //  PWA — MANIFEST + SERVICE WORKER + INSTALL PROMPT
@@ -1401,14 +746,12 @@ if('serviceWorker' in navigator){
 // ══════════════════════════════════════════════════════
 //  STATE & PERSISTENCE
 // ══════════════════════════════════════════════════════
-const KEYS={pw:'mc_password',subs:'mc_subscriptions',fares:'mc_fares',zones:'mc_zones',settings:'mc_settings'};
-const DEFAULT_PW='admin123';
+const KEYS={subs:'mc_subscriptions',fares:'mc_fares',zones:'mc_zones',settings:'mc_settings'};
 const RATES={ZMW:1,USD:0.049,EUR:0.046,GBP:0.040,ZAR:0.90};
 let state={currency:'ZMW',warnDays:7,adminName:'Admin User'};
 
 function save(key,data){try{localStorage.setItem(key,JSON.stringify(data));}catch(e){console.error('save',e);}}
 function load(key,def){try{const v=localStorage.getItem(key);return v!==null?JSON.parse(v):def;}catch(e){return def;}}
-function getPassword(){return load(KEYS.pw,DEFAULT_PW);}
 function getSubs(){return load(KEYS.subs,[]);}
 function getFares(){return load(KEYS.fares,[
   {id:'f1',type:'Taxi',base:15,perKm:3.5,svc:10},
@@ -1422,113 +765,7 @@ function getZones(){return load(KEYS.zones,[
 ]);}
 function getSettings(){return load(KEYS.settings,{adminName:'Admin User',currency:'ZMW',warnDays:7});}
 
-function applySettings(){
-  const s=getSettings();
-  state.currency=s.currency||'ZMW';
-  state.warnDays=s.warnDays||7;
-  state.adminName=s.adminName||'Admin User';
-  document.getElementById('currencySelect').value=state.currency;
-  document.getElementById('adminNameInput').value=state.adminName;
-  document.getElementById('defaultCurrency').value=state.currency;
-  document.getElementById('warnDays').value=state.warnDays;
-  document.getElementById('adminNameDisplay').textContent=state.adminName;
-  document.getElementById('avatarInitial').textContent=state.adminName.charAt(0).toUpperCase();
-}
 
-// ══════════════════════════════════════════════════════
-//  AUTO-EXPIRE: run on every load — mark subs past expiry
-// ══════════════════════════════════════════════════════
-function autoExpireSubs(){
-  const today=new Date(); today.setHours(0,0,0,0);
-  const subs=getSubs();
-  let changed=false;
-  subs.forEach(s=>{
-    if(s.status==='active' && s.expiry){
-      const exp=new Date(s.expiry);
-      if(exp<today){s.status='expired';changed=true;}
-    }
-  });
-  if(changed) save(KEYS.subs,subs);
-}
-
-// ══════════════════════════════════════════════════════
-//  AUTH
-// ══════════════════════════════════════════════════════
-function doLogin(){
-  const pw=document.getElementById('loginPw').value;
-  if(pw===getPassword()){
-    hideAllPages();
-    document.getElementById('app').style.display='block';
-    document.getElementById('loginPw').value='';
-    document.getElementById('loginErr').style.display='none';
-    applySettings();
-    autoExpireSubs();
-    renderAll();
-    buildNotifications();
-  } else {
-    document.getElementById('loginErr').style.display='block';
-  }
-}
-document.getElementById('loginPw').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
-
-function doLogout(){
-  hideAllPages();
-  showPublicPage();
-}
-
-function changePassword(){
-  const cur=document.getElementById('curPw').value;
-  const nw=document.getElementById('newPw').value;
-  const conf=document.getElementById('confPw').value;
-  const msg=document.getElementById('pwMsg');
-  const show=(txt,cls)=>{msg.textContent=txt;msg.className='alert '+cls;msg.style.display='block';};
-  if(cur!==getPassword()){show('Current password is incorrect.','alert-err');return;}
-  if(nw.length<6){show('New password must be at least 6 characters.','alert-err');return;}
-  if(nw!==conf){show('New passwords do not match.','alert-err');return;}
-  save(KEYS.pw,nw);
-  show('Password updated successfully.','alert-ok');
-  ['curPw','newPw','confPw'].forEach(id=>document.getElementById(id).value='');
-}
-
-// ══════════════════════════════════════════════════════
-//  NAVIGATION
-// ══════════════════════════════════════════════════════
-const pageTitles={dashboard:'Dashboard',subscriptions:'All Subscriptions',fares:'Fares & Rates',locations:'Location Zones',reports:'Reports',settings:'Settings',applications:'Rider Applications'};
-
-function showPage(id,el){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById('page-'+id).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  if(el) el.classList.add('active');
-  else document.querySelectorAll('.nav-item').forEach(n=>{if(n.textContent.trim().toLowerCase().includes(id))n.classList.add('active');});
-  document.getElementById('pageTitle').textContent=pageTitles[id]||id;
-  if(window.innerWidth<=768)closeSidebar();
-  if(id==='reports')renderReports();
-  if(id==='fares'){renderFares();calcFare();}
-  if(id==='locations')renderZones();
-  if(id==='subscriptions')renderSubs();
-  if(id==='dashboard'){renderStats();renderRecentSubs();}
-  if(id==='applications'){renderApplications();updateAppBadge();}
-}
-
-function setBottomNav(id){
-  document.querySelectorAll('.bnav-item').forEach(b=>b.classList.remove('active'));
-  const el=document.getElementById('bn-'+id);
-  if(el)el.classList.add('active');
-}
-
-function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');}
-function closeSidebar(){document.getElementById('sidebar').classList.remove('open');}
-
-// ══════════════════════════════════════════════════════
-//  CURRENCY
-// ══════════════════════════════════════════════════════
-function setCurrency(v){state.currency=v;renderStats();renderRecentSubs();renderSubs();calcFare();renderReports();}
-function fmt(zmw){
-  const r=RATES[state.currency]||1;
-  const s={ZMW:'K',USD:'$',EUR:'€',GBP:'£',ZAR:'R'}[state.currency]||'K';
-  return s+(zmw*r).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
-}
 
 // ══════════════════════════════════════════════════════
 //  MODALS
@@ -1537,20 +774,7 @@ function openModal(id){document.getElementById(id).classList.add('open');}
 function closeModal(id){document.getElementById(id).classList.remove('open');}
 document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
 
-// ══════════════════════════════════════════════════════
-//  EXPIRY AUTO-CALCULATION
-// ══════════════════════════════════════════════════════
-function toDateStr(d){return d.toISOString().split('T')[0];}
-function todayStr(){return toDateStr(new Date());}
 
-function calcExpiry(){
-  const dur=parseInt(document.getElementById('subDuration').value)||0;
-  if(dur===0)return; // custom — don't overwrite
-  const startVal=document.getElementById('subStart').value||todayStr();
-  const start=new Date(startVal);
-  start.setMonth(start.getMonth()+dur);
-  document.getElementById('subExpiry').value=toDateStr(start);
-}
 
 // ══════════════════════════════════════════════════════
 //  SUBSCRIPTIONS
@@ -1610,8 +834,7 @@ function saveSub(){
   renderStats();
   renderRecentSubs();
   renderSubs();
-  buildNotifications();
-}
+  }
 
 function editSub(id){
   const subs=getSubs();
@@ -1649,8 +872,7 @@ function renewSub(id){
   subs[i]={...s,status:'active',expiry:toDateStr(newExp),start:toDateStr(startFrom)};
   save(KEYS.subs,subs);
   fbRestWrite(subs[i]);
-  renderStats();renderRecentSubs();renderSubs();buildNotifications();
-}
+  renderPublicDirectory();}
 
 function deleteSub(id){
   const subs=getSubs();
@@ -1659,15 +881,9 @@ function deleteSub(id){
   document.getElementById('confirmOkBtn').onclick=()=>{
     save(KEYS.subs,subs.filter(x=>x.id!==id));
     // Delete from Firebase
-    try{
-      const cfg=JSON.parse(localStorage.getItem('mc_fb_config')||'null');
-      if(cfg&&cfg.databaseURL){
-        fetch(cfg.databaseURL.replace(/\/$/,'')+'/motoconnect_mansa/subscriptions/'+id+'.json',{method:'DELETE'}).catch(()=>{});
-      }
-    }catch(e){}
+    fbRestDelete(id);
     closeModal('confirmModal');
-    renderStats();renderRecentSubs();renderSubs();buildNotifications();
-  };
+    renderPublicDirectory();  };
   openModal('confirmModal');
 }
 
@@ -1911,36 +1127,6 @@ function openZoneModal(){
   openModal('zoneModal');
 }
 
-// ══════════════════════════════════════════════════════
-//  NOTIFICATIONS
-// ══════════════════════════════════════════════════════
-function buildNotifications(){
-  const subs=getSubs();
-  const today=new Date();today.setHours(0,0,0,0);
-  const items=[];
-  subs.forEach(s=>{
-    if(!s.expiry)return;
-    const diff=daysLeft(s.expiry);
-    if(diff===null)return;
-    if(diff>=0&&diff<=state.warnDays&&s.status==='active'){
-      items.push({cls:'warn',title:`${s.name} — expiring in ${diff} day${diff!==1?'s':''}`,body:`${s.type} · ${s.plan} plan · ${fmt(s.price)}/mo`});
-    } else if(diff<0&&s.status!=='expired'){
-      items.push({cls:'danger',title:`${s.name} — EXPIRED ${Math.abs(diff)} days ago`,body:'Please renew or archive this subscription.'});
-    }
-  });
-  const list=document.getElementById('notifList');
-  const badge=document.getElementById('notifBadge');
-  if(!items.length){
-    list.innerHTML='<p class="text-muted" style="font-size:.82rem">No alerts right now. ✅</p>';
-    badge.style.display='none';
-  } else {
-    list.innerHTML=items.map(i=>`<div class="notif-item ${i.cls}"><strong>${esc(i.title)}</strong>${esc(i.body)}</div>`).join('');
-    badge.textContent=items.length;
-    badge.style.display='flex';
-  }
-}
-
-function toggleNotifPanel(){document.getElementById('notifPanel').classList.toggle('open');}
 
 // ══════════════════════════════════════════════════════
 //  INVOICE
@@ -2009,8 +1195,7 @@ function clearAllData(){
   document.getElementById('confirmOkBtn').onclick=()=>{
     save(KEYS.subs,[]);
     closeModal('confirmModal');
-    renderStats();renderRecentSubs();renderSubs();buildNotifications();
-  };
+    renderPublicDirectory();  };
   openModal('confirmModal');
 }
 
@@ -2050,8 +1235,7 @@ function importJSON(e){
       if(data.fares)save(KEYS.fares,data.fares);
       if(data.zones)save(KEYS.zones,data.zones);
       if(data.settings)save(KEYS.settings,data.settings);
-      applySettings();renderAll();buildNotifications();
-      alert('✅ Backup imported successfully!');
+      renderPublicDirectory();renderPubZoneTabs();      alert('✅ Backup imported successfully!');
     }catch(err){alert('❌ Invalid backup file.');}
   };
   r.readAsText(f);e.target.value='';
@@ -2072,27 +1256,13 @@ function togglePw(inputId,btn){
   else{el.type='password';btn.textContent='👁';}
 }
 
-function renderAll(){
-  renderStats();
-  renderRecentSubs();
-  renderSubs();
-  updateAppBadge();
-  // only re-render fares/zones if their page is active to avoid stomping fare estimator
-  if(document.getElementById('page-fares').classList.contains('active')){renderFares();calcFare();}
-  if(document.getElementById('page-locations').classList.contains('active'))renderZones();
-}
 
-// Fix button onclick wiring that points to openModal directly
-document.querySelectorAll('button').forEach(b=>{
-  if(b.getAttribute('onclick')==="openModal('fareModal')")b.setAttribute('onclick','openFareModal()');
-  if(b.getAttribute('onclick')==="openModal('subModal')")b.setAttribute('onclick','openNewSub()');
-  if(b.getAttribute('onclick')==="openModal('zoneModal')")b.setAttribute('onclick','openZoneModal()');
-});
+
 
 // ══════════════════════════════════════════════════════
 //  PHASE 1: PAGE ROUTING (Public / Apply / Admin)
 // ══════════════════════════════════════════════════════
-const PAGES=['publicPage','applyPage','landingPage','loginPage','app'];
+const PAGES=['publicPage','applyPage','landingPage'];
 function hideAllPages(){PAGES.forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});}
 
 function showPublicPage(){
@@ -2112,14 +1282,9 @@ function showApplyPage(){
   zoneSelect.innerHTML='<option value="">— Select Zone —</option>'+getZones().map(z=>`<option value="${esc(z.name)}">${esc(z.name)}</option>`).join('');
 }
 
-function showLoginPage(){
-  hideAllPages();
-  document.getElementById('loginPage').style.display='flex';
-}
 
-function showLandingFromPublic(){
-  showLanding();
-}
+
+
 
 // On initial load: show public directory
 window.addEventListener('DOMContentLoaded',()=>{
@@ -2310,29 +1475,14 @@ function submitApplication(){
   save(KEYS.subs,subs);
   document.getElementById('appRefDisplay').textContent=ref;
   setApplyStep(4);
-  buildNotifications();
-  updateAppBadge();
-  // Push to Firebase if config is available (so Admin panel on another device receives it)
-  try{
-    const cfg=JSON.parse(localStorage.getItem('mc_fb_config')||'null');
-    if(cfg&&cfg.databaseURL){
-      const url=cfg.databaseURL.replace(/\/$/,'')+'/motoconnect_mansa/subscriptions/'+appId+'.json';
-      fetch(url,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(app)})
-        .catch(()=>{/* offline – Admin will sync on next login if on same device */});
-    }
-  }catch(e){}
+    updateAppBadge();
+  // Push to Firebase so Admin panel receives it in real-time
+  fbRestWrite(app);
 }
 
 // ══════════════════════════════════════════════════════
 //  ADMIN: APPLICATIONS QUEUE
 // ══════════════════════════════════════════════════════
-function updateAppBadge(){
-  const pending=getSubs().filter(s=>s.status==='pending');
-  const badge=document.getElementById('appNavBadge');
-  const statPending=document.getElementById('statPending');
-  if(badge){badge.textContent=pending.length;badge.style.display=pending.length?'inline-flex':'none';}
-  if(statPending)statPending.textContent=pending.length;
-}
 
 function renderApplications(){
   const search=(document.getElementById('appSearch')?.value||'').toLowerCase();
@@ -2417,8 +1567,7 @@ function confirmApprove(){
   closeModal('approveModal');
   renderApplications();
   renderStats();
-  buildNotifications();
-  updateAppBadge();
+    updateAppBadge();
   renderPublicDirectory();
   alert('✅ Rider activated! They now appear in the public directory.');
 }
@@ -2440,14 +1589,58 @@ function rejectApp(appId){
   openModal('confirmModal');
 }
 
-// Lightweight Firebase REST write used in Mansa (no SDK)
-function fbRestWrite(item){
+// ══════════════════════════════════════════════════════
+//  FIREBASE REST (with Anonymous Auth token)
+// ══════════════════════════════════════════════════════
+const _FB_DB_URL='https://motoconnect-a0e64-default-rtdb.firebaseio.com';
+const _FB_API_KEY='AIzaSyAGqnBJXEdDU6FdQzKQSAMu2wuBHAloTBs';
+let _fbAnonToken=null;
+let _fbTokenExpiry=0;
+let _fbTokenPromise=null;
+
+async function _getAnonToken(){
+  const now=Date.now();
+  // Return cached token if still valid (with 5-min buffer)
+  if(_fbAnonToken && now < _fbTokenExpiry - 300000) return _fbAnonToken;
+  // Deduplicate concurrent calls
+  if(_fbTokenPromise) return _fbTokenPromise;
+  _fbTokenPromise=(async()=>{
+    try{
+      const res=await fetch(
+        'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key='+_FB_API_KEY,
+        {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({returnSecureToken:true})}
+      );
+      const data=await res.json();
+      if(data.idToken){
+        _fbAnonToken=data.idToken;
+        // expiresIn is in seconds
+        _fbTokenExpiry=now+(parseInt(data.expiresIn||3600)*1000);
+        return _fbAnonToken;
+      }
+    }catch(e){console.warn('FB anon auth failed:',e);}
+    return null;
+  })();
+  const token=await _fbTokenPromise;
+  _fbTokenPromise=null;
+  return token;
+}
+
+async function fbRestWrite(item){
+  if(!item||!item.id)return;
   try{
-    const cfg=JSON.parse(localStorage.getItem('mc_fb_config')||'null');
-    if(!cfg||!cfg.databaseURL||!item||!item.id)return;
-    const url=cfg.databaseURL.replace(/\/$/,'')+'/motoconnect_mansa/subscriptions/'+item.id+'.json';
+    const token=await _getAnonToken();
+    const url=_FB_DB_URL+'/motoconnect_mansa/subscriptions/'+item.id+'.json'+(token?'?auth='+token:'');
     fetch(url,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(item)})
       .catch(()=>{});
+  }catch(e){}
+}
+
+async function fbRestDelete(id){
+  if(!id)return;
+  try{
+    const token=await _getAnonToken();
+    const url=_FB_DB_URL+'/motoconnect_mansa/subscriptions/'+id+'.json'+(token?'?auth='+token:'');
+    fetch(url,{method:'DELETE'}).catch(()=>{});
   }catch(e){}
 }
 
