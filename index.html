@@ -1287,9 +1287,42 @@ function showApplyPage(){
 
 
 
-// On initial load: show public directory
+// On initial load: show public directory (local data first for instant render)
 window.addEventListener('DOMContentLoaded',()=>{
   showPublicPage();
+});
+
+// ══════════════════════════════════════════════════════
+//  FIREBASE READ — fetch live data from Firebase on load
+//  so any device always sees the latest approved riders.
+// ══════════════════════════════════════════════════════
+async function fbRestLoad(){
+  try{
+    const token=await _getAnonToken();
+    const url=_FB_DB_URL+'/motoconnect_mansa/subscriptions.json'+(token?'?auth='+token:'');
+    const res=await fetch(url);
+    if(!res.ok)return;
+    const data=await res.json();
+    if(!data||typeof data!=='object')return;
+    // Firebase returns an object map {id: record}; convert to array
+    const fbSubs=Object.values(data).filter(Boolean);
+    // Merge: Firebase (admin) is source of truth; keep any local-only records
+    const localMap={};
+    getSubs().forEach(s=>{if(s&&s.id)localMap[s.id]=s;});
+    fbSubs.forEach(s=>{if(s&&s.id)localMap[s.id]=s;});
+    save(KEYS.subs,Object.values(localMap));
+    renderPublicDirectory();
+    renderPubZoneTabs();
+  }catch(e){
+    console.warn('Firebase load failed, showing local data:',e);
+  }
+}
+
+// Load from Firebase immediately on page open, then refresh every 30s
+// so availability changes from admin appear without a manual reload.
+window.addEventListener('DOMContentLoaded',()=>{
+  fbRestLoad();
+  setInterval(fbRestLoad,30000);
 });
 
 // ══════════════════════════════════════════════════════
