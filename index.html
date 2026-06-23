@@ -605,8 +605,15 @@
               <option value="Tour Operator">🚌 Tour Operator</option>
             </select>
           </div>
-          <div class="form-row"><label>Primary Operating Zone *</label><select id="appZone"></select></div>
-          <div class="form-row"><label>Secondary Zone <span style="font-weight:400;color:rgba(255,255,255,.5);font-size:.75rem">(optional — if you cover a second area)</span></label><select id="appZone2"></select></div>
+          <div class="form-row"><label>Primary Operating Zone *</label>
+            <select id="appZone" onchange="onApplyZoneChange(1)"></select>
+            <input type="text" id="appZoneCustom" placeholder="Type the name of your area/region…" style="display:none;margin-top:.5rem" oninput="document.getElementById('appZoneCustomHint').style.display=this.value.trim()?'block':'none'"/>
+            <div id="appZoneCustomHint" style="display:none;margin-top:.4rem;font-size:.74rem;color:#fbbf24">⚠️ This is a new region — admin will review and approve it before it becomes official.</div>
+          </div>
+          <div class="form-row"><label>Secondary Zone <span style="font-weight:400;color:rgba(255,255,255,.5);font-size:.75rem">(optional — if you cover a second area)</span></label>
+            <select id="appZone2" onchange="onApplyZoneChange(2)"></select>
+            <input type="text" id="appZone2Custom" placeholder="Type the name of your second area/region…" style="display:none;margin-top:.5rem"/>
+          </div>
           <div class="form-row" style="display:flex;align-items:flex-start;gap:.5rem;padding:.5rem .6rem;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:8px;font-size:.78rem;color:rgba(255,255,255,.65)">
             <span style="flex-shrink:0">🗺️</span>
             <span>Standard &amp; Premium riders can cover all zones. Basic riders are shown only in their primary zone.</span>
@@ -1297,16 +1304,46 @@ function showPublicPage(){
 function showApplyPage(){
   hideAllPages();
   document.getElementById('applyPage').style.display='block';
-  ['appName','appPhone','appNRC','appArea','appNotes','appTxnId','appHours'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['appName','appPhone','appNRC','appArea','appNotes','appTxnId','appHours','appZoneCustom','appZone2Custom'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   const z2r=document.getElementById('appZone2');if(z2r)z2r.value='';;
   document.getElementById('appType').value='';
   setApplyStep(1);
   document.getElementById('appPlan').value='Basic';
   updatePlanInfo();
   const zoneSelect=document.getElementById('appZone');
-  zoneSelect.innerHTML='<option value="">— Select Zone —</option>'+getZones().map(z=>`<option value="${esc(z.name)}">${esc(z.name)}</option>`).join('');
+  zoneSelect.innerHTML='<option value="">— Select Zone —</option>'+getZones().map(z=>`<option value="${esc(z.name)}">${esc(z.name)}</option>`).join('')+'<option value="__custom__">✏️ Other — define my own region</option>';
   const zoneSelect2=document.getElementById('appZone2');
-  if(zoneSelect2)zoneSelect2.innerHTML='<option value="">— None —</option>'+getZones().map(z=>`<option value="${esc(z.name)}">${esc(z.name)}</option>`).join('');
+  if(zoneSelect2)zoneSelect2.innerHTML='<option value="">— None —</option>'+getZones().map(z=>`<option value="${esc(z.name)}">${esc(z.name)}</option>`).join('')+'<option value="__custom__">✏️ Other — define my own region</option>';
+  // Hide custom inputs/hints until "Other" is chosen
+  ['appZoneCustom','appZone2Custom','appZoneCustomHint'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
+}
+
+// Toggle the free-text region input when a rider picks "Other" in a zone dropdown
+function onApplyZoneChange(which){
+  const sel=document.getElementById(which===1?'appZone':'appZone2');
+  const custom=document.getElementById(which===1?'appZoneCustom':'appZone2Custom');
+  if(!sel||!custom)return;
+  const isCustom=sel.value==='__custom__';
+  custom.style.display=isCustom?'block':'none';
+  if(isCustom){custom.focus();}
+  else{
+    custom.value='';
+    if(which===1){const hint=document.getElementById('appZoneCustomHint');if(hint)hint.style.display='none';}
+  }
+}
+
+// Resolve a zone dropdown + its custom-text sibling into a final value,
+// flagging whether it's a brand-new (admin-reviewable) region.
+function resolveZoneValue(selectId,customId){
+  const sel=document.getElementById(selectId);
+  if(!sel)return{value:'',isCustom:false};
+  if(sel.value==='__custom__'){
+    const typed=(document.getElementById(customId)?.value||'').trim();
+    if(!typed)return{value:'',isCustom:false};
+    const match=getZones().find(z=>z.name.toLowerCase()===typed.toLowerCase());
+    return match?{value:match.name,isCustom:false}:{value:typed,isCustom:true};
+  }
+  return{value:sel.value,isCustom:false};
 }
 
 
@@ -1567,9 +1604,11 @@ function applyNext(fromStep){
     setApplyStep(2);
   } else if(fromStep===2){
     const type=document.getElementById('appType').value;
-    const zone=document.getElementById('appZone').value;
+    const z1=resolveZoneValue('appZone','appZoneCustom');
+    const z2=resolveZoneValue('appZone2','appZone2Custom');
+    const zone=z1.value;
     if(!type){alert('Please select a vehicle type.');return;}
-    if(!zone){alert('Please select your operating zone.');return;}
+    if(!zone){alert(document.getElementById('appZone').value==='__custom__'?'Please type the name of your operating region.':'Please select your operating zone.');return;}
     // Build review
     document.getElementById('appReviewContent').innerHTML=`
       <div><span style="color:var(--text);font-weight:600">Name:</span> ${esc(document.getElementById('appName').value)}</div>
@@ -1577,8 +1616,8 @@ function applyNext(fromStep){
       ${document.getElementById('appNRC').value?`<div><span style="color:var(--text);font-weight:600">NRC:</span> ${esc(document.getElementById('appNRC').value)}</div>`:''}
       <div><span style="color:var(--text);font-weight:600">Vehicle:</span> ${vehicleIcon(type)} ${esc(type)}</div>
       ${document.getElementById('appHours').value?`<div><span style="color:var(--text);font-weight:600">🕐 Hours:</span> ${esc(document.getElementById('appHours').value)}</div>`:''}
-      <div><span style="color:var(--text);font-weight:600">Primary Zone:</span> ${esc(zone)}</div>
-      ${document.getElementById('appZone2').value?`<div><span style="color:var(--text);font-weight:600">Secondary Zone:</span> ${esc(document.getElementById('appZone2').value)}</div>`:''}
+      <div><span style="color:var(--text);font-weight:600">Primary Zone:</span> ${esc(zone)}${z1.isCustom?' <span style="font-size:.72rem;color:var(--warn);font-weight:700">(new — pending admin approval)</span>':''}</div>
+      ${z2.value?`<div><span style="color:var(--text);font-weight:600">Secondary Zone:</span> ${esc(z2.value)}${z2.isCustom?' <span style="font-size:.72rem;color:var(--warn);font-weight:700">(new — pending admin approval)</span>':''}</div>`:''}
       <div><span style="color:var(--text);font-weight:600">Plan:</span> ${esc(document.getElementById('appPlan').value)} <span style="color:var(--accent);font-weight:700">(${({Basic:'K50',Standard:'K100',Premium:'K200'})[document.getElementById('appPlan').value]||''}/mo)</span></div>
       ${document.getElementById('appNotes').value?`<div><span style="color:var(--text);font-weight:600">Notes:</span> ${esc(document.getElementById('appNotes').value)}</div>`:''}
       ${document.getElementById('appTxnId').value?`<div><span style="color:var(--text);font-weight:600">💳 Transaction ID:</span> <span style="font-family:monospace;color:#0d9669;font-weight:700">${esc(document.getElementById('appTxnId').value)}</span></div>`:''}
@@ -1595,6 +1634,8 @@ function submitApplication(){
   const appId=uid();
   const ref='MCM-'+appId.slice(-6).toUpperCase();
   const planRaw=document.getElementById('appPlan').value;
+  const z1=resolveZoneValue('appZone','appZoneCustom');
+  const z2=resolveZoneValue('appZone2','appZone2Custom');
   const app={
     id:appId,
     ref,
@@ -1603,8 +1644,10 @@ function submitApplication(){
     nrc:document.getElementById('appNRC').value.trim(),
     area:document.getElementById('appArea').value.trim(),
     type:document.getElementById('appType').value,
-    zone:document.getElementById('appZone').value,
-    zone2:document.getElementById('appZone2')?.value.trim()||'',
+    zone:z1.value,
+    zone2:z2.value,
+    zoneCustom:z1.isCustom?z1.value:'',
+    zone2Custom:z2.isCustom?z2.value:'',
     hours:document.getElementById('appHours')?.value.trim()||'',
     plan:planRaw,
     notes:document.getElementById('appNotes').value.trim(),
@@ -1635,11 +1678,11 @@ function submitApplication(){
         'Name: '+app.name+'\n'+
         'Phone: '+app.phone+'\n'+
         'Vehicle: '+app.type+'\n'+
-        'Zone: '+app.zone+'\n'+
+        'Zone: '+app.zone+(app.zoneCustom?' ⚠️ NEW REGION - needs approval':'')+'\n'+
         'Plan: '+app.plan+' ('+( planPrice[app.plan]||'')+'/mo)\n'+
         (app.nrc?'NRC: '+app.nrc+'\n':'')+
         (app.txnId?'💳 Txn ID: '+app.txnId+'\n':'')+
-        (app.zone2?'Zone 2: '+app.zone2+'\n':'')+
+        (app.zone2?'Zone 2: '+app.zone2+(app.zone2Custom?' ⚠️ NEW REGION':'')+'\n':'')+
         (app.hours?'🕐 Hours: '+app.hours+'\n':'')+
         'Time: '+new Date().toLocaleString('en-ZM')+'\n'+
         '---\nOpen admin panel to review & approve.'
