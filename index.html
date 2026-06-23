@@ -193,6 +193,22 @@
   .mt1{margin-top:.5rem}
   .bold{font-weight:600}
 
+  /* ══ LEGAL MODALS ══════════════════════════════════ */
+  .legal-modal{max-width:620px}
+  .legal-body{padding:1.25rem 1.4rem;font-size:.85rem;line-height:1.7;color:var(--text);max-height:70vh;overflow-y:auto}
+  .legal-body h4{font-size:.9rem;font-weight:700;color:var(--sidebar-bg);margin:1.1rem 0 .35rem;padding-top:.5rem;border-top:1px solid var(--border)}
+  .legal-body h4:first-child{border-top:none;margin-top:0;padding-top:0}
+  .legal-body p{margin-bottom:.6rem;color:var(--muted)}
+  .legal-body ul{padding-left:1.2rem;color:var(--muted);margin-bottom:.6rem}
+  .legal-body ul li{margin-bottom:.3rem}
+  .legal-body strong{color:var(--text)}
+  .legal-footer-links{text-align:center;padding:1.5rem 1rem .75rem;font-size:.75rem;color:rgba(255,255,255,.45)}
+  .legal-footer-links a{color:rgba(255,255,255,.6);text-decoration:underline;cursor:pointer;background:none;border:none;font-size:.75rem;font-family:inherit}
+  .legal-footer-links a:hover{color:#fff}
+  .legal-consent{display:flex;align-items:flex-start;gap:.55rem;font-size:.78rem;color:#78350f;background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:.75rem;margin-bottom:1rem}
+  .legal-consent input[type=checkbox]{margin-top:.15rem;flex-shrink:0;accent-color:var(--accent);width:15px;height:15px}
+  .legal-consent a{color:var(--accent);text-decoration:underline;cursor:pointer;background:none;border:none;font-size:.78rem;font-family:inherit;padding:0}
+
   /* ══ LANDING PAGE ══════════════════════════════════ */
   #landingPage{
     position:fixed;inset:0;z-index:9999;
@@ -566,6 +582,11 @@
   <div id="pubZoneGroupBanner" style="display:none;align-items:center;gap:.75rem;margin:0 1.5rem .5rem;padding:.6rem 1rem;background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.3);border-radius:10px;flex-wrap:wrap"></div>
   <div class="pub-stats-row" id="pubStatsRow"></div>
   <div class="pub-grid" id="pubGrid"></div>
+  <div class="legal-footer-links">
+    &copy; 2025 MotoConnect Mansa &mdash; Mansa, Luapula Province, Zambia<br/>
+    <a onclick="openModal('tosModal')">Terms of Service</a> &nbsp;&bull;&nbsp;
+    <a onclick="openModal('privacyModal')">Privacy Policy</a>
+  </div>
 </div>
 
 <!-- ══ APPLY PAGE ════════════════════════════════════════ -->
@@ -650,6 +671,10 @@
           <div style="background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:.75rem;font-size:.78rem;color:#92400e;margin-bottom:1rem">
             ⚠️ Your application will be reviewed by admin. You will be contacted on your phone once approved.
           </div>
+          <label class="legal-consent">
+            <input type="checkbox" id="appTosConsent"/>
+            <span>I agree to the <button type="button" onclick="openModal('tosModal')">Terms of Service</button> and <button type="button" onclick="openModal('privacyModal')">Privacy Policy</button> of MotoConnect Mansa.</span>
+          </label>
           <div class="apply-nav">
             <button class="btn btn-ghost btn-sm" onclick="applyBack(3)">← Back</button>
             <button class="btn btn-success btn-sm" onclick="submitApplication()">✅ Submit Application</button>
@@ -672,6 +697,141 @@
       </div>
     </div>
     <span class="apply-back-link" onclick="showPublicPage()">← Back to rider directory</span>
+  </div>
+</div>
+
+<!-- ══ TERMS OF SERVICE MODAL ════════════════════════════ -->
+<div class="overlay" id="tosModal">
+  <div class="modal legal-modal">
+    <div class="modal-header">
+      <h3>📄 Terms of Service</h3>
+      <button class="close-btn" onclick="closeModal('tosModal')">✕</button>
+    </div>
+    <div class="legal-body">
+      <p><strong>Effective Date: 1 January 2025</strong><br/>
+      These Terms of Service ("Terms") govern your use of the MotoConnect Mansa platform ("Platform"), operated by <strong>NEXLITE DIGITAL SOLUTIONS LIMITED</strong> (trading as Digital Frontier Technologies), a company registered in Zambia ("we", "us", "our").</p>
+
+      <h4>1. Acceptance of Terms</h4>
+      <p>By accessing the Platform, submitting a rider application, or using any feature of MotoConnect Mansa, you confirm that you have read, understood, and agree to be bound by these Terms and our Privacy Policy. If you do not agree, do not use the Platform.</p>
+
+      <h4>2. The Platform</h4>
+      <p>MotoConnect Mansa is a transport subscription management platform that connects riders (motorbike operators, taxi operators, tour operators) with customers in Mansa, Luapula Province, Zambia. The Platform facilitates subscription management, public rider directories, and booking enquiries. We do not provide transport services directly.</p>
+
+      <h4>3. Rider Registration &amp; Subscriptions</h4>
+      <ul>
+        <li>You must provide accurate and complete information when submitting a rider application.</li>
+        <li>Applications are subject to admin review and approval. We reserve the right to reject any application without stating a reason.</li>
+        <li>Subscriptions are offered on Basic (K50/month), Standard (K100/month), and Premium (K200/month) plans. Fees are payable in advance via Airtel Money or MTN Mobile Money.</li>
+        <li>Subscriptions are non-refundable once activated.</li>
+        <li>Your listing may be removed if you fail to renew your subscription or if you violate these Terms.</li>
+      </ul>
+
+      <h4>4. Acceptable Use</h4>
+      <p>You must not:</p>
+      <ul>
+        <li>Provide false personal or vehicle information.</li>
+        <li>Use the Platform to engage in illegal, fraudulent, or harmful activities.</li>
+        <li>Harass, threaten, or deceive customers or other riders.</li>
+        <li>Attempt to gain unauthorised access to the admin panel or any restricted part of the Platform.</li>
+        <li>Scrape, copy, or redistribute Platform data without our written permission.</li>
+      </ul>
+
+      <h4>5. Platform Availability</h4>
+      <p>We aim to keep MotoConnect Mansa available at all times but do not guarantee uninterrupted access. We may suspend or modify the Platform for maintenance, updates, or any other reason without notice. We are not liable for any loss resulting from unavailability of the Platform.</p>
+
+      <h4>6. Intellectual Property</h4>
+      <p>All content, design, and software on the Platform is owned by NEXLITE DIGITAL SOLUTIONS LIMITED or its licensors. You may not reproduce, modify, or distribute any part of the Platform without our prior written consent.</p>
+
+      <h4>7. Limitation of Liability</h4>
+      <p>To the fullest extent permitted by Zambian law, we are not liable for any indirect, incidental, or consequential loss arising from your use of the Platform, including loss of income, disputes with customers, or transport incidents. Our total liability to you shall not exceed the subscription fees paid by you in the three months preceding the claim.</p>
+
+      <h4>8. Governing Law</h4>
+      <p>These Terms are governed by the laws of the Republic of Zambia. Any disputes shall be subject to the exclusive jurisdiction of the courts of Zambia.</p>
+
+      <h4>9. Changes to Terms</h4>
+      <p>We may update these Terms from time to time. Continued use of the Platform after changes are posted constitutes acceptance of the revised Terms.</p>
+
+      <h4>10. Contact</h4>
+      <p>For questions about these Terms, contact us via WhatsApp or phone at <strong>+260 977 638790</strong> or <strong>+260 960 27118</strong>.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('tosModal')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PRIVACY POLICY MODAL ════════════════════════════════ -->
+<div class="overlay" id="privacyModal">
+  <div class="modal legal-modal">
+    <div class="modal-header">
+      <h3>🔒 Privacy Policy</h3>
+      <button class="close-btn" onclick="closeModal('privacyModal')">✕</button>
+    </div>
+    <div class="legal-body">
+      <p><strong>Effective Date: 1 January 2025</strong><br/>
+      This Privacy Policy explains how <strong>NEXLITE DIGITAL SOLUTIONS LIMITED</strong> (trading as Digital Frontier Technologies) collects, uses, and protects personal data through the MotoConnect Mansa platform ("Platform"). We are committed to compliance with the <strong>Zambia Data Protection Act, 2021</strong>.</p>
+
+      <h4>1. Data We Collect</h4>
+      <p>When you use the Platform, we may collect:</p>
+      <ul>
+        <li><strong>Personal identifiers:</strong> Full name, NRC number, phone number, home area/neighbourhood.</li>
+        <li><strong>Vehicle information:</strong> Vehicle type, operating zones, operating hours, preferred subscription plan.</li>
+        <li><strong>Payment references:</strong> Airtel Money or MTN Mobile Money transaction IDs (we do not store account PINs or full payment credentials).</li>
+        <li><strong>Application notes:</strong> Any additional information you voluntarily provide in the notes field.</li>
+        <li><strong>Usage data:</strong> Device type, browser, approximate location (if you permit), and interaction logs for platform improvement.</li>
+      </ul>
+
+      <h4>2. How We Use Your Data</h4>
+      <ul>
+        <li>To process and manage your rider application and subscription.</li>
+        <li>To display your profile (name, vehicle type, zone, availability) in the public rider directory.</li>
+        <li>To contact you via phone or WhatsApp regarding your subscription, renewal reminders, or application status.</li>
+        <li>To verify payment and issue renewal notices.</li>
+        <li>To improve and maintain the Platform.</li>
+      </ul>
+
+      <h4>3. Public Directory</h4>
+      <p>If your application is approved and your subscription is active, the following information will be visible publicly on the MotoConnect Mansa rider directory: <strong>name, vehicle type, operating zone, availability status, operating hours, and contact phone number</strong>. By submitting an application, you consent to this public display. You may request removal at any time by contacting us.</p>
+
+      <h4>4. Data Sharing</h4>
+      <p>We do not sell your personal data. We may share data with:</p>
+      <ul>
+        <li><strong>Firebase (Google LLC):</strong> Our cloud database provider, used to sync rider data across admin devices. Data is stored in accordance with Google's security practices.</li>
+        <li><strong>Platform administrators:</strong> Staff authorised to manage the Platform.</li>
+        <li><strong>Legal authorities:</strong> Where required by Zambian law or a lawful order.</li>
+      </ul>
+
+      <h4>5. Data Retention</h4>
+      <p>We retain your personal data for as long as your subscription is active plus a period of 12 months thereafter, unless you request deletion earlier. Expired or rejected applications may be retained for up to 6 months for administrative purposes.</p>
+
+      <h4>6. Your Rights</h4>
+      <p>Under the Zambia Data Protection Act, 2021, you have the right to:</p>
+      <ul>
+        <li>Access the personal data we hold about you.</li>
+        <li>Request correction of inaccurate data.</li>
+        <li>Request deletion of your data (subject to legal obligations).</li>
+        <li>Withdraw consent at any time (this may result in removal from the directory).</li>
+        <li>Lodge a complaint with the Zambia Information and Communications Technology Authority (ZICTA).</li>
+      </ul>
+
+      <h4>7. Data Security</h4>
+      <p>We implement reasonable technical and organisational measures to protect your personal data, including encrypted cloud storage via Firebase and access controls on the admin panel. No system is completely secure; please contact us immediately if you believe your data has been compromised.</p>
+
+      <h4>8. Cookies &amp; Local Storage</h4>
+      <p>The Platform uses browser localStorage to store subscription data locally on your device for offline functionality. No tracking cookies are used. No advertising networks have access to your data through this Platform.</p>
+
+      <h4>9. Children's Privacy</h4>
+      <p>The Platform is not intended for persons under 18 years of age. We do not knowingly collect data from minors. If you believe a minor has submitted data, please contact us for immediate removal.</p>
+
+      <h4>10. Contact &amp; Complaints</h4>
+      <p>For any privacy enquiries or to exercise your rights, contact us:<br/>
+      <strong>NEXLITE DIGITAL SOLUTIONS LIMITED</strong> (t/a Digital Frontier Technologies)<br/>
+      Mansa, Luapula Province, Zambia<br/>
+      WhatsApp / Phone: <strong>+260 977 638790</strong> or <strong>+260 960 27118</strong></p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('privacyModal')">Close</button>
+    </div>
   </div>
 </div>
 
@@ -1631,6 +1791,10 @@ function applyBack(fromStep){
 }
 
 function submitApplication(){
+  if(!document.getElementById('appTosConsent').checked){
+    alert('Please agree to the Terms of Service and Privacy Policy before submitting.');
+    return;
+  }
   const appId=uid();
   const ref='MCM-'+appId.slice(-6).toUpperCase();
   const planRaw=document.getElementById('appPlan').value;
