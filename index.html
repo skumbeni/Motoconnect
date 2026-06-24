@@ -646,7 +646,15 @@
   </header>
   <script>
     // Hide download button when running inside the Median native app
-    if(window.median){document.getElementById('downloadAppBtn').style.display='none';}
+    function _hideDownloadIfMedian(){
+      if(window.median||navigator.userAgent.includes('median')||window.medianBridge){
+        var btn=document.getElementById('downloadAppBtn');
+        if(btn)btn.style.display='none';
+      }
+    }
+    _hideDownloadIfMedian();
+    document.addEventListener('DOMContentLoaded',_hideDownloadIfMedian);
+    setTimeout(_hideDownloadIfMedian,500);
   </script>
 
   <div class="pub-hero">
