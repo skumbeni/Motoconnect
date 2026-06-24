@@ -640,9 +640,14 @@
   <header class="pub-header">
     <div class="pub-logo">🏍️ Moto<span>Connect</span> <span style="font-size:.7rem;color:rgba(255,255,255,.5);font-weight:400">Zambia</span></div>
     <div class="pub-header-actions">
+      <a id="downloadAppBtn" class="btn-pub-apply" href="https://github.com/skumbeni/motoconnect-mansa/releases/latest/download/motoconnect.apk" style="background:linear-gradient(135deg,#1e3a5f,#2d5a8e);color:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:.4rem" download>📲 Download App</a>
       <button class="btn-pub-apply" onclick="showApplyPage()">🚀 Apply as Rider</button>
     </div>
   </header>
+  <script>
+    // Hide download button when running inside the Median native app
+    if(window.median){document.getElementById('downloadAppBtn').style.display='none';}
+  </script>
 
   <div class="pub-hero">
     <h1 id="pubHeroTitle">Find a <span>Ride</span> in Zambia</h1>
