@@ -3239,13 +3239,14 @@ function renderPublicDirectory(){
   }
   if(_pubZoneFilter)riders=riders.filter(s=>(s.zone||'').includes(_pubZoneFilter)||(s.zone2||'').includes(_pubZoneFilter)||(_pubZoneFilter&&(s.notes||'').toLowerCase().includes(_pubZoneFilter.toLowerCase())));
 
-  // Stats row
+  // Stats row — always shows platform-wide totals (not filtered by zone)
   const statsEl=document.getElementById('pubStatsRow');
   if(statsEl){
     const allActive=getSubs().filter(s=>s.status==='active'&&(!s.expiry||new Date(s.expiry)>=today));
     const avail=allActive.filter(s=>(s.availability||'available')==='available');
+    const loadingHint=!_pubDirLoaded?'<span style="font-size:.65rem;opacity:.55"> (loading…)</span>':'';
     statsEl.innerHTML=`
-      <div class="pub-stat"><strong>${allActive.length}</strong> Registered Riders</div>
+      <div class="pub-stat"><strong>${allActive.length}</strong> Registered Riders${loadingHint}</div>
       <div class="pub-stat"><strong>${avail.length}</strong> Available Now</div>
       <div class="pub-stat"><strong>${getZones().length}</strong> Operating Zones</div>
     `;
