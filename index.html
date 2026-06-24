@@ -4,12 +4,13 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
 <title>MotoConnect Zambia</title>
-<meta name="description" content="MotoConnect Zambia — Transport subscription management"/>
+<meta name="description" content="MotoConnect Zambia — Find motorbike taxis, taxis &amp; trucks near you across Zambia"/>
 <meta name="theme-color" content="#1e3a5f"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="MotoConnect"/>
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='36' fill='%231e3a5f'/%3E%3Ccircle cx='58' cy='128' r='18' fill='none' stroke='%23fbbf24' stroke-width='7'/%3E%3Ccircle cx='134' cy='128' r='18' fill='none' stroke='%23fbbf24' stroke-width='7'/%3E%3Cpath d='M58 128 L80 90 L110 90 L130 110 L134 128' fill='none' stroke='%23fbbf24' stroke-width='7' stroke-linejoin='round' stroke-linecap='round'/%3E%3Cpath d='M100 90 L115 70 L130 70' fill='none' stroke='%23fbbf24' stroke-width='6' stroke-linecap='round'/%3E%3Ccircle cx='130' cy='70' r='5' fill='%23fbbf24'/%3E%3Ctext x='96' y='170' font-family='Arial,sans-serif' font-size='22' font-weight='900' text-anchor='middle' fill='%23fbbf24' letter-spacing='1'%3EZAMBIA%3C/text%3E%3C/svg%3E"/>
 <link rel="manifest" id="pwaManifest"/>
 <style>
   :root {
@@ -587,6 +588,47 @@
 
   /* pending badge on nav */
   .nav-badge{display:inline-flex;align-items:center;justify-content:center;background:#f59e0b;color:#000;border-radius:50%;width:18px;height:18px;font-size:.65rem;font-weight:800;margin-left:auto}
+
+  /* ══ COMBO ZONE WIDGET (modal + apply page) ══════════════ */
+  .cz-wrap{position:relative;width:100%}
+  .cz-input{
+    width:100%;background:var(--surface2);border:1.5px solid var(--border);
+    border-radius:8px;padding:.65rem .8rem;color:var(--text);font-size:.9rem;
+    outline:none;transition:border .2s;font-family:inherit;cursor:text;
+  }
+  .cz-input:focus{border-color:var(--accent)}
+  .cz-input.has-value{border-color:var(--accent2);background:#f0fdf4}
+  .cz-dropdown{
+    position:absolute;top:calc(100% + 3px);left:0;right:0;
+    background:#fff;border:1.5px solid var(--border);border-radius:8px;
+    max-height:200px;overflow-y:auto;z-index:500;display:none;
+    box-shadow:0 6px 24px rgba(30,58,95,.14);
+  }
+  .cz-dropdown.open{display:block}
+  .cz-dditem{
+    padding:.5rem .85rem;font-size:.85rem;color:var(--text);cursor:pointer;
+    border-bottom:1px solid #f0f2f6;
+  }
+  .cz-dditem:last-child{border-bottom:none}
+  .cz-dditem:hover,.cz-dditem.cz-active{background:var(--accent-light);color:var(--accent)}
+  .cz-dditem mark{background:transparent;color:var(--accent);font-weight:700}
+  .cz-custom-row{
+    padding:.5rem .85rem;font-size:.82rem;color:var(--warn);
+    cursor:pointer;border-top:1px dashed var(--border);
+    display:flex;align-items:center;gap:.4rem;font-weight:600;
+  }
+  .cz-custom-row:hover{background:var(--warn-light)}
+  .cz-new-badge{
+    display:inline-block;background:var(--warn-light);border:1px solid #fcd34d;
+    color:#92400e;border-radius:6px;padding:.3rem .7rem;font-size:.75rem;
+    font-weight:600;margin-top:.4rem;
+  }
+  .cz-clear{
+    position:absolute;right:.65rem;top:50%;transform:translateY(-50%);
+    background:none;border:none;cursor:pointer;color:var(--muted);font-size:.85rem;
+    line-height:1;padding:.15rem;display:none;
+  }
+  .cz-clear.visible{display:block}
 </style>
 </head>
 <body>
@@ -683,13 +725,31 @@
             </select>
           </div>
           <div class="form-row"><label>Primary Operating Zone *</label>
-            <select id="appZone" onchange="onApplyZoneChange(1)"></select>
-            <input type="text" id="appZoneCustom" placeholder="Type the name of your area/region…" style="display:none;margin-top:.5rem" oninput="document.getElementById('appZoneCustomHint').style.display=this.value.trim()?'block':'none'"/>
-            <div id="appZoneCustomHint" style="display:none;margin-top:.4rem;font-size:.74rem;color:#fbbf24">⚠️ This is a new region — admin will review and approve it before it becomes official.</div>
+            <div class="cz-wrap">
+              <input type="text" class="cz-input" id="appZoneInput" placeholder="🔍 Search or type your zone…" autocomplete="off"
+                oninput="czOnInput('appZoneInput','czDrop1','appZone','appZoneCustom','appZoneCustomHint','czClear1')"
+                onfocus="czOnFocus('appZoneInput','czDrop1','appZone','appZoneCustom')"
+                onblur="czOnBlur('czDrop1')"
+                onkeydown="czOnKey(event,'czDrop1','appZone','appZoneInput','appZoneCustom','appZoneCustomHint','czClear1')"/>
+              <button class="cz-clear" id="czClear1" onclick="czClear('appZoneInput','czDrop1','appZone','appZoneCustom','czClear1','appZoneCustomHint')" title="Clear">✕</button>
+              <div class="cz-dropdown" id="czDrop1"></div>
+            </div>
+            <input type="hidden" id="appZone" value=""/>
+            <input type="hidden" id="appZoneCustom" value=""/>
+            <div id="appZoneCustomHint" style="display:none;margin-top:.4rem" class="cz-new-badge">⚠️ New region — admin will review before it goes live</div>
           </div>
           <div class="form-row"><label>Secondary Zone <span style="font-weight:400;color:var(--muted);font-size:.75rem">(optional — if you cover a second area)</span></label>
-            <select id="appZone2" onchange="onApplyZoneChange(2)"></select>
-            <input type="text" id="appZone2Custom" placeholder="Type the name of your second area/region…" style="display:none;margin-top:.5rem"/>
+            <div class="cz-wrap">
+              <input type="text" class="cz-input" id="appZone2Input" placeholder="🔍 Search or leave blank…" autocomplete="off"
+                oninput="czOnInput('appZone2Input','czDrop2','appZone2','appZone2Custom',null,'czClear2')"
+                onfocus="czOnFocus('appZone2Input','czDrop2','appZone2','appZone2Custom')"
+                onblur="czOnBlur('czDrop2')"
+                onkeydown="czOnKey(event,'czDrop2','appZone2','appZone2Input','appZone2Custom',null,'czClear2')"/>
+              <button class="cz-clear" id="czClear2" onclick="czClear('appZone2Input','czDrop2','appZone2','appZone2Custom','czClear2',null)" title="Clear">✕</button>
+              <div class="cz-dropdown" id="czDrop2"></div>
+            </div>
+            <input type="hidden" id="appZone2" value=""/>
+            <input type="hidden" id="appZone2Custom" value=""/>
           </div>
           <div class="form-row" style="display:flex;align-items:flex-start;gap:.5rem;padding:.5rem .6rem;background:#f0f4f8;border:1px solid var(--border);border-radius:8px;font-size:.78rem;color:var(--muted)">
             <span style="flex-shrink:0">🗺️</span>
@@ -968,7 +1028,26 @@ function showLanding(){
 //  PWA — MANIFEST + SERVICE WORKER + INSTALL PROMPT
 // ══════════════════════════════════════════════════════
 (function(){
-  const m={name:"MotoConnect Zambia",short_name:"MotoConnect",description:"Transport subscription platform",start_url:"./",display:"standalone",background_color:"#1e3a5f",theme_color:"#1e3a5f",orientation:"portrait-primary",icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='32' fill='%231e3a5f'/%3E%3Ctext x='96' y='140' font-size='120' text-anchor='middle'%3E%F0%9F%8F%8D%EF%B8%8F%3C/text%3E%3C/svg%3E",sizes:"192x192",type:"image/svg+xml"},{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='80' fill='%231e3a5f'/%3E%3Ctext x='256' y='360' font-size='300' text-anchor='middle'%3E%F0%9F%8F%8D%EF%B8%8F%3C/text%3E%3C/svg%3E",sizes:"512x512",type:"image/svg+xml"}]};
+  // Icon SVG — navy rounded square, amber "MCZ" monogram + motorbike
+  const iconSvg192=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><rect width="192" height="192" rx="36" fill="#1e3a5f"/><rect x="8" y="8" width="176" height="176" rx="30" fill="#1e3a5f"/><circle cx="58" cy="128" r="18" fill="none" stroke="#fbbf24" stroke-width="7"/><circle cx="134" cy="128" r="18" fill="none" stroke="#fbbf24" stroke-width="7"/><path d="M58 128 L80 90 L110 90 L130 110 L134 128" fill="none" stroke="#fbbf24" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/><path d="M100 90 L115 70 L130 70" fill="none" stroke="#fbbf24" stroke-width="6" stroke-linecap="round"/><circle cx="130" cy="70" r="5" fill="#fbbf24"/><text x="96" y="170" font-family="Arial,sans-serif" font-size="22" font-weight="900" text-anchor="middle" fill="#fbbf24" letter-spacing="1">ZAMBIA</text></svg>`;
+  const iconSvg512=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="96" fill="#1e3a5f"/><circle cx="152" cy="340" r="52" fill="none" stroke="#fbbf24" stroke-width="20"/><circle cx="360" cy="340" r="52" fill="none" stroke="#fbbf24" stroke-width="20"/><path d="M152 340 L210 230 L295 230 L348 292 L360 340" fill="none" stroke="#fbbf24" stroke-width="20" stroke-linejoin="round" stroke-linecap="round"/><path d="M268 230 L308 175 L348 175" fill="none" stroke="#fbbf24" stroke-width="18" stroke-linecap="round"/><circle cx="348" cy="175" r="14" fill="#fbbf24"/><text x="256" y="460" font-family="Arial,sans-serif" font-size="58" font-weight="900" text-anchor="middle" fill="#fbbf24" letter-spacing="2">ZAMBIA</text><text x="256" y="110" font-family="Arial,sans-serif" font-size="48" font-weight="900" text-anchor="middle" fill="rgba(255,255,255,.85)" letter-spacing="1">MotoConnect</text></svg>`;
+
+  const enc=s=>'data:image/svg+xml,'+encodeURIComponent(s);
+  const m={
+    name:"MotoConnect Zambia",
+    short_name:"MotoConnect",
+    description:"Zambia's transport rider directory — find motorbike taxis, taxis & trucks near you",
+    start_url:"./",
+    scope:"./",
+    display:"standalone",
+    background_color:"#1e3a5f",
+    theme_color:"#1e3a5f",
+    orientation:"portrait-primary",
+    icons:[
+      {src:enc(iconSvg192),sizes:"192x192",type:"image/svg+xml",purpose:"any maskable"},
+      {src:enc(iconSvg512),sizes:"512x512",type:"image/svg+xml",purpose:"any maskable"}
+    ]
+  };
   try{
     const b=new Blob([JSON.stringify(m)],{type:'application/json'});
     document.getElementById('pwaManifest').href=URL.createObjectURL(b);
@@ -979,7 +1058,6 @@ let _deferredInstall=null;
 window.addEventListener('beforeinstallprompt',e=>{
   e.preventDefault();
   _deferredInstall=e;
-  // Show banner after 3s if not already installed
   if(!window.matchMedia('(display-mode: standalone)').matches){
     setTimeout(()=>document.getElementById('installBanner').classList.add('show'),3000);
   }
@@ -997,10 +1075,38 @@ function dismissInstall(){
   try{localStorage.setItem('mc_install_dismissed','1');}catch(e){}
 }
 
-// Service worker (blob-based, works from any host / file://)
+// Service Worker — cache-first with network fallback, versioned
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{
-    const sw=`const C='mc-v2';self.addEventListener('install',e=>e.waitUntil(caches.open(C).then(c=>c.add(self.location.href||'/'))));self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==C).map(k=>caches.delete(k))))));self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).catch(()=>caches.match(self.location.href||'/')))));`;
+    const CACHE='mc-zambia-v1';
+    const sw=`
+const CACHE='mc-zambia-v1';
+const OFFLINE_PAGE=self.location.href.replace(/\\/sw.*$/,'');
+self.addEventListener('install',e=>{
+  e.waitUntil(caches.open(CACHE).then(c=>c.add(OFFLINE_PAGE)).catch(()=>{}));
+  self.skipWaiting();
+});
+self.addEventListener('activate',e=>{
+  e.waitUntil(
+    caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k))))
+    .then(()=>self.clients.claim())
+  );
+});
+self.addEventListener('fetch',e=>{
+  if(e.request.method!=='GET')return;
+  e.respondWith(
+    caches.match(e.request).then(cached=>{
+      const network=fetch(e.request).then(res=>{
+        if(res&&res.status===200&&res.type==='basic'){
+          const clone=res.clone();
+          caches.open(CACHE).then(c=>c.put(e.request,clone));
+        }
+        return res;
+      }).catch(()=>cached||caches.match(OFFLINE_PAGE));
+      return cached||network;
+    })
+  );
+});`;
     try{
       const b=new Blob([sw],{type:'text/javascript'});
       navigator.serviceWorker.register(URL.createObjectURL(b),{scope:'./'}).catch(()=>{});
@@ -1011,7 +1117,7 @@ if('serviceWorker' in navigator){
 // ══════════════════════════════════════════════════════
 //  STATE & PERSISTENCE
 // ══════════════════════════════════════════════════════
-const KEYS={subs:'mc_subscriptions',fares:'mc_fares',zones:'mc_zones_v2',settings:'mc_settings'};
+const KEYS={subs:'mc_subscriptions',fares:'mc_fares',zones:'mc_zones_v2',settings:'mc_settings',pendingSync:'mc_pending_sync'};
 const RATES={ZMW:1,USD:0.049,EUR:0.046,GBP:0.040,ZAR:0.90};
 let state={currency:'ZMW',warnDays:7,adminName:'Admin User'};
 
@@ -2011,9 +2117,11 @@ function showPublicPage(){
 function showApplyPage(){
   hideAllPages();
   document.getElementById('applyPage').style.display='block';
-  ['appName','appPhone','appPhone2','appNRC','appArea','appNotes','appTxnId','appHours','appZoneCustom','appZone2Custom'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-  const z2r=document.getElementById('appZone2');if(z2r)z2r.value='';;
+  ['appName','appPhone','appPhone2','appNRC','appArea','appNotes','appTxnId','appHours'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   document.getElementById('appType').value='';
+  // Reset combo zone widgets
+  czClear('appZoneInput','czDrop1','appZone','appZoneCustom','czClear1','appZoneCustomHint');
+  czClear('appZone2Input','czDrop2','appZone2','appZone2Custom','czClear2',null);
   // Reset photos
   _appPhoto1Base64=''; _appPhoto2Base64='';
   [1,2].forEach(n=>{
@@ -2025,41 +2133,164 @@ function showApplyPage(){
   setApplyStep(1);
   document.getElementById('appPlan').value='Basic';
   updatePlanInfo();
-  const zoneSelect=document.getElementById('appZone');
-  zoneSelect.innerHTML='<option value="">— Select Zone —</option>'+getZones().map(z=>`<option value="${esc(z.name)}">${esc(z.name)}</option>`).join('')+'<option value="__custom__">✏️ Other — define my own region</option>';
-  const zoneSelect2=document.getElementById('appZone2');
-  if(zoneSelect2)zoneSelect2.innerHTML='<option value="">— None —</option>'+getZones().map(z=>`<option value="${esc(z.name)}">${esc(z.name)}</option>`).join('')+'<option value="__custom__">✏️ Other — define my own region</option>';
-  // Hide custom inputs/hints until "Other" is chosen
-  ['appZoneCustom','appZone2Custom','appZoneCustomHint'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
 }
 
-// Toggle the free-text region input when a rider picks "Other" in a zone dropdown
-function onApplyZoneChange(which){
-  const sel=document.getElementById(which===1?'appZone':'appZone2');
-  const custom=document.getElementById(which===1?'appZoneCustom':'appZone2Custom');
-  if(!sel||!custom)return;
-  const isCustom=sel.value==='__custom__';
-  custom.style.display=isCustom?'block':'none';
-  if(isCustom){custom.focus();}
-  else{
-    custom.value='';
-    if(which===1){const hint=document.getElementById('appZoneCustomHint');if(hint)hint.style.display='none';}
-  }
-}
+// onApplyZoneChange replaced by combo zone widget (czOnInput / czSelect / czSelectCustom)
 
-// Resolve a zone dropdown + its custom-text sibling into a final value,
+// Resolve zone hidden input + its custom-text sibling into a final value,
 // flagging whether it's a brand-new (admin-reviewable) region.
-function resolveZoneValue(selectId,customId){
-  const sel=document.getElementById(selectId);
-  if(!sel)return{value:'',isCustom:false};
-  if(sel.value==='__custom__'){
-    const typed=(document.getElementById(customId)?.value||'').trim();
-    if(!typed)return{value:'',isCustom:false};
-    const match=getZones().find(z=>z.name.toLowerCase()===typed.toLowerCase());
-    return match?{value:match.name,isCustom:false}:{value:typed,isCustom:true};
+function resolveZoneValue(hiddenId,customId){
+  const hid=document.getElementById(hiddenId);
+  const value=(hid?.value||'').trim();
+  if(!value)return{value:'',isCustom:false};
+  const customVal=(document.getElementById(customId)?.value||'').trim();
+  // isCustom if the customId field has content (set by czSelectCustom)
+  if(customVal){
+    const match=getZones().find(z=>z.name.toLowerCase()===value.toLowerCase());
+    return match?{value:match.name,isCustom:false}:{value,isCustom:true};
   }
-  return{value:sel.value,isCustom:false};
+  return{value,isCustom:false};
 }
+// ══════════════════════════════════════════════════════
+//  COMBO ZONE WIDGET — shared by Apply page (appZone/appZone2)
+//  Uses data-value attributes + delegated click to avoid
+//  apostrophe-in-zone-name quoting issues.
+// ══════════════════════════════════════════════════════
+
+function _czOpen(ddId, q, hiddenId, inputId, customId, hintId, clearId){
+  const dd=document.getElementById(ddId);
+  if(!dd)return;
+  const zones=getZones().map(z=>z.name);
+  const all=[...new Set(zones)].sort();
+  const qL=(q||'').trim().toLowerCase();
+  const matches=qL?all.filter(n=>n.toLowerCase().includes(qL)).slice(0,40):all.slice(0,40);
+
+  let html=matches.map(n=>{
+    const hi=qL?n.replace(new RegExp('('+qL.replace(/[.*+?^${}()|[\]]/g,'\$&')+')','gi'),'<mark>$1</mark>'):esc(n);
+    // Store the raw name in data-val; click handler reads it safely
+    return '<div class="cz-dditem" data-val="'+n.replace(/"/g,'&quot;')+'">'+hi+'</div>';
+  }).join('');
+  html+='<div class="cz-dditem cz-custom-row">✏️ My zone isn&#39;t listed — enter it</div>';
+  dd.innerHTML=html;
+
+  // Event delegation — one listener per open, replaced each time
+  dd._czHandler && dd.removeEventListener('mousedown', dd._czHandler);
+  dd._czHandler=function(e){
+    const item=e.target.closest('.cz-dditem');
+    if(!item)return;
+    e.preventDefault();
+    if(item.classList.contains('cz-custom-row')){
+      _czCustomEntry(hiddenId,inputId,ddId,customId,hintId,clearId);
+    }else{
+      const name=item.getAttribute('data-val');
+      _czPickName(name,hiddenId,inputId,ddId,customId,hintId,clearId);
+    }
+  };
+  dd.addEventListener('mousedown', dd._czHandler);
+  dd.classList.add('open');
+}
+
+function _czPickName(name,hiddenId,inputId,ddId,customId,hintId,clearId){
+  const hid=document.getElementById(hiddenId);
+  const inp=document.getElementById(inputId);
+  const dd=document.getElementById(ddId);
+  const cust=document.getElementById(customId);
+  const hint=hintId?document.getElementById(hintId):null;
+  const clr=clearId?document.getElementById(clearId):null;
+  if(hid)hid.value=name;
+  if(inp){inp.value=name;inp.classList.add('has-value');}
+  if(dd)dd.classList.remove('open');
+  if(cust)cust.value='';
+  if(hint)hint.style.display='none';
+  if(clr)clr.classList.add('visible');
+}
+
+function _czCustomEntry(hiddenId,inputId,ddId,customId,hintId,clearId){
+  const dd=document.getElementById(ddId);
+  if(dd)dd.classList.remove('open');
+  const typed=(prompt('Enter the name of your operating zone/area:','')||'').trim();
+  if(!typed)return;
+  const hid=document.getElementById(hiddenId);
+  const inp=document.getElementById(inputId);
+  const cust=document.getElementById(customId);
+  const hint=hintId?document.getElementById(hintId):null;
+  const clr=clearId?document.getElementById(clearId):null;
+  if(hid)hid.value=typed;
+  if(cust)cust.value=typed;
+  if(inp){inp.value=typed;inp.classList.add('has-value');}
+  if(hint)hint.style.display='block';
+  if(clr)clr.classList.add('visible');
+}
+
+function czOnInput(inputId,ddId,hiddenId,customId,hintId,clearId){
+  const inp=document.getElementById(inputId);
+  _czOpen(ddId,inp?inp.value:'',hiddenId,inputId,customId,hintId,clearId);
+}
+
+function czOnFocus(inputId,ddId,hiddenId,customId){
+  const inp=document.getElementById(inputId);
+  _czOpen(ddId,inp?inp.value:'',hiddenId,inputId,customId,null,null);
+}
+
+function czOnBlur(ddId){
+  setTimeout(()=>{const dd=document.getElementById(ddId);if(dd)dd.classList.remove('open');},200);
+}
+
+function czClear(inputId,ddId,hiddenId,customId,clearId,hintId){
+  const inp=document.getElementById(inputId);
+  const hid=document.getElementById(hiddenId);
+  const cust=document.getElementById(customId);
+  const hint=hintId?document.getElementById(hintId):null;
+  const clr=clearId?document.getElementById(clearId):null;
+  const dd=document.getElementById(ddId);
+  if(inp){inp.value='';inp.classList.remove('has-value');}
+  if(hid)hid.value='';
+  if(cust)cust.value='';
+  if(hint)hint.style.display='none';
+  if(clr)clr.classList.remove('visible');
+  if(dd)dd.classList.remove('open');
+}
+
+function czOnKey(e,ddId,hiddenId,inputId,customId,hintId,clearId){
+  const dd=document.getElementById(ddId);
+  if(!dd||!dd.classList.contains('open'))return;
+  const items=[...dd.querySelectorAll('.cz-dditem')];
+  let cur=items.findIndex(el=>el.classList.contains('cz-active'));
+  if(e.key==='ArrowDown'){
+    e.preventDefault();
+    if(cur>=0)items[cur].classList.remove('cz-active');
+    const next=Math.min(cur+1,items.length-1);
+    items[next].classList.add('cz-active');
+    items[next].scrollIntoView({block:'nearest'});
+  }else if(e.key==='ArrowUp'){
+    e.preventDefault();
+    if(cur>=0)items[cur].classList.remove('cz-active');
+    const prev=Math.max(cur-1,0);
+    items[prev].classList.add('cz-active');
+    items[prev].scrollIntoView({block:'nearest'});
+  }else if(e.key==='Enter'&&cur>=0){
+    e.preventDefault();
+    const item=items[cur];
+    if(item.classList.contains('cz-custom-row')){
+      _czCustomEntry(hiddenId,inputId,ddId,customId,hintId,clearId);
+    }else{
+      _czPickName(item.getAttribute('data-val'),hiddenId,inputId,ddId,customId,hintId,clearId);
+    }
+  }else if(e.key==='Escape'){
+    dd.classList.remove('open');
+  }
+}
+
+// czSelect kept for any legacy inline calls (not used by new widgets but harmless)
+function czSelect(name,hiddenId,inputId,ddId,customId,hintId,clearId){
+  _czPickName(name,hiddenId,inputId,ddId,customId,hintId,clearId);
+}
+function czSelectCustom(hiddenId,inputId,ddId,customId,hintId,clearId){
+  _czCustomEntry(hiddenId,inputId,ddId,customId,hintId,clearId);
+}
+
+
+
 
 
 
@@ -2121,9 +2352,9 @@ async function fbRestLoad(){
     const token=await _getAnonToken();
     const url=_FB_DB_URL+'/motoconnect_zambia/subscriptions.json'+(token?'?auth='+token:'');
     const res=await fetch(url);
-    if(!res.ok)return;
+    if(!res.ok){_pubLoadSettle(false);return;}
     const data=await res.json();
-    if(!data||typeof data!=='object')return;
+    if(!data||typeof data!=='object'){_pubLoadSettle(true);return;}
     // Firebase returns an object map {id: record}; convert to array
     const fbSubs=Object.values(data).filter(Boolean);
     // Merge: Firebase (admin) is source of truth; keep any local-only records
@@ -2131,10 +2362,36 @@ async function fbRestLoad(){
     getSubs().forEach(s=>{if(s&&s.id)localMap[s.id]=s;});
     fbSubs.forEach(s=>{if(s&&s.id)localMap[s.id]=s;});
     save(KEYS.subs,Object.values(localMap));
-    renderPublicDirectory();
+    _pubLoadSettle(true);
     renderPubZoneTabs();
   }catch(e){
     console.warn('Firebase load failed, showing local data:',e);
+    _pubLoadSettle(false);
+  }
+}
+
+// Marks the first-sync attempt as finished and re-renders. If the very
+// first attempt failed (e.g. a weak/dropped connection), retry once
+// quickly instead of leaving registered riders looking "gone" for the
+// full 30s cycle — but only ever retry the first attempt, not every poll.
+let _pubLoadFirstAttemptDone=false;
+function _pubLoadSettle(success){
+  if(success){
+    _pubDirLoaded=true;
+    renderPublicDirectory();
+    _pubLoadFirstAttemptDone=true;
+    return;
+  }
+  if(!_pubLoadFirstAttemptDone){
+    // First attempt failed — give it one quick retry before showing
+    // any "no riders" message, so a brief connection blip doesn't make
+    // registered riders look like they vanished.
+    _pubLoadFirstAttemptDone=true;
+    setTimeout(fbRestLoad,4000);
+  } else {
+    // Retry (or a later poll) also failed — show whatever's cached locally.
+    _pubDirLoaded=true;
+    renderPublicDirectory();
   }
 }
 
@@ -2150,6 +2407,7 @@ window.addEventListener('DOMContentLoaded',()=>{
 // ══════════════════════════════════════════════════════
 let _pubZoneFilter='';
 let _pubTownFilter='';
+let _pubDirLoaded=false; // becomes true once the first Firebase sync attempt finishes (success or fail)
 
 let _zoneSearchAllOptions=[];
 function initPubTownDropdown(){
@@ -2160,23 +2418,38 @@ function initPubTownDropdown(){
 }
 
 function onZoneSearchInput(val){
-  const q=val.trim().toLowerCase();
+  const q=(val||'').trim().toLowerCase();
   const dd=document.getElementById('zoneSearchDropdown');
   if(!dd)return;
-  if(!q){dd.classList.remove('open');dd.innerHTML='';return;}
-  const matches=_zoneSearchAllOptions.filter(n=>n.toLowerCase().includes(q)).slice(0,30);
-  if(!matches.length){dd.classList.remove('open');return;}
+  // Show all zones (up to 40) on empty, or filtered matches
+  const matches=q
+    ?_zoneSearchAllOptions.filter(n=>n.toLowerCase().includes(q)).slice(0,40)
+    :_zoneSearchAllOptions.slice(0,40);
+  if(!matches.length){dd.classList.remove('open');dd.innerHTML='';return;}
   dd.innerHTML=matches.map(n=>{
-    const hi=n.replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi'),'<mark>$1</mark>');
-    return `<div class="zone-dditem" onmousedown="selectZoneOption('${n.replace(/'/g,"\\'")}')">${hi}</div>`;
+    const safe=n.replace(/'/g,"\\'");
+    const hi=q?n.replace(new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi'),'<mark>$1</mark>'):n;
+    return '<div class="zone-dditem" onmousedown="selectZoneOption(\''+safe+'\')">'+hi+'</div>';
   }).join('');
   dd.classList.add('open');
 }
 
 function onZoneSearchFocus(){
-  // Show all on focus if empty
+  // Show dropdown on focus: filter if text present, else show up to 40 zones
   const inp=document.getElementById('pubTownSelect');
-  if(inp&&!inp.value.trim())onZoneSearchInput('');
+  const dd=document.getElementById('zoneSearchDropdown');
+  if(!inp||!dd)return;
+  const q=(inp.value||'').trim().toLowerCase();
+  const matches=q
+    ?_zoneSearchAllOptions.filter(n=>n.toLowerCase().includes(q)).slice(0,40)
+    :_zoneSearchAllOptions.slice(0,40);
+  if(!matches.length)return;
+  dd.innerHTML=matches.map(n=>{
+    const safe=n.replace(/'/g,"\\'");
+    const hi=q?n.replace(new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi'),'<mark>$1</mark>'):n;
+    return '<div class="zone-dditem" onmousedown="selectZoneOption(\''+safe+'\')">'+hi+'</div>';
+  }).join('');
+  dd.classList.add('open');
 }
 
 function onZoneSearchBlur(){
@@ -2897,6 +3170,10 @@ function renderPublicDirectory(){
 
   const grid=document.getElementById('pubGrid');
   if(!riders.length){
+    if(!_pubDirLoaded){
+      grid.innerHTML=`<div class="pub-empty" style="grid-column:1/-1"><div>🔄</div><p>Loading riders…</p></div>`;
+      return;
+    }
     const townMsg=_pubTownFilter?` in <strong>${esc(_pubTownFilter)}</strong>`:'';
     grid.innerHTML=`<div class="pub-empty" style="grid-column:1/-1"><div>🏍️</div><p>No riders found${townMsg}.</p><p style="font-size:.8rem;margin-top:.5rem">${_pubTownFilter?`Be the first rider in ${esc(_pubTownFilter)}! `:'Try adjusting your filters or '}<span style="color:#fbbf24;cursor:pointer" onclick="showApplyPage()">Apply as a rider</span>.</p></div>`;
     return;
@@ -3016,7 +3293,7 @@ function applyNext(fromStep){
     const z2=resolveZoneValue('appZone2','appZone2Custom');
     const zone=z1.value;
     if(!type){alert('Please select a vehicle type.');return;}
-    if(!zone){alert(document.getElementById('appZone').value==='__custom__'?'Please type the name of your operating region.':'Please select your operating zone.');return;}
+    if(!zone){alert('Please select or type your operating zone.');return;}
     const txnId=document.getElementById('appTxnId').value.trim();
     if(!txnId){alert('Please enter your payment Transaction ID before proceeding. Pay via Airtel Money or MTN Mobile Money first, then enter the transaction ID here.');document.getElementById('appTxnId').focus();return;}
     // Build review
@@ -3121,25 +3398,21 @@ function submitApplication(){
     }catch(e){}
   })();
 
-  // Push to Firebase so Admin panel receives it in real-time
+  // Push to Firebase so Admin panel receives it in real-time.
+  // Uses fbRestWrite so a failed attempt (weak signal at submit time)
+  // gets queued and retried automatically — not lost after one try.
   (async()=>{
-    try{
-      const token=await _getAnonToken();
-      const url=_FB_DB_URL+'/motoconnect_zambia/subscriptions/'+app.id+'.json'+(token?'?auth='+token:'');
-      const res=await fetch(url,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(app)});
-      const fbStatusEl=document.getElementById('fbSubmitStatus');
-      if(fbStatusEl){
-        if(res.ok){
-          fbStatusEl.innerHTML='✅ Application received by admin.';
-          fbStatusEl.style.color='#065f46';
-        } else {
-          fbStatusEl.innerHTML='⚠️ Saved locally. Admin will receive it when online.';
-          fbStatusEl.style.color='#92400e';
-        }
+    await fbRestWrite(app);
+    const fbStatusEl=document.getElementById('fbSubmitStatus');
+    if(fbStatusEl){
+      const stillPending=getPendingSync().includes(app.id);
+      if(!stillPending){
+        fbStatusEl.innerHTML='✅ Application received by admin.';
+        fbStatusEl.style.color='#065f46';
+      } else {
+        fbStatusEl.innerHTML='⚠️ Saved on this phone. Will keep retrying in the background until it reaches the admin.';
+        fbStatusEl.style.color='#92400e';
       }
-    }catch(e){
-      const fbStatusEl=document.getElementById('fbSubmitStatus');
-      if(fbStatusEl){fbStatusEl.innerHTML='⚠️ Saved locally. Will sync when online.';fbStatusEl.style.color='#92400e';}
     }
   })();
 }
@@ -3289,15 +3562,67 @@ async function _getAnonToken(){
   return token;
 }
 
+function getPendingSync(){return load(KEYS.pendingSync,[]);}
+function markPendingSync(id){
+  const p=getPendingSync();
+  if(!p.includes(id)){p.push(id);save(KEYS.pendingSync,p);}
+}
+function clearPendingSync(id){
+  const p=getPendingSync().filter(x=>x!==id);
+  save(KEYS.pendingSync,p);
+}
+
 async function fbRestWrite(item){
   if(!item||!item.id)return;
+  // Mark as pending *before* attempting the write. If the write succeeds
+  // we clear it below; if anything fails (offline, timeout, bad response)
+  // it stays queued and gets retried automatically — so a rider never
+  // silently disappears from the cloud just because the connection was
+  // weak at the moment they were saved.
+  markPendingSync(item.id);
   try{
     const token=await _getAnonToken();
     const url=_FB_DB_URL+'/motoconnect_zambia/subscriptions/'+item.id+'.json'+(token?'?auth='+token:'');
-    fetch(url,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(item)})
-      .catch(()=>{});
-  }catch(e){}
+    const res=await fetch(url,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(item)});
+    if(res&&res.ok)clearPendingSync(item.id);
+  }catch(e){
+    console.warn('Sync to cloud failed, will retry:',e);
+  }
+  renderSyncBanner();
 }
+
+// Retries any riders that failed to sync earlier. Safe to call repeatedly —
+// already-synced ids are skipped automatically.
+async function flushPendingSync(){
+  const pending=getPendingSync();
+  if(!pending.length)return;
+  const subs=getSubs();
+  for(const id of pending){
+    const item=subs.find(s=>s.id===id);
+    if(item)await fbRestWrite(item);
+    else clearPendingSync(id); // record was deleted locally — drop from queue
+  }
+}
+
+// Small banner so unsynced riders are never invisible to the admin.
+function renderSyncBanner(){
+  const el=document.getElementById('syncPendingBanner');
+  if(!el)return;
+  const n=getPendingSync().length;
+  if(n>0){
+    el.style.display='flex';
+    el.querySelector('span').textContent=`⚠️ ${n} rider${n>1?'s':''} not yet synced to the cloud — retrying…`;
+  } else {
+    el.style.display='none';
+  }
+}
+
+window.addEventListener('online',flushPendingSync);
+window.addEventListener('DOMContentLoaded',()=>{
+  renderSyncBanner();
+  setTimeout(flushPendingSync,3000);
+  setInterval(flushPendingSync,30000);
+});
 
 async function fbRestDelete(id){
   if(!id)return;
