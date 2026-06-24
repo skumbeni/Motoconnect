@@ -10,6 +10,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="MotoConnect"/>
+<!-- Median native bridge -->
+<script src="https://cdn.median.co/median.js"></script>
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='36' fill='%231e3a5f'/%3E%3Ccircle cx='58' cy='128' r='18' fill='none' stroke='%23fbbf24' stroke-width='7'/%3E%3Ccircle cx='134' cy='128' r='18' fill='none' stroke='%23fbbf24' stroke-width='7'/%3E%3Cpath d='M58 128 L80 90 L110 90 L130 110 L134 128' fill='none' stroke='%23fbbf24' stroke-width='7' stroke-linejoin='round' stroke-linecap='round'/%3E%3Cpath d='M100 90 L115 70 L130 70' fill='none' stroke='%23fbbf24' stroke-width='6' stroke-linecap='round'/%3E%3Ccircle cx='130' cy='70' r='5' fill='%23fbbf24'/%3E%3Ctext x='96' y='170' font-family='Arial,sans-serif' font-size='22' font-weight='900' text-anchor='middle' fill='%23fbbf24' letter-spacing='1'%3EZAMBIA%3C/text%3E%3C/svg%3E"/>
 <link rel="manifest" id="pwaManifest"/>
 <style>
@@ -327,6 +329,13 @@
   #installBanner p{flex:1;font-size:.82rem;line-height:1.4}
   #installBanner strong{color:#fbbf24}
   .install-actions{display:flex;gap:.5rem;flex-shrink:0}
+
+  /* Landing page install buttons */
+  .lp-install-wrap{display:none;flex-direction:column;align-items:center;gap:.5rem;animation:fadeUp .6s .8s ease both;opacity:0}
+  .lp-install-wrap.visible{display:flex}
+  .lp-install-btn{display:inline-flex;align-items:center;gap:.55rem;padding:.65rem 1.6rem;border-radius:50px;border:1.5px solid rgba(255,255,255,.25);background:rgba(255,255,255,.10);color:#fff;font-size:.88rem;font-weight:700;cursor:pointer;transition:background .15s,border-color .15s;backdrop-filter:blur(6px)}
+  .lp-install-btn:hover{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.45)}
+  .lp-install-hint{font-size:.72rem;color:rgba(255,255,255,.5);text-align:center;max-width:260px;line-height:1.5}
 
   /* ══ PUBLIC DIRECTORY PAGE ══════════════════════════════ */
   #publicPage{display:none;
@@ -1003,6 +1012,19 @@
       <span class="lp-pill blue">🧾 Invoice Generator</span>
     </div>
 
+    <!-- Install buttons — shown based on platform, hidden inside Median -->
+    <div id="lpInstallWrap" class="lp-install-wrap">
+      <!-- Android/mobile browser: PWA install prompt -->
+      <button id="lpInstallBtn" class="lp-install-btn" onclick="doInstall()" style="display:none">
+        📲 Download App
+      </button>
+      <!-- Desktop: Add to Home Screen instructions -->
+      <button id="lpDesktopInstallBtn" class="lp-install-btn" onclick="showDesktopInstallHint()" style="display:none">
+        🖥️ Add to Home Screen
+      </button>
+      <div id="lpInstallHint" class="lp-install-hint" style="display:none"></div>
+    </div>
+
     <div style="display:flex;flex-direction:column;align-items:center;gap:.75rem;animation:fadeUp .6s .65s ease both">
       <button class="lp-cta" onclick="showPublicPage()">
         🔍 Find a Rider
@@ -1055,28 +1077,86 @@ function showLanding(){
 })();
 
 let _deferredInstall=null;
-window.addEventListener('beforeinstallprompt',e=>{
-  e.preventDefault();
-  _deferredInstall=e;
-  if(!window.matchMedia('(display-mode: standalone)').matches){
-    setTimeout(()=>document.getElementById('installBanner').classList.add('show'),3000);
+// Only show install banner in browser — Median wraps as native app
+if(typeof median==='undefined'||!median.isNativeApp){
+  window.addEventListener('beforeinstallprompt',e=>{
+    e.preventDefault();
+    _deferredInstall=e;
+    if(!window.matchMedia('(display-mode: standalone)').matches){
+      setTimeout(()=>document.getElementById('installBanner')?.classList.add('show'),3000);
+    }
+    // Show the Download App button on landing page
+    const btn=document.getElementById('lpInstallBtn');
+    const wrap=document.getElementById('lpInstallWrap');
+    if(btn)btn.style.display='inline-flex';
+    if(wrap)wrap.classList.add('visible');
+  });
+  window.addEventListener('appinstalled',()=>{
+    document.getElementById('installBanner')?.classList.remove('show');
+    document.getElementById('lpInstallBtn')?.style.setProperty('display','none');
+    _deferredInstall=null;
+  });
+}
+
+function _initInstallButtons(){
+  // Don't show inside Median native app or if already installed
+  if(typeof median!=='undefined'&&median.isNativeApp)return;
+  if(window.matchMedia('(display-mode: standalone)').matches)return;
+
+  const isDesktop=!('ontouchstart' in window)&&window.innerWidth>768;
+  const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+  const wrap=document.getElementById('lpInstallWrap');
+
+  if(isIOS){
+    // iOS Safari can't trigger install prompt — show manual hint
+    const btn=document.getElementById('lpDesktopInstallBtn');
+    if(btn){btn.style.display='inline-flex';btn.textContent='📲 Add to Home Screen';}
+    if(wrap)wrap.classList.add('visible');
+  } else if(isDesktop){
+    // Desktop: show Add to Home Screen button (Chrome/Edge support)
+    const btn=document.getElementById('lpDesktopInstallBtn');
+    if(btn)btn.style.display='inline-flex';
+    if(wrap)wrap.classList.add('visible');
   }
-});
-window.addEventListener('appinstalled',()=>{
-  document.getElementById('installBanner').classList.remove('show');
-  _deferredInstall=null;
-});
+  // Android PWA install button shown via beforeinstallprompt event above
+}
+
+function showDesktopInstallHint(){
+  const hint=document.getElementById('lpInstallHint');
+  const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isFirefox=/firefox/i.test(navigator.userAgent);
+  const isEdge=/edg\//i.test(navigator.userAgent);
+  if(!hint)return;
+  let msg='';
+  if(isIOS){
+    msg='Tap the Share button (⬆️) in Safari, then choose "Add to Home Screen".';
+  } else if(isFirefox){
+    msg='Click the house icon (🏠) in the address bar, or use the browser menu → "Install".';
+  } else if(isEdge){
+    msg='Click ··· menu → Apps → "Install this site as an app".';
+  } else if(_deferredInstall){
+    // Chrome: trigger the prompt directly
+    doInstall();return;
+  } else {
+    msg='In Chrome: click ⋮ menu → "Install app" or "Add to Home Screen".';
+  }
+  hint.textContent=msg;
+  hint.style.display='block';
+  setTimeout(()=>{if(hint)hint.style.display='none';},6000);
+}
+
+window.addEventListener('DOMContentLoaded',_initInstallButtons);
 function doInstall(){
-  document.getElementById('installBanner').classList.remove('show');
+  document.getElementById('installBanner')?.classList.remove('show');
   if(_deferredInstall){ _deferredInstall.prompt(); _deferredInstall.userChoice.then(()=>_deferredInstall=null); }
 }
 function dismissInstall(){
-  document.getElementById('installBanner').classList.remove('show');
+  document.getElementById('installBanner')?.classList.remove('show');
   try{localStorage.setItem('mc_install_dismissed','1');}catch(e){}
 }
 
-// Service Worker — cache-first with network fallback, versioned
-if('serviceWorker' in navigator){
+// Service Worker — only register in browser context, not inside Median WebView
+if('serviceWorker' in navigator && (typeof median==='undefined'||!median.isNativeApp)){
   window.addEventListener('load',()=>{
     const CACHE='mc-zambia-v1';
     const sw=`
@@ -3801,12 +3881,57 @@ function printRiderCard(){
 function shareRiderCard(){
   const s=getSubs().find(x=>x.id===document.querySelector('#riderCardBody .id-num')?.textContent?.replace('MCM-','').toLowerCase());
   const text=`🏍️ MotoConnect Zambia Verified Rider\nCheck out this rider on MotoConnect Zambia!`;
-  if(navigator.share){
+  // Use Median native share if available, fallback to Web Share API, then clipboard
+  if(typeof median!=='undefined'&&median.share){
+    median.share({text});
+  } else if(navigator.share){
     navigator.share({title:'MotoConnect Rider',text}).catch(()=>{});
   } else {
     navigator.clipboard?.writeText(text).then(()=>alert('Rider info copied to clipboard!'));
   }
 }
+
+// ══════════════════════════════════════════════════════
+//  MEDIAN NATIVE APP INTEGRATION
+// ══════════════════════════════════════════════════════
+(function(){
+  // Wait for Median bridge to be ready
+  function initMedian(){
+    if(typeof median==='undefined'||!median.isNativeApp)return;
+
+    // Status bar: dark background to match navy theme
+    if(median.statusbar&&median.statusbar.set){
+      median.statusbar.set({style:'light',color:'#1e3a5f'});
+    }
+
+    // Back button: navigate within app instead of exiting
+    if(median.backButton&&median.backButton.setCallback){
+      median.backButton.setCallback(function(){
+        // If any modal is open, close it
+        const openModal=document.querySelector('.overlay.open');
+        if(openModal){openModal.classList.remove('open');return;}
+        // If on apply page, go back to public directory
+        const applyPage=document.getElementById('applyPage');
+        if(applyPage&&applyPage.style.display!=='none'&&applyPage.style.display!==''){
+          showPublicPage();return;
+        }
+        // If on public page, go to landing
+        const pubPage=document.getElementById('pubPage');
+        if(pubPage&&pubPage.style.display!=='none'&&pubPage.style.display!==''){
+          showLanding();return;
+        }
+        // Otherwise let Median handle (exit app)
+        median.backButton.goBack();
+      });
+    }
+  }
+
+  // Median fires 'median.ready' when the bridge is initialised
+  document.addEventListener('median.ready',initMedian);
+  // Also try immediately in case bridge loaded synchronously
+  if(document.readyState==='complete'){initMedian();}
+  else{window.addEventListener('load',initMedian);}
+})();
 
 // ══════════════════════════════════════════════════════
 //  AVAILABILITY TOGGLE (in admin subscriptions table)
