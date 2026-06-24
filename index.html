@@ -1117,7 +1117,7 @@ self.addEventListener('fetch',e=>{
 // ══════════════════════════════════════════════════════
 //  STATE & PERSISTENCE
 // ══════════════════════════════════════════════════════
-const KEYS={subs:'mc_subscriptions',fares:'mc_fares',zones:'mc_zones_v2',settings:'mc_settings',pendingSync:'mc_pending_sync'};
+const KEYS={subs:'mc_subscriptions',fares:'mc_fares',zones:'mc_zones_v2',settings:'mc_settings',pendingSync:'mc_pending_sync',pendingZoneSync:'mc_pending_zone_sync'};
 const RATES={ZMW:1,USD:0.049,EUR:0.046,GBP:0.040,ZAR:0.90};
 let state={currency:'ZMW',warnDays:7,adminName:'Admin User'};
 
@@ -1915,6 +1915,7 @@ function calcFare(){
 function renderZones(){
   const zones=getZones();
   const tbody=document.getElementById('zoneBody');
+  if(!tbody)return;
   if(!zones.length){tbody.innerHTML='<tr><td colspan="4" class="empty">No zones yet.</td></tr>';return;}
   tbody.innerHTML=zones.map(z=>`
     <tr>
@@ -2411,9 +2412,11 @@ let _pubDirLoaded=false; // becomes true once the first Firebase sync attempt fi
 
 let _zoneSearchAllOptions=[];
 function initPubTownDropdown(){
-  // Build master list once from all zone names + any rider-registered extras
+  // Build master list from all official zones + zones used by *approved*
+  // riders. Pending applicants' custom zone entries are intentionally
+  // excluded until admin approval promotes them via addApprovedCustomZones().
   const zoneNames=getZones().map(z=>z.name);
-  const registeredExtras=getSubs().flatMap(s=>[s.zone,s.zone2]).filter(Boolean);
+  const registeredExtras=getSubs().filter(s=>s.status==='active').flatMap(s=>[s.zone,s.zone2]).filter(Boolean);
   _zoneSearchAllOptions=[...new Set([...zoneNames,...registeredExtras])].sort();
 }
 
@@ -3501,12 +3504,43 @@ function confirmApprove(){
     notes:notes||subs[i].notes,approvedAt:new Date().toISOString()};
   save(KEYS.subs,subs);
   fbRestWrite(subs[i]);
+  // If the applicant typed a brand-new zone (not in the existing list),
+  // it only becomes an official zone now that the application is
+  // approved — added to the master list and synced to Firebase so it
+  // shows up for everyone, including other applicants searching zones.
+  addApprovedCustomZones(subs[i]);
   closeModal('approveModal');
   renderApplications();
   renderStats();
     updateAppBadge();
   renderPublicDirectory();
   alert('✅ Rider activated! They now appear in the public directory.');
+}
+
+// Promotes any zone an applicant typed in (rather than picked from the
+// list) into the official zones list, once their application is
+// approved — then pushes it to Firebase and refreshes every zone-aware
+// UI (zone tabs, zone search dropdown, admin zones table).
+function addApprovedCustomZones(sub){
+  const names=[sub.zoneCustom,sub.zone2Custom].filter(Boolean);
+  if(!names.length)return;
+  const zones=getZones();
+  let changed=false;
+  names.forEach(name=>{
+    const exists=zones.some(z=>z.name.toLowerCase()===name.toLowerCase());
+    if(!exists){
+      const z={id:uid(),name,desc:'',mult:1.0};
+      zones.push(z);
+      fbZoneWrite(z);
+      changed=true;
+    }
+  });
+  if(changed){
+    save(KEYS.zones,zones);
+    initPubTownDropdown();
+    renderPubZoneTabs();
+    renderZones();
+  }
 }
 
 function rejectApp(appId){
@@ -3571,6 +3605,71 @@ function clearPendingSync(id){
   const p=getPendingSync().filter(x=>x!==id);
   save(KEYS.pendingSync,p);
 }
+
+// ── Zone sync (same retry-queue pattern as subscriptions, separate path) ──
+function getPendingZoneSync(){return load(KEYS.pendingZoneSync,[]);}
+function markPendingZoneSync(id){
+  const p=getPendingZoneSync();
+  if(!p.includes(id)){p.push(id);save(KEYS.pendingZoneSync,p);}
+}
+function clearPendingZoneSync(id){
+  save(KEYS.pendingZoneSync,getPendingZoneSync().filter(x=>x!==id));
+}
+
+async function fbZoneWrite(zone){
+  if(!zone||!zone.id)return;
+  markPendingZoneSync(zone.id);
+  try{
+    const token=await _getAnonToken();
+    const url=_FB_DB_URL+'/motoconnect_zambia/zones/'+zone.id+'.json'+(token?'?auth='+token:'');
+    const res=await fetch(url,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(zone)});
+    if(res&&res.ok)clearPendingZoneSync(zone.id);
+  }catch(e){
+    console.warn('Zone sync to cloud failed, will retry:',e);
+  }
+}
+
+async function flushPendingZoneSync(){
+  const pending=getPendingZoneSync();
+  if(!pending.length)return;
+  const zones=getZones();
+  for(const id of pending){
+    const z=zones.find(x=>x.id===id);
+    if(z)await fbZoneWrite(z);
+    else clearPendingZoneSync(id);
+  }
+}
+
+// Pulls the latest zones list from Firebase (e.g. zones another admin
+// device approved) and merges with any local-only zones, then refreshes
+// every UI that lists zones.
+async function fbZonesLoad(){
+  try{
+    const token=await _getAnonToken();
+    const url=_FB_DB_URL+'/motoconnect_zambia/zones.json'+(token?'?auth='+token:'');
+    const res=await fetch(url);
+    if(!res.ok)return;
+    const data=await res.json();
+    if(!data||typeof data!=='object')return;
+    const fbZones=Object.values(data).filter(Boolean);
+    const localMap={};
+    getZones().forEach(z=>{if(z&&z.id)localMap[z.id]=z;});
+    fbZones.forEach(z=>{if(z&&z.id)localMap[z.id]=z;});
+    save(KEYS.zones,Object.values(localMap));
+    initPubTownDropdown();
+    renderPubZoneTabs();
+    renderZones();
+  }catch(e){
+    console.warn('Zone load failed, showing local zones:',e);
+  }
+}
+
+window.addEventListener('online',()=>{flushPendingSync();flushPendingZoneSync();});
+window.addEventListener('DOMContentLoaded',()=>{
+  fbZonesLoad();
+  setTimeout(flushPendingZoneSync,3000);
+  setInterval(()=>{fbZonesLoad();flushPendingZoneSync();},30000);
+});
 
 async function fbRestWrite(item){
   if(!item||!item.id)return;
