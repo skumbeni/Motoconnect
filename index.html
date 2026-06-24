@@ -10,8 +10,10 @@
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="MotoConnect"/>
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='36' fill='%231e3a5f'/%3E%3Ccircle cx='58' cy='128' r='18' fill='none' stroke='%23fbbf24' stroke-width='7'/%3E%3Ccircle cx='134' cy='128' r='18' fill='none' stroke='%23fbbf24' stroke-width='7'/%3E%3Cpath d='M58 128 L80 90 L110 90 L130 110 L134 128' fill='none' stroke='%23fbbf24' stroke-width='7' stroke-linejoin='round' stroke-linecap='round'/%3E%3Cpath d='M100 90 L115 70 L130 70' fill='none' stroke='%23fbbf24' stroke-width='6' stroke-linecap='round'/%3E%3Ccircle cx='130' cy='70' r='5' fill='%23fbbf24'/%3E%3Ctext x='96' y='170' font-family='Arial,sans-serif' font-size='22' font-weight='900' text-anchor='middle' fill='%23fbbf24' letter-spacing='1'%3EZAMBIA%3C/text%3E%3C/svg%3E"/>
-<link rel="manifest" id="pwaManifest"/>
+<link rel="apple-touch-icon" href="icon-192x192.png"/>
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512x512.png"/>
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192x192.png"/>
+<link rel="manifest" href="manifest.json"/>
 <style>
   :root {
     --bg: #f0f4f8;
@@ -1025,34 +1027,8 @@ function showLanding(){
 
 
 // ══════════════════════════════════════════════════════
-//  PWA — MANIFEST + SERVICE WORKER + INSTALL PROMPT
+//  PWA — SERVICE WORKER + INSTALL PROMPT
 // ══════════════════════════════════════════════════════
-(function(){
-  // Icon SVG — navy rounded square, amber "MCZ" monogram + motorbike
-  const iconSvg192=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><rect width="192" height="192" rx="36" fill="#1e3a5f"/><rect x="8" y="8" width="176" height="176" rx="30" fill="#1e3a5f"/><circle cx="58" cy="128" r="18" fill="none" stroke="#fbbf24" stroke-width="7"/><circle cx="134" cy="128" r="18" fill="none" stroke="#fbbf24" stroke-width="7"/><path d="M58 128 L80 90 L110 90 L130 110 L134 128" fill="none" stroke="#fbbf24" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/><path d="M100 90 L115 70 L130 70" fill="none" stroke="#fbbf24" stroke-width="6" stroke-linecap="round"/><circle cx="130" cy="70" r="5" fill="#fbbf24"/><text x="96" y="170" font-family="Arial,sans-serif" font-size="22" font-weight="900" text-anchor="middle" fill="#fbbf24" letter-spacing="1">ZAMBIA</text></svg>`;
-  const iconSvg512=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="96" fill="#1e3a5f"/><circle cx="152" cy="340" r="52" fill="none" stroke="#fbbf24" stroke-width="20"/><circle cx="360" cy="340" r="52" fill="none" stroke="#fbbf24" stroke-width="20"/><path d="M152 340 L210 230 L295 230 L348 292 L360 340" fill="none" stroke="#fbbf24" stroke-width="20" stroke-linejoin="round" stroke-linecap="round"/><path d="M268 230 L308 175 L348 175" fill="none" stroke="#fbbf24" stroke-width="18" stroke-linecap="round"/><circle cx="348" cy="175" r="14" fill="#fbbf24"/><text x="256" y="460" font-family="Arial,sans-serif" font-size="58" font-weight="900" text-anchor="middle" fill="#fbbf24" letter-spacing="2">ZAMBIA</text><text x="256" y="110" font-family="Arial,sans-serif" font-size="48" font-weight="900" text-anchor="middle" fill="rgba(255,255,255,.85)" letter-spacing="1">MotoConnect</text></svg>`;
-
-  const enc=s=>'data:image/svg+xml,'+encodeURIComponent(s);
-  const m={
-    name:"MotoConnect Zambia",
-    short_name:"MotoConnect",
-    description:"Zambia's transport rider directory — find motorbike taxis, taxis & trucks near you",
-    start_url:"./",
-    scope:"./",
-    display:"standalone",
-    background_color:"#1e3a5f",
-    theme_color:"#1e3a5f",
-    orientation:"portrait-primary",
-    icons:[
-      {src:enc(iconSvg192),sizes:"192x192",type:"image/svg+xml",purpose:"any maskable"},
-      {src:enc(iconSvg512),sizes:"512x512",type:"image/svg+xml",purpose:"any maskable"}
-    ]
-  };
-  try{
-    const b=new Blob([JSON.stringify(m)],{type:'application/json'});
-    document.getElementById('pwaManifest').href=URL.createObjectURL(b);
-  }catch(e){}
-})();
 
 let _deferredInstall=null;
 window.addEventListener('beforeinstallprompt',e=>{
