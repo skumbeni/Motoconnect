@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-<title>MotoConnect Mansa — Admin</title>
-<meta name="description" content="MotoConnect Mansa — Transport subscription management"/>
+<title>MotoConnect Zambia</title>
+<meta name="description" content="MotoConnect Zambia — Transport subscription management"/>
 <meta name="theme-color" content="#1e3a5f"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
@@ -384,6 +384,28 @@
     outline:none;cursor:pointer;min-width:140px;
   }
   .pub-town-bar select option{background:#1e3a5f;color:#fff}
+  .zone-search-wrap{position:relative;min-width:180px;flex:1;max-width:260px}
+  .zone-search-input{
+    width:100%;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);
+    border-radius:8px;color:#fff;font-size:.85rem;padding:.35rem .75rem;
+    outline:none;cursor:text;
+  }
+  .zone-search-input::placeholder{color:rgba(255,255,255,.5)}
+  .zone-search-input:focus{border-color:#fbbf24;background:rgba(255,255,255,.18)}
+  .zone-search-dropdown{
+    position:absolute;top:calc(100% + 4px);left:0;right:0;
+    background:#1e3a5f;border:1px solid rgba(255,255,255,.2);border-radius:8px;
+    max-height:220px;overflow-y:auto;z-index:200;display:none;
+    box-shadow:0 8px 24px rgba(0,0,0,.35);
+  }
+  .zone-search-dropdown.open{display:block}
+  .zone-dditem{
+    padding:.5rem .85rem;font-size:.85rem;color:#fff;cursor:pointer;
+    border-bottom:1px solid rgba(255,255,255,.07);
+  }
+  .zone-dditem:last-child{border-bottom:none}
+  .zone-dditem:hover,.zone-dditem.selected{background:rgba(251,191,36,.2);color:#fbbf24}
+  .zone-dditem mark{background:transparent;color:#fbbf24;font-weight:700}
   .btn-detect-location{
     background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.4);
     border-radius:8px;color:#fbbf24;font-size:.8rem;font-weight:600;
@@ -572,7 +594,7 @@
 <!-- ══ PUBLIC RIDER DIRECTORY ════════════════════════════ -->
 <div id="publicPage">
   <header class="pub-header">
-    <div class="pub-logo">🏍️ Moto<span>Connect</span> <span style="font-size:.7rem;color:rgba(255,255,255,.5);font-weight:400">Mansa</span></div>
+    <div class="pub-logo">🏍️ Moto<span>Connect</span> <span style="font-size:.7rem;color:rgba(255,255,255,.5);font-weight:400">Zambia</span></div>
     <div class="pub-header-actions">
       <button class="btn-pub-apply" onclick="showApplyPage()">🚀 Apply as Rider</button>
     </div>
@@ -582,7 +604,7 @@
     <h1 id="pubHeroTitle">Find a <span>Ride</span> in Zambia</h1>
     <p>Browse verified motorbike taxis &amp; operators — tap to call or WhatsApp instantly</p>
     <div class="pub-search-bar">
-      <input class="pub-search-input" id="pubSearch" placeholder="🔍  Search by name or zone…" oninput="renderPublicDirectory()"/>
+      <input class="pub-search-input" id="pubSearch" placeholder="🔍  Search by name, zone or MCM-ID…" oninput="renderPublicDirectory()"/>
       <select class="pub-filter-select" id="pubFilterType" onchange="renderPublicDirectory()">
         <option value="">All Vehicles</option>
         <option value="Motorbike">🏍️ Motorbike</option>
@@ -599,21 +621,23 @@
   </div>
 
   <div class="pub-town-bar" id="pubTownBar">
-    <span class="pub-town-label">📍 Town:</span>
-    <select id="pubTownSelect" onchange="setPubTown(this.value)">
-      <option value="">All Towns</option>
-    </select>
+    <span class="pub-town-label">📍 Zone:</span>
+    <div class="zone-search-wrap" id="zoneSearchWrap">
+      <input type="text" id="pubTownSelect" class="zone-search-input" placeholder="Type to search zone…" autocomplete="off"
+        oninput="onZoneSearchInput(this.value)" onfocus="onZoneSearchFocus()" onblur="onZoneSearchBlur()"/>
+      <div class="zone-search-dropdown" id="zoneSearchDropdown"></div>
+    </div>
     <button class="btn-detect-location" id="btnDetectLocation" onclick="detectUserTown()" title="Detect my location">
       <span id="detectLocationIcon">📍</span> <span id="detectLocationText">Detect</span>
     </button>
-    <span id="pubTownClearBtn" onclick="setPubTown('')" style="display:none;cursor:pointer;font-size:.8rem;color:#fbbf24;white-space:nowrap">✕ Clear</span>
+    <span id="pubTownClearBtn" onclick="clearZoneSearch()" style="display:none;cursor:pointer;font-size:.8rem;color:#fbbf24;white-space:nowrap">✕ Clear</span>
   </div>
   <div class="pub-zone-tabs" id="pubZoneTabs"></div>
   <div id="pubZoneGroupBanner" style="display:none;align-items:center;gap:.75rem;margin:0 1.5rem .5rem;padding:.6rem 1rem;background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.3);border-radius:10px;flex-wrap:wrap"></div>
   <div class="pub-stats-row" id="pubStatsRow"></div>
   <div class="pub-grid" id="pubGrid"></div>
   <div class="legal-footer-links">
-    &copy; 2025 MotoConnect Mansa &mdash; Mansa, Luapula Province, Zambia<br/>
+    &copy; 2025 MotoConnect Zambia &mdash; Zambia<br/>
     <a onclick="openModal('tosModal')">Terms of Service</a> &nbsp;&bull;&nbsp;
     <a onclick="openModal('privacyModal')">Privacy Policy</a>
   </div>
@@ -628,7 +652,7 @@
     <div class="apply-card">
       <div class="apply-card-header">
         <h2>🏍️ Rider Application</h2>
-        <p>Join MotoConnect Mansa — reach more customers</p>
+        <p>Join MotoConnect Zambia — reach more customers</p>
         <div class="apply-steps">
           <div class="apply-step active" id="applyStepDot1"><div class="apply-step-num">1</div>Personal</div>
           <div class="apply-step" id="applyStepDot2"><div class="apply-step-num">2</div>Vehicle</div>
@@ -725,7 +749,7 @@
           </div>
           <label class="legal-consent">
             <input type="checkbox" id="appTosConsent"/>
-            <span>I agree to the <button type="button" onclick="openModal('tosModal')">Terms of Service</button> and <button type="button" onclick="openModal('privacyModal')">Privacy Policy</button> of MotoConnect Mansa.</span>
+            <span>I agree to the <button type="button" onclick="openModal('tosModal')">Terms of Service</button> and <button type="button" onclick="openModal('privacyModal')">Privacy Policy</button> of MotoConnect Zambia.</span>
           </label>
           <div class="apply-nav">
             <button class="btn btn-ghost btn-sm" onclick="applyBack(3)">← Back</button>
@@ -738,7 +762,7 @@
           <div class="apply-confirm-box">
             <div class="big-check">✅</div>
             <h3>Application Submitted!</h3>
-            <p>Thank you for applying to MotoConnect Mansa. Keep your reference number safe — admin will contact you on your phone once reviewed.</p>
+            <p>Thank you for applying to MotoConnect Zambia. Keep your reference number safe — admin will contact you on your phone once reviewed.</p>
             <div class="ref-chip" id="appRefDisplay">MCM-XXXX</div>
             <p id="fbSubmitStatus" style="font-size:.8rem;margin-top:.6rem;font-weight:600">📡 Sending to admin…</p>
             <p style="font-size:.78rem;margin-top:.3rem;color:var(--muted)">Processing usually takes 1–2 business days.</p>
@@ -761,13 +785,13 @@
     </div>
     <div class="legal-body">
       <p><strong>Effective Date: 1 January 2025</strong><br/>
-      These Terms of Service ("Terms") govern your use of the MotoConnect Mansa platform ("Platform"), operated by <strong>NEXLITE DIGITAL SOLUTIONS LIMITED</strong> (trading as Digital Frontier Technologies), a company registered in Zambia ("we", "us", "our").</p>
+      These Terms of Service ("Terms") govern your use of the MotoConnect Zambia platform ("Platform"), operated by <strong>NEXLITE DIGITAL SOLUTIONS LIMITED</strong> (trading as Digital Frontier Technologies), a company registered in Zambia ("we", "us", "our").</p>
 
       <h4>1. Acceptance of Terms</h4>
-      <p>By accessing the Platform, submitting a rider application, or using any feature of MotoConnect Mansa, you confirm that you have read, understood, and agree to be bound by these Terms and our Privacy Policy. If you do not agree, do not use the Platform.</p>
+      <p>By accessing the Platform, submitting a rider application, or using any feature of MotoConnect Zambia, you confirm that you have read, understood, and agree to be bound by these Terms and our Privacy Policy. If you do not agree, do not use the Platform.</p>
 
       <h4>2. The Platform</h4>
-      <p>MotoConnect Mansa is a transport subscription management platform that connects riders (motorbike operators, taxi operators, tour operators) with customers in Mansa, Luapula Province, Zambia. The Platform facilitates subscription management, public rider directories, and booking enquiries. We do not provide transport services directly.</p>
+      <p>MotoConnect Zambia is a transport subscription management platform that connects riders (motorbike operators, taxi operators, tour operators) with customers across Zambia. The Platform facilitates subscription management, public rider directories, and booking enquiries. We do not provide transport services directly.</p>
 
       <h4>3. Rider Registration &amp; Subscriptions</h4>
       <ul>
@@ -789,7 +813,7 @@
       </ul>
 
       <h4>5. Platform Availability</h4>
-      <p>We aim to keep MotoConnect Mansa available at all times but do not guarantee uninterrupted access. We may suspend or modify the Platform for maintenance, updates, or any other reason without notice. We are not liable for any loss resulting from unavailability of the Platform.</p>
+      <p>We aim to keep MotoConnect Zambia available at all times but do not guarantee uninterrupted access. We may suspend or modify the Platform for maintenance, updates, or any other reason without notice. We are not liable for any loss resulting from unavailability of the Platform.</p>
 
       <h4>6. Intellectual Property</h4>
       <p>All content, design, and software on the Platform is owned by NEXLITE DIGITAL SOLUTIONS LIMITED or its licensors. You may not reproduce, modify, or distribute any part of the Platform without our prior written consent.</p>
@@ -821,7 +845,7 @@
     </div>
     <div class="legal-body">
       <p><strong>Effective Date: 1 January 2025</strong><br/>
-      This Privacy Policy explains how <strong>NEXLITE DIGITAL SOLUTIONS LIMITED</strong> (trading as Digital Frontier Technologies) collects, uses, and protects personal data through the MotoConnect Mansa platform ("Platform"). We are committed to compliance with the <strong>Zambia Data Protection Act, 2021</strong>.</p>
+      This Privacy Policy explains how <strong>NEXLITE DIGITAL SOLUTIONS LIMITED</strong> (trading as Digital Frontier Technologies) collects, uses, and protects personal data through the MotoConnect Zambia platform ("Platform"). We are committed to compliance with the <strong>Zambia Data Protection Act, 2021</strong>.</p>
 
       <h4>1. Data We Collect</h4>
       <p>When you use the Platform, we may collect:</p>
@@ -843,7 +867,7 @@
       </ul>
 
       <h4>3. Public Directory</h4>
-      <p>If your application is approved and your subscription is active, the following information will be visible publicly on the MotoConnect Mansa rider directory: <strong>name, vehicle type, operating zone, availability status, operating hours, and contact phone number</strong>. By submitting an application, you consent to this public display. You may request removal at any time by contacting us.</p>
+      <p>If your application is approved and your subscription is active, the following information will be visible publicly on the MotoConnect Zambia rider directory: <strong>name, vehicle type, operating zone, availability status, operating hours, and contact phone number</strong>. By submitting an application, you consent to this public display. You may request removal at any time by contacting us.</p>
 
       <h4>4. Data Sharing</h4>
       <p>We do not sell your personal data. We may share data with:</p>
@@ -878,7 +902,7 @@
       <h4>10. Contact &amp; Complaints</h4>
       <p>For any privacy enquiries or to exercise your rights, contact us:<br/>
       <strong>NEXLITE DIGITAL SOLUTIONS LIMITED</strong> (t/a Digital Frontier Technologies)<br/>
-      Mansa, Luapula Province, Zambia<br/>
+      Zambia<br/>
       WhatsApp / Phone: <strong>+260 977 638790</strong> or <strong>+260 960 27118</strong></p>
     </div>
     <div class="modal-footer">
@@ -906,9 +930,9 @@
     <div class="lp-badge">🏍️</div>
 
     <h1 class="lp-title">Moto<span>Connect</span></h1>
-    <p class="lp-sub">The smart transport subscription platform built for Mansa's roads</p>
+    <p class="lp-sub">The smart transport subscription platform built for Zambia's roads</p>
 
-    <div class="lp-location">📍 Mansa, Luapula Province — Zambia</div>
+    <div class="lp-location">📍 Zambia</div>
 
     <div class="lp-pills">
       <span class="lp-pill green">✅ Subscription Management</span>
@@ -944,7 +968,7 @@ function showLanding(){
 //  PWA — MANIFEST + SERVICE WORKER + INSTALL PROMPT
 // ══════════════════════════════════════════════════════
 (function(){
-  const m={name:"MotoConnect Mansa",short_name:"MotoConnect",description:"Transport subscription platform",start_url:"./",display:"standalone",background_color:"#1e3a5f",theme_color:"#1e3a5f",orientation:"portrait-primary",icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='32' fill='%231e3a5f'/%3E%3Ctext x='96' y='140' font-size='120' text-anchor='middle'%3E%F0%9F%8F%8D%EF%B8%8F%3C/text%3E%3C/svg%3E",sizes:"192x192",type:"image/svg+xml"},{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='80' fill='%231e3a5f'/%3E%3Ctext x='256' y='360' font-size='300' text-anchor='middle'%3E%F0%9F%8F%8D%EF%B8%8F%3C/text%3E%3C/svg%3E",sizes:"512x512",type:"image/svg+xml"}]};
+  const m={name:"MotoConnect Zambia",short_name:"MotoConnect",description:"Transport subscription platform",start_url:"./",display:"standalone",background_color:"#1e3a5f",theme_color:"#1e3a5f",orientation:"portrait-primary",icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='32' fill='%231e3a5f'/%3E%3Ctext x='96' y='140' font-size='120' text-anchor='middle'%3E%F0%9F%8F%8D%EF%B8%8F%3C/text%3E%3C/svg%3E",sizes:"192x192",type:"image/svg+xml"},{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='80' fill='%231e3a5f'/%3E%3Ctext x='256' y='360' font-size='300' text-anchor='middle'%3E%F0%9F%8F%8D%EF%B8%8F%3C/text%3E%3C/svg%3E",sizes:"512x512",type:"image/svg+xml"}]};
   try{
     const b=new Blob([JSON.stringify(m)],{type:'application/json'});
     document.getElementById('pwaManifest').href=URL.createObjectURL(b);
@@ -1850,7 +1874,7 @@ function showInvoice(id){
   document.getElementById('invoiceBody').innerHTML=`
     <div style="font-size:.85rem;line-height:1.7">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem">
-        <div><strong style="font-size:1.1rem;color:#1e3a5f">🏍️ MotoConnect Mansa</strong><br><small style="color:var(--muted)">Transport Platform · Mansa, Luapula</small></div>
+        <div><strong style="font-size:1.1rem;color:#1e3a5f">🏍️ MotoConnect Zambia</strong><br><small style="color:var(--muted)">Transport Platform · Zambia</small></div>
         <div style="text-align:right"><small style="color:var(--muted)">Invoice Date</small><br>${now}</div>
       </div>
       <div class="divider"></div>
@@ -1870,7 +1894,7 @@ function showInvoice(id){
         <span style="font-size:1.3rem;font-weight:700;color:var(--accent)">${fmt(s.price)}</span>
       </div>
       ${s.notes?`<div style="margin-top:.75rem;background:#f7f9ff;border-radius:8px;padding:.65rem;font-size:.78rem;color:var(--muted)">📝 ${esc(s.notes)}</div>`:''}
-      <div style="margin-top:1rem;font-size:.72rem;color:var(--muted);text-align:center">Thank you for using MotoConnect Mansa</div>
+      <div style="margin-top:1rem;font-size:.72rem;color:var(--muted);text-align:center">Thank you for using MotoConnect Zambia</div>
     </div>`;
   openModal('invoiceModal');
 }
@@ -2044,6 +2068,48 @@ function resolveZoneValue(selectId,customId){
 // On initial load: show public directory (local data first for instant render)
 window.addEventListener('DOMContentLoaded',()=>{
   showPublicPage();
+  // Silent auto-detect on load — quietly filters to user's zone if permitted
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(
+      async (pos)=>{
+        try{
+          const {latitude:lat,longitude:lon}=pos.coords;
+          const url=`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=10&addressdetails=1`;
+          const res=await fetch(url,{headers:{'Accept-Language':'en','User-Agent':'MotoConnectZambia/1.0'}});
+          const data=await res.json();
+          const addr=data.address||{};
+          const candidates=[
+            addr.suburb,addr.neighbourhood,addr.village,addr.hamlet,
+            addr.town,addr.city,addr.municipality,
+            addr.county,addr.state_district,addr.state
+          ].filter(Boolean).map(s=>s.trim());
+          const allNames=[...new Set([...ZAMBIA_TOWNS,...getZones().map(z=>z.name)])];
+          let resolvedTown='';
+          for(const candidate of candidates){
+            const cl=candidate.toLowerCase();
+            const exact=allNames.find(n=>n.toLowerCase()===cl);
+            if(exact){resolvedTown=exact;break;}
+            const partial=allNames.find(n=>{const nl=n.toLowerCase();return cl.includes(nl)||nl.includes(cl);});
+            if(partial){resolvedTown=partial;break;}
+          }
+          if(!resolvedTown&&candidates.length)resolvedTown=candidates[0];
+          if(resolvedTown){
+            if(!_zoneSearchAllOptions.some(o=>o.toLowerCase()===resolvedTown.toLowerCase())){
+              _zoneSearchAllOptions.push(resolvedTown);_zoneSearchAllOptions.sort();
+            }
+            setPubTown(resolvedTown);
+            // Update detect button to show detected zone
+            const icon=document.getElementById('detectLocationIcon');
+            const txt=document.getElementById('detectLocationText');
+            if(icon)icon.textContent='✅';
+            if(txt)txt.textContent=resolvedTown;
+          }
+        }catch(e){} // fail silently
+      },
+      ()=>{}, // denied or error — fail silently, user sees all zones
+      {timeout:8000,maximumAge:600000} // 10-min cache
+    );
+  }
 });
 
 // ══════════════════════════════════════════════════════
@@ -2053,7 +2119,7 @@ window.addEventListener('DOMContentLoaded',()=>{
 async function fbRestLoad(){
   try{
     const token=await _getAnonToken();
-    const url=_FB_DB_URL+'/motoconnect_mansa/subscriptions.json'+(token?'?auth='+token:'');
+    const url=_FB_DB_URL+'/motoconnect_zambia/subscriptions.json'+(token?'?auth='+token:'');
     const res=await fetch(url);
     if(!res.ok)return;
     const data=await res.json();
@@ -2085,23 +2151,63 @@ window.addEventListener('DOMContentLoaded',()=>{
 let _pubZoneFilter='';
 let _pubTownFilter='';
 
+let _zoneSearchAllOptions=[];
 function initPubTownDropdown(){
-  const sel=document.getElementById('pubTownSelect');
-  if(!sel)return;
-  // Use all defined zone names + any extra zones from registered riders
+  // Build master list once from all zone names + any rider-registered extras
   const zoneNames=getZones().map(z=>z.name);
   const registeredExtras=getSubs().flatMap(s=>[s.zone,s.zone2]).filter(Boolean);
-  const allTowns=[...new Set([...zoneNames,...registeredExtras])].sort();
-  sel.innerHTML='<option value="">All Zones</option>'+allTowns.map(t=>`<option value="${esc(t)}" ${_pubTownFilter===t?'selected':''}>${esc(t)}</option>`).join('');
+  _zoneSearchAllOptions=[...new Set([...zoneNames,...registeredExtras])].sort();
+}
+
+function onZoneSearchInput(val){
+  const q=val.trim().toLowerCase();
+  const dd=document.getElementById('zoneSearchDropdown');
+  if(!dd)return;
+  if(!q){dd.classList.remove('open');dd.innerHTML='';return;}
+  const matches=_zoneSearchAllOptions.filter(n=>n.toLowerCase().includes(q)).slice(0,30);
+  if(!matches.length){dd.classList.remove('open');return;}
+  dd.innerHTML=matches.map(n=>{
+    const hi=n.replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi'),'<mark>$1</mark>');
+    return `<div class="zone-dditem" onmousedown="selectZoneOption('${n.replace(/'/g,"\\'")}')">${hi}</div>`;
+  }).join('');
+  dd.classList.add('open');
+}
+
+function onZoneSearchFocus(){
+  // Show all on focus if empty
+  const inp=document.getElementById('pubTownSelect');
+  if(inp&&!inp.value.trim())onZoneSearchInput('');
+}
+
+function onZoneSearchBlur(){
+  // Delay close so mousedown on item fires first
+  setTimeout(()=>{
+    const dd=document.getElementById('zoneSearchDropdown');
+    if(dd)dd.classList.remove('open');
+  },180);
+}
+
+function selectZoneOption(name){
+  const inp=document.getElementById('pubTownSelect');
+  if(inp)inp.value=name;
+  const dd=document.getElementById('zoneSearchDropdown');
+  if(dd){dd.classList.remove('open');dd.innerHTML='';}
+  setPubTown(name);
+}
+
+function clearZoneSearch(){
+  const inp=document.getElementById('pubTownSelect');
+  if(inp)inp.value='';
+  setPubTown('');
 }
 
 function setPubTown(town){
   _pubTownFilter=town;
-  _pubZoneFilter=''; // reset zone filter when town changes
+  _pubZoneFilter='';
   const clearBtn=document.getElementById('pubTownClearBtn');
   if(clearBtn)clearBtn.style.display=town?'inline':'none';
-  const sel=document.getElementById('pubTownSelect');
-  if(sel)sel.value=town;
+  const inp=document.getElementById('pubTownSelect');
+  if(inp)inp.value=town;
   const heroTitle=document.getElementById('pubHeroTitle');
   if(heroTitle)heroTitle.innerHTML=town?`Find a <span>Ride</span> in ${esc(town)}`:`Find a <span>Ride</span> in Zambia`;
   renderPubZoneTabs();
@@ -2155,13 +2261,10 @@ async function detectUserTown(){
         // Fallback: use the most specific raw candidate if no match
         if(!resolvedTown&&candidates.length)resolvedTown=candidates[0];
         if(resolvedTown){
-          // Add to dropdown if not already there
-          initPubTownDropdown();
-          const sel=document.getElementById('pubTownSelect');
-          if(sel&&![...sel.options].some(o=>o.value.toLowerCase()===resolvedTown.toLowerCase())){
-            const opt=document.createElement('option');
-            opt.value=resolvedTown;opt.textContent=resolvedTown;
-            sel.appendChild(opt);
+          // Add to options list if not already there, then set
+          if(!_zoneSearchAllOptions.some(o=>o.toLowerCase()===resolvedTown.toLowerCase())){
+            _zoneSearchAllOptions.push(resolvedTown);
+            _zoneSearchAllOptions.sort();
           }
           setPubTown(resolvedTown);
           if(icon)icon.textContent='✅';
@@ -2771,7 +2874,7 @@ function renderPublicDirectory(){
     return true;
   });
 
-  if(search)riders=riders.filter(s=>(s.name+' '+(s.zone||s.notes||'')).toLowerCase().includes(search));
+  if(search)riders=riders.filter(s=>(s.name+' '+(s.zone||'')+(s.zone2||'')+(s.notes||'')+' '+(s.ref||'MCM-'+s.id.slice(-6).toUpperCase())).toLowerCase().includes(search));
   if(filterType)riders=riders.filter(s=>s.type===filterType);
   if(filterAvail)riders=riders.filter(s=>(s.availability||'available')===filterAvail);
   if(_pubTownFilter){
@@ -2802,7 +2905,7 @@ function renderPublicDirectory(){
   grid.innerHTML=riders.map(s=>{
     const avail=s.availability||'available';
     const phone=zamPhone(s.phone);
-    const waMsg=encodeURIComponent('Hi '+s.name+', I found you on MotoConnect Mansa. Are you available for a ride?');
+    const waMsg=encodeURIComponent('Hi '+s.name+', I found you on MotoConnect Zambia. Are you available for a ride?');
     const riderId='MCM-'+s.id.slice(-4).toUpperCase();
     const photosHtml=(s.photo1||s.photo2)?`<div style="display:flex;gap:.4rem;padding:.5rem .75rem 0;overflow:hidden">${s.photo1?`<img src="${s.photo1}" style="width:72px;height:54px;object-fit:cover;border-radius:7px;border:1px solid var(--border);flex-shrink:0" alt="Vehicle photo">`:''}${s.photo2?`<img src="${s.photo2}" style="width:72px;height:54px;object-fit:cover;border-radius:7px;border:1px solid var(--border);flex-shrink:0" alt="Vehicle photo">`:''}` +'</div>':'';
     return `<div class="rider-card">
@@ -2989,7 +3092,7 @@ function submitApplication(){
     try{
       const planPrice={Basic:'K50',Standard:'K100',Premium:'K200'};
       const msg=encodeURIComponent(
-        '🏍️ *New MotoConnect Mansa Application*\n'+
+        '🏍️ *New MotoConnect Zambia Application*\n'+
         'Ref: '+ref+'\n'+
         'Name: '+app.name+'\n'+
         'Phone: '+app.phone+'\n'+
@@ -3022,7 +3125,7 @@ function submitApplication(){
   (async()=>{
     try{
       const token=await _getAnonToken();
-      const url=_FB_DB_URL+'/motoconnect_mansa/subscriptions/'+app.id+'.json'+(token?'?auth='+token:'');
+      const url=_FB_DB_URL+'/motoconnect_zambia/subscriptions/'+app.id+'.json'+(token?'?auth='+token:'');
       const res=await fetch(url,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(app)});
       const fbStatusEl=document.getElementById('fbSubmitStatus');
       if(fbStatusEl){
@@ -3190,7 +3293,7 @@ async function fbRestWrite(item){
   if(!item||!item.id)return;
   try{
     const token=await _getAnonToken();
-    const url=_FB_DB_URL+'/motoconnect_mansa/subscriptions/'+item.id+'.json'+(token?'?auth='+token:'');
+    const url=_FB_DB_URL+'/motoconnect_zambia/subscriptions/'+item.id+'.json'+(token?'?auth='+token:'');
     fetch(url,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(item)})
       .catch(()=>{});
   }catch(e){}
@@ -3200,7 +3303,7 @@ async function fbRestDelete(id){
   if(!id)return;
   try{
     const token=await _getAnonToken();
-    const url=_FB_DB_URL+'/motoconnect_mansa/subscriptions/'+id+'.json'+(token?'?auth='+token:'');
+    const url=_FB_DB_URL+'/motoconnect_zambia/subscriptions/'+id+'.json'+(token?'?auth='+token:'');
     fetch(url,{method:'DELETE',headers:{'Content-Type':'application/json'}}).catch(()=>{});
   }catch(e){}
 }
@@ -3222,7 +3325,7 @@ function showRiderCard(id){
           <h3>${esc(s.name)}</h3>
           <small>${vehicleIcon(s.type)} ${esc(s.type)} Operator</small>
         </div>
-        <div class="id-card-logo"><strong>MotoConnect</strong>Mansa, Luapula</div>
+        <div class="id-card-logo"><strong>MotoConnect</strong>Zambia</div>
       </div>
       <div class="id-card-fields">
         <div class="id-field"><label>Zone</label><span>${esc(s.zone||'Mansa')}${s.zone2?' &amp; '+esc(s.zone2):''}</span></div>
@@ -3239,7 +3342,7 @@ function showRiderCard(id){
       <p style="font-size:.8rem;color:var(--muted);margin-bottom:.5rem">Quick Contact</p>
       <div style="display:flex;gap:.5rem">
         ${s.phone?`<a class="btn-call" href="tel:+${zamPhone(s.phone)}" style="flex:1;padding:.55rem;text-decoration:none">📞 Call</a>`:''}
-        ${s.phone?`<a class="btn-wa" href="https://wa.me/${zamPhone(s.phone)}?text=${encodeURIComponent('Hi '+s.name+', I found you on MotoConnect Mansa!')}" target="_blank" style="flex:1;padding:.55rem;text-decoration:none">💬 WhatsApp</a>`:''}
+        ${s.phone?`<a class="btn-wa" href="https://wa.me/${zamPhone(s.phone)}?text=${encodeURIComponent('Hi '+s.name+', I found you on MotoConnect Zambia!')}" target="_blank" style="flex:1;padding:.55rem;text-decoration:none">💬 WhatsApp</a>`:''}
       </div>
     </div>
   `;
@@ -3273,7 +3376,7 @@ function printRiderCard(){
 
 function shareRiderCard(){
   const s=getSubs().find(x=>x.id===document.querySelector('#riderCardBody .id-num')?.textContent?.replace('MCM-','').toLowerCase());
-  const text=`🏍️ MotoConnect Mansa Verified Rider\nCheck out this rider on MotoConnect Mansa!`;
+  const text=`🏍️ MotoConnect Zambia Verified Rider\nCheck out this rider on MotoConnect Zambia!`;
   if(navigator.share){
     navigator.share({title:'MotoConnect Rider',text}).catch(()=>{});
   } else {
@@ -3301,7 +3404,7 @@ function remindRider(id){
   if(!s||!s.phone)return alert('No phone number on record for this rider.');
   const phone=zamPhone(s.phone);
   const msg=encodeURIComponent(
-    'Hi '+s.name+', your MotoConnect Mansa subscription expires on '+s.expiry+'. '
+    'Hi '+s.name+', your MotoConnect Zambia subscription expires on '+s.expiry+'. '
     +'Please renew to stay listed on the platform. Ref: MCM-'+s.id.slice(-4).toUpperCase()
   );
   window.open('https://wa.me/'+phone+'?text='+msg,'_blank');
