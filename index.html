@@ -1103,42 +1103,17 @@ function dismissInstall(){
   try{localStorage.setItem('mc_install_dismissed','1');}catch(e){}
 }
 
-// Service Worker — cache-first with network fallback, versioned
+// Service Worker — registered from sw.js (must be deployed alongside index.html)
+// Blob-URL SW registration is unreliable on Android; a real file is required
+// so the browser can cache the app shell and serve it when offline.
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{
-    const CACHE='mc-zambia-v1';
-    const sw=`
-const CACHE='mc-zambia-v1';
-const OFFLINE_PAGE=self.location.href.replace(/\\/sw.*$/,'');
-self.addEventListener('install',e=>{
-  e.waitUntil(caches.open(CACHE).then(c=>c.add(OFFLINE_PAGE)).catch(()=>{}));
-  self.skipWaiting();
-});
-self.addEventListener('activate',e=>{
-  e.waitUntil(
-    caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k))))
-    .then(()=>self.clients.claim())
-  );
-});
-self.addEventListener('fetch',e=>{
-  if(e.request.method!=='GET')return;
-  e.respondWith(
-    caches.match(e.request).then(cached=>{
-      const network=fetch(e.request).then(res=>{
-        if(res&&res.status===200&&res.type==='basic'){
-          const clone=res.clone();
-          caches.open(CACHE).then(c=>c.put(e.request,clone));
-        }
-        return res;
-      }).catch(()=>cached||caches.match(OFFLINE_PAGE));
-      return cached||network;
-    })
-  );
-});`;
-    try{
-      const b=new Blob([sw],{type:'text/javascript'});
-      navigator.serviceWorker.register(URL.createObjectURL(b),{scope:'./'}).catch(()=>{});
-    }catch(e){}
+    navigator.serviceWorker.register('./sw.js',{scope:'./'})
+      .then(reg=>{
+        // Check for SW updates in the background on each load
+        reg.update().catch(()=>{});
+      })
+      .catch(err=>console.warn('SW registration failed:',err));
   });
 }
 
