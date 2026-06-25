@@ -502,6 +502,14 @@
   .btn-call:hover{opacity:.85}
   .btn-wa{flex:1;background:#25d366;color:#fff;border:none;border-radius:8px;padding:.6rem;font-size:.82rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.35rem;transition:opacity .15s;text-decoration:none}
   .btn-wa:hover{opacity:.85}
+  /* ── OFFLINE BANNER ── */
+  #offlineBanner{display:none;align-items:center;gap:.7rem;margin:0 1.5rem .75rem;padding:.65rem 1rem;background:rgba(251,191,36,.13);border:1.5px solid rgba(251,191,36,.45);border-radius:10px;color:#fef3c7;font-size:.82rem;line-height:1.4}
+  #offlineBanner.show{display:flex}
+  #offlineBanner .ob-icon{font-size:1.25rem;flex-shrink:0}
+  #offlineBanner .ob-text{flex:1}
+  #offlineBanner strong{color:#fbbf24}
+  #offlineBanner .ob-refresh{background:rgba(251,191,36,.25);border:1px solid rgba(251,191,36,.5);color:#fbbf24;border-radius:6px;padding:.25rem .65rem;font-size:.78rem;font-weight:600;cursor:pointer;white-space:nowrap;font-family:inherit}
+  #offlineBanner .ob-refresh:active{opacity:.75}
   .pub-empty{text-align:center;padding:3rem 1rem;color:rgba(255,255,255,.6)}
   .open-now-badge{display:inline-flex;align-items:center;gap:.25rem;background:rgba(16,185,129,.2);border:1px solid rgba(16,185,129,.4);color:#6ee7b7;font-size:.65rem;font-weight:700;padding:.1rem .45rem;border-radius:20px;margin-left:.3rem;vertical-align:middle}
   .closed-badge{display:inline-flex;align-items:center;gap:.25rem;background:rgba(100,116,139,.15);border:1px solid rgba(100,116,139,.3);color:rgba(255,255,255,.4);font-size:.65rem;font-weight:700;padding:.1rem .45rem;border-radius:20px;margin-left:.3rem;vertical-align:middle}
@@ -702,6 +710,11 @@
   </div>
   <div class="pub-zone-tabs" id="pubZoneTabs"></div>
   <div id="pubZoneGroupBanner" style="display:none;align-items:center;gap:.75rem;margin:0 1.5rem .5rem;padding:.6rem 1rem;background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.3);border-radius:10px;flex-wrap:wrap"></div>
+  <div id="offlineBanner">
+    <span class="ob-icon">📶</span>
+    <span class="ob-text"><strong>You're offline.</strong> Showing last known riders. Connect to the internet to see live updates.</span>
+    <button class="ob-refresh" onclick="fbRestLoad()">↻ Refresh</button>
+  </div>
   <div class="pub-stats-row" id="pubStatsRow"></div>
   <div class="pub-grid" id="pubGrid"></div>
   <div class="legal-footer-links">
@@ -2363,14 +2376,26 @@ window.addEventListener('DOMContentLoaded',()=>{
 //  FIREBASE READ — fetch live data from Firebase on load
 //  so any device always sees the latest approved riders.
 // ══════════════════════════════════════════════════════
+function _showOfflineBanner(show){
+  const b=document.getElementById('offlineBanner');
+  if(b)show?b.classList.add('show'):b.classList.remove('show');
+}
+
 async function fbRestLoad(){
+  // If browser reports offline, skip the fetch and just show cached data
+  if(!navigator.onLine){
+    _showOfflineBanner(true);
+    _pubDirLoaded=true;
+    renderPublicDirectory();
+    return;
+  }
   try{
     const token=await _getAnonToken();
     const url=_FB_DB_URL+'/motoconnect_zambia/subscriptions.json'+(token?'?auth='+token:'');
     const res=await fetch(url);
-    if(!res.ok){_pubLoadSettle(false);return;}
+    if(!res.ok){_showOfflineBanner(true);_pubLoadSettle(false);return;}
     const data=await res.json();
-    if(!data||typeof data!=='object'){_pubLoadSettle(true);return;}
+    if(!data||typeof data!=='object'){_showOfflineBanner(false);_pubLoadSettle(true);return;}
     // Firebase returns an object map {id: record}; convert to array
     const fbSubs=Object.values(data).filter(Boolean);
     // Merge: Firebase (admin) is source of truth; keep any local-only records
@@ -2378,10 +2403,12 @@ async function fbRestLoad(){
     getSubs().forEach(s=>{if(s&&s.id)localMap[s.id]=s;});
     fbSubs.forEach(s=>{if(s&&s.id)localMap[s.id]=s;});
     save(KEYS.subs,Object.values(localMap));
+    _showOfflineBanner(false); // connected and synced — hide banner
     _pubLoadSettle(true);
     renderPubZoneTabs();
   }catch(e){
     console.warn('Firebase load failed, showing local data:',e);
+    _showOfflineBanner(true);
     _pubLoadSettle(false);
   }
 }
@@ -2414,8 +2441,16 @@ function _pubLoadSettle(success){
 // Load from Firebase immediately on page open, then refresh every 30s
 // so availability changes from admin appear without a manual reload.
 window.addEventListener('DOMContentLoaded',()=>{
+  // Show cached riders immediately — app is usable offline from the first frame
+  _pubDirLoaded=true;
+  renderPublicDirectory();
+  renderPubZoneTabs();
+  // Then attempt live Firebase sync (will show offline banner if it fails)
   fbRestLoad();
   setInterval(fbRestLoad,30000);
+  // React to browser going offline/online
+  window.addEventListener('offline',()=>_showOfflineBanner(true));
+  window.addEventListener('online',()=>fbRestLoad());
 });
 
 // ══════════════════════════════════════════════════════
@@ -3188,10 +3223,7 @@ function renderPublicDirectory(){
 
   const grid=document.getElementById('pubGrid');
   if(!riders.length){
-    if(!_pubDirLoaded){
-      grid.innerHTML=`<div class="pub-empty" style="grid-column:1/-1"><div>🔄</div><p>Loading riders…</p></div>`;
-      return;
-    }
+    // No spinner — cached riders are already visible even on first load
     const townMsg=_pubTownFilter?` in <strong>${esc(_pubTownFilter)}</strong>`:'';
     grid.innerHTML=`<div class="pub-empty" style="grid-column:1/-1"><div>🏍️</div><p>No riders found${townMsg}.</p><p style="font-size:.8rem;margin-top:.5rem">${_pubTownFilter?`Be the first rider in ${esc(_pubTownFilter)}! `:'Try adjusting your filters or '}<span style="color:#fbbf24;cursor:pointer" onclick="showApplyPage()">Apply as a rider</span>.</p></div>`;
     return;
