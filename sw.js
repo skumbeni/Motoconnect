@@ -1,73 +1,79 @@
-// MotoConnect Zambia — Service Worker v4
-// Deploy at: https://skumbeni.github.io/Motoconnect/sw.js
-const CACHE = 'mc-v4';
+// MotoConnect Zambia — Service Worker
+// Repo: skumbeni/Motoconnect → served at /Motoconnect/
+// Based on proven GitHub Pages PWA pattern
 
-// These MUST match your GitHub Pages URL exactly — trailing slash included
-const SHELL_URLS = [
-  '/Motoconnect/',
-  '/Motoconnect/index.html',
+const GHPATH = '/Motoconnect';
+const CACHE  = 'mc-v5';
+
+// Every URL the app needs to open offline — both slash forms required
+const URLS = [
+  `${GHPATH}/`,
+  `${GHPATH}/index.html`,
+  `${GHPATH}/sw.js`,
+  `${GHPATH}/manifest.json`,
 ];
 
-// ── INSTALL: cache the app shell under both URL forms ──
+// ── INSTALL: pre-cache everything in URLS using addAll ──
+// addAll is atomic — if any URL 404s, the whole install fails,
+// so you know immediately if something is wrong.
 self.addEventListener('install', e => {
   e.waitUntil(
-    caches.open(CACHE).then(async c => {
-      for (const url of SHELL_URLS) {
-        try {
-          const res = await fetch(url, { cache: 'reload' });
-          if (res.ok) await c.put(url, res);
-        } catch (_) {}
-      }
-    })
-    .then(() => self.skipWaiting())
-    .catch(() => self.skipWaiting())
+    caches.open(CACHE)
+      .then(c => c.addAll(URLS))
+      .then(() => self.skipWaiting())
   );
 });
 
-// ── ACTIVATE: remove old caches ──
+// ── ACTIVATE: wipe old caches ──
 self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys()
-      .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
+      .then(keys => Promise.all(
+        keys.filter(k => k !== CACHE).map(k => caches.delete(k))
+      ))
       .then(() => self.clients.claim())
   );
 });
 
-// ── FETCH ──
+// ── FETCH: cache-first for shell, network-only for Firebase/APIs ──
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
+
   const url = e.request.url;
 
-  // Let Firebase / external API calls go straight to network
-  // (app handles failures gracefully with localStorage fallback)
+  // Firebase REST, auth, geocoding — always network, never cache
   if (
-    url.includes('firebaseio.com') ||
-    url.includes('googleapis.com') ||
-    url.includes('identitytoolkit') ||
+    url.includes('firebaseio.com')    ||
+    url.includes('googleapis.com')    ||
+    url.includes('identitytoolkit')   ||
     url.includes('nominatim.openstreetmap.org')
   ) return;
 
   e.respondWith(
-    caches.open(CACHE).then(async c => {
-      // 1. Try exact cache match
-      let cached = await c.match(e.request);
-
-      // 2. If the request is a navigation (opening the app), also try
-      //    the shell URLs — catches trailing-slash vs index.html mismatches
-      if (!cached && e.request.mode === 'navigate') {
-        cached = await c.match('/Motoconnect/') || await c.match('/Motoconnect/index.html');
+    caches.match(e.request).then(cached => {
+      if (cached) {
+        // Serve from cache immediately; refresh cache in background
+        fetch(e.request)
+          .then(res => { if (res && res.ok) caches.open(CACHE).then(c => c.put(e.request, res)); })
+          .catch(() => {});
+        return cached;
       }
 
-      // 3. Try network, update cache on success
-      const networkPromise = fetch(e.request)
+      // Not in cache — try network, cache on success
+      return fetch(e.request)
         .then(res => {
-          if (res && res.ok) c.put(e.request, res.clone());
+          if (res && res.ok) {
+            caches.open(CACHE).then(c => c.put(e.request, res.clone()));
+          }
           return res;
         })
-        .catch(() => null);
-
-      // Return cached immediately if available; otherwise wait for network
-      return cached || await networkPromise || cached;
+        .catch(() => {
+          // Network failed and nothing cached — for navigation requests
+          // fall back to the cached shell so app still opens
+          if (e.request.mode === 'navigate') {
+            return caches.match(`${GHPATH}/`) || caches.match(`${GHPATH}/index.html`);
+          }
+        });
     })
   );
 });

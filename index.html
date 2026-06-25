@@ -1104,13 +1104,11 @@ function dismissInstall(){
 }
 
 // Service Worker — registered from sw.js (must be deployed alongside index.html)
-// Blob-URL SW registration is unreliable on Android; a real file is required
-// so the browser can cache the app shell and serve it when offline.
+// Service Worker — must use absolute scope matching the GitHub Pages repo path
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('./sw.js',{scope:'./'})
+    navigator.serviceWorker.register('/Motoconnect/sw.js',{scope:'/Motoconnect/'})
       .then(reg=>{
-        // Check for SW updates in the background on each load
         reg.update().catch(()=>{});
       })
       .catch(err=>console.warn('SW registration failed:',err));
