@@ -2355,20 +2355,22 @@ function _showOfflineBanner(show){
 }
 
 async function fbRestLoad(){
-  // If browser reports offline, skip the fetch and just show cached data
+  // Always show cached data immediately — app is usable offline from the first frame.
+  _pubDirLoaded=true;
+  renderPublicDirectory();
+
+  // If browser reports offline, show banner and stop — no point trying Firebase.
   if(!navigator.onLine){
     _showOfflineBanner(true);
-    _pubDirLoaded=true;
-    renderPublicDirectory();
     return;
   }
   try{
     const token=await _getAnonToken();
     const url=_FB_DB_URL+'/motoconnect_zambia/subscriptions.json'+(token?'?auth='+token:'');
     const res=await fetch(url);
-    if(!res.ok){_showOfflineBanner(true);_pubLoadSettle(false);return;}
+    if(!res.ok){_showOfflineBanner(true);_pubLoadFirstAttemptDone=true;return;}
     const data=await res.json();
-    if(!data||typeof data!=='object'){_showOfflineBanner(false);_pubLoadSettle(true);return;}
+    if(!data||typeof data!=='object'){_showOfflineBanner(false);_pubLoadFirstAttemptDone=true;return;}
     // Firebase returns an object map {id: record}; convert to array
     const fbSubs=Object.values(data).filter(Boolean);
     // Merge: Firebase (admin) is source of truth; keep any local-only records
@@ -2376,52 +2378,29 @@ async function fbRestLoad(){
     getSubs().forEach(s=>{if(s&&s.id)localMap[s.id]=s;});
     fbSubs.forEach(s=>{if(s&&s.id)localMap[s.id]=s;});
     save(KEYS.subs,Object.values(localMap));
-    _showOfflineBanner(false); // connected and synced — hide banner
-    _pubLoadSettle(true);
+    _showOfflineBanner(false);
+    _pubLoadFirstAttemptDone=true;
+    renderPublicDirectory(); // re-render with fresh Firebase data
     renderPubZoneTabs();
   }catch(e){
     console.warn('Firebase load failed, showing local data:',e);
     _showOfflineBanner(true);
-    _pubLoadSettle(false);
+    if(!_pubLoadFirstAttemptDone){
+      _pubLoadFirstAttemptDone=true;
+      setTimeout(fbRestLoad,4000);
+    }
   }
 }
 
-// Marks the first-sync attempt as finished and re-renders. If the very
-// first attempt failed (e.g. a weak/dropped connection), retry once
-// quickly instead of leaving registered riders looking "gone" for the
-// full 30s cycle — but only ever retry the first attempt, not every poll.
 let _pubLoadFirstAttemptDone=false;
-function _pubLoadSettle(success){
-  if(success){
-    _pubDirLoaded=true;
-    renderPublicDirectory();
-    _pubLoadFirstAttemptDone=true;
-    return;
-  }
-  if(!_pubLoadFirstAttemptDone){
-    // First attempt failed — give it one quick retry before showing
-    // any "no riders" message, so a brief connection blip doesn't make
-    // registered riders look like they vanished.
-    _pubLoadFirstAttemptDone=true;
-    setTimeout(fbRestLoad,4000);
-  } else {
-    // Retry (or a later poll) also failed — show whatever's cached locally.
-    _pubDirLoaded=true;
-    renderPublicDirectory();
-  }
-}
 
 // Load from Firebase immediately on page open, then refresh every 30s
 // so availability changes from admin appear without a manual reload.
+// fbRestLoad() now renders cached data immediately before the network call.
 window.addEventListener('DOMContentLoaded',()=>{
-  // Show cached riders immediately — app is usable offline from the first frame
-  _pubDirLoaded=true;
-  renderPublicDirectory();
-  renderPubZoneTabs();
-  // Then attempt live Firebase sync (will show offline banner if it fails)
   fbRestLoad();
+  renderPubZoneTabs();
   setInterval(fbRestLoad,30000);
-  // React to browser going offline/online
   window.addEventListener('offline',()=>_showOfflineBanner(true));
   window.addEventListener('online',()=>fbRestLoad());
 });

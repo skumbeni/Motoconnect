@@ -3,7 +3,7 @@
 // Based on proven GitHub Pages PWA pattern
 
 const GHPATH = '/Motoconnect';
-const CACHE  = 'mc-v5';
+const CACHE  = 'mc-v6';
 
 // Every URL the app needs to open offline — both slash forms required
 const URLS = [
@@ -13,14 +13,19 @@ const URLS = [
   `${GHPATH}/manifest.json`,
 ];
 
-// ── INSTALL: pre-cache everything in URLS using addAll ──
-// addAll is atomic — if any URL 404s, the whole install fails,
-// so you know immediately if something is wrong.
+// ── INSTALL: pre-cache shell URLs individually so one missing file
+// doesn't abort the whole install and leave the app uncacheable.
 self.addEventListener('install', e => {
   e.waitUntil(
-    caches.open(CACHE)
-      .then(c => c.addAll(URLS))
-      .then(() => self.skipWaiting())
+    caches.open(CACHE).then(cache =>
+      Promise.all(
+        URLS.map(url =>
+          cache.add(url).catch(err => {
+            console.warn('[SW] Failed to cache on install (will retry on fetch):', url, err);
+          })
+        )
+      )
+    ).then(() => self.skipWaiting())
   );
 });
 
