@@ -515,6 +515,94 @@
   .closed-badge{display:inline-flex;align-items:center;gap:.25rem;background:rgba(100,116,139,.15);border:1px solid rgba(100,116,139,.3);color:rgba(255,255,255,.4);font-size:.65rem;font-weight:700;padding:.1rem .45rem;border-radius:20px;margin-left:.3rem;vertical-align:middle}
   .pub-empty div{font-size:3rem;margin-bottom:.75rem}
 
+  /* ══ NEARBY DEALS — BANNER CAROUSEL ══════════════════ */
+  .deals-banner-wrap{padding:0 1.5rem .75rem}
+  .deals-banner-carousel{position:relative;border-radius:14px;overflow:hidden;box-shadow:0 4px 18px rgba(0,0,0,.18)}
+  .deals-banner-track{display:flex;transition:transform .45s ease}
+  .deals-banner-slide{
+    min-width:100%;background:linear-gradient(120deg,#fbbf24,#e8820c);
+    color:#1a1306;padding:.85rem 1rem;display:flex;align-items:center;gap:.7rem;cursor:pointer;
+  }
+  .deals-banner-slide .dbs-logo{
+    width:42px;height:42px;border-radius:50%;background:#fff;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;font-size:1.3rem;overflow:hidden;
+    box-shadow:0 2px 6px rgba(0,0,0,.15);
+  }
+  .deals-banner-slide .dbs-logo img{width:100%;height:100%;object-fit:cover}
+  .deals-banner-slide .dbs-text{flex:1;min-width:0}
+  .deals-banner-slide .dbs-text .dbs-name{font-weight:800;font-size:.85rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .deals-banner-slide .dbs-text .dbs-offer{font-size:.74rem;opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .deals-banner-slide .dbs-arrow{font-size:.68rem;font-weight:800;opacity:.7;white-space:nowrap}
+  .deals-banner-dots{display:flex;justify-content:center;gap:5px;padding:.4rem 0 0}
+  .deals-banner-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3)}
+  .deals-banner-dot.active{background:#fbbf24;width:16px;border-radius:3px;transition:all .3s}
+
+  /* ══ NEARBY DEALS — INVITE STRIP ══════════════════════ */
+  .deals-invite-strip{
+    margin:0 1.5rem .75rem;background:rgba(251,191,36,.1);border:1px dashed rgba(251,191,36,.5);
+    border-radius:10px;padding:.55rem .85rem;display:flex;align-items:center;gap:.55rem;
+    font-size:.78rem;color:rgba(255,255,255,.85);cursor:pointer;
+  }
+  .deals-invite-strip .dis-go{margin-left:auto;color:#fbbf24;font-weight:700;font-size:.76rem;white-space:nowrap}
+
+  /* ══ NEARBY DEALS TAB (within publicPage) ══════════════ */
+  .deals-section-head{padding:1.25rem 1.5rem .25rem;display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap}
+  .deals-section-head h2{color:#fff;font-size:1.15rem;font-weight:800}
+  .deals-section-head p{color:rgba(255,255,255,.6);font-size:.8rem;margin-top:.15rem}
+  .deals-cat-scroll{display:flex;gap:.5rem;overflow-x:auto;padding:.6rem 1.5rem 1rem;scrollbar-width:none}
+  .deals-cat-scroll::-webkit-scrollbar{display:none}
+  .deals-chip{
+    flex-shrink:0;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);
+    color:rgba(255,255,255,.8);border-radius:50px;padding:.4rem .9rem;font-size:.78rem;
+    font-weight:600;cursor:pointer;white-space:nowrap;transition:all .15s;
+  }
+  .deals-chip:hover{background:rgba(255,255,255,.18);color:#fff}
+  .deals-chip.active{background:#fbbf24;border-color:#fbbf24;color:#000}
+  .deals-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;padding:0 1.5rem 1.5rem}
+  .deal-card{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.2);animation:fadeUp .4s ease both}
+  .deal-card-top{padding:.9rem 1rem .6rem;display:flex;gap:.7rem;align-items:flex-start}
+  .deal-logo-box{
+    width:48px;height:48px;border-radius:12px;background:var(--surface2);border:1px solid var(--border);
+    display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;overflow:hidden;
+  }
+  .deal-logo-box img{width:100%;height:100%;object-fit:cover}
+  .deal-info{flex:1;min-width:0}
+  .deal-info .deal-name{font-weight:700;font-size:.92rem;color:var(--text);display:flex;align-items:center;gap:.4rem;flex-wrap:wrap}
+  .deal-tier-badge{background:#fbbf24;color:#1a1306;font-size:.6rem;font-weight:800;padding:.1rem .4rem;border-radius:5px;letter-spacing:.3px}
+  .deal-info .deal-cat{font-size:.74rem;color:var(--muted);margin-top:.1rem}
+  .deal-info .deal-zone{font-size:.74rem;color:var(--sidebar-bg);margin-top:.2rem;font-weight:600}
+  .deal-offer-box{margin:.55rem 1rem 0;background:var(--surface2);border-radius:8px;padding:.5rem .65rem;font-size:.78rem;color:var(--text);line-height:1.4}
+  .deal-card-actions{display:flex;gap:.5rem;padding:.7rem 1rem 1rem}
+  .deals-empty{grid-column:1/-1;text-align:center;padding:2.5rem 1rem;color:rgba(255,255,255,.6)}
+  .deals-empty div{font-size:2.6rem;margin-bottom:.6rem}
+
+  .deals-ad-cta{
+    margin:.5rem 1.5rem 2rem;background:linear-gradient(135deg,#1e3a5f,#2d5a8e);
+    border-radius:14px;padding:1.1rem 1.2rem;color:#fff;
+  }
+  .deals-ad-cta h3{font-size:.98rem;margin-bottom:.3rem}
+  .deals-ad-cta p{font-size:.8rem;opacity:.85;line-height:1.45;margin-bottom:.8rem}
+  .deals-ad-cta button{
+    background:#fbbf24;color:#1a1306;border:none;border-radius:8px;
+    padding:.6rem 1.1rem;font-weight:800;font-size:.85rem;cursor:pointer;width:100%;
+  }
+
+  /* ══ ADVERTISE PAGE — tier cards & logo upload ══════════ */
+  .tier-pick{
+    border:1.5px solid var(--border);border-radius:10px;padding:.7rem .85rem;
+    display:flex;justify-content:space-between;align-items:center;cursor:pointer;margin-bottom:.55rem;
+  }
+  .tier-pick.selected{border-color:var(--accent);background:var(--accent-light)}
+  .tier-pick .tp-name{font-weight:700;font-size:.85rem;color:var(--text)}
+  .tier-pick .tp-desc{font-size:.72rem;color:var(--muted);margin-top:.1rem}
+  .tier-pick .tp-price{font-weight:800;color:var(--sidebar-bg);font-size:.88rem;white-space:nowrap;margin-left:.6rem}
+  .adv-logo-upload{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4rem;
+    border:2px dashed var(--border);border-radius:10px;padding:1rem .5rem;cursor:pointer;
+    background:var(--surface2);text-align:center;transition:border-color .2s;
+  }
+  .adv-logo-upload.has-file{border-color:var(--accent2)}
+
   /* ══ APPLY PAGE ══════════════════════════════════════ */
   #applyPage{
     display:none;min-height:100vh;
@@ -660,6 +748,8 @@
     <div class="pub-logo">🏍️ Moto<span>Connect</span> <span style="font-size:.7rem;color:rgba(255,255,255,.5);font-weight:400">Zambia</span></div>
     <div class="pub-header-actions">
       <a id="downloadAppBtn" class="btn-pub-apply" href="https://raw.githubusercontent.com/skumbeni/Motoconnect/main/app.apk" style="background:linear-gradient(135deg,#1e3a5f,#2d5a8e);color:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:.4rem" download>📲 Download App</a>
+      <button class="btn-pub-apply" id="navDealsBtn" onclick="showDealsTab()" style="background:rgba(255,255,255,.12);color:#fff">🏷️ Nearby Deals</button>
+      <button class="btn-pub-apply" id="navRidersBtn" onclick="showRidersTab()" style="display:none">🏍️ Find a Rider</button>
       <button class="btn-pub-apply" onclick="showApplyPage()">🚀 Apply as Rider</button>
     </div>
   </header>
@@ -676,6 +766,15 @@
     setTimeout(_hideDownloadIfMedian,500);
   </script>
 
+  <!-- ══ NEARBY DEALS BANNER (featured/premium advertisers) ══ -->
+  <div class="deals-banner-wrap" id="dealsBannerWrap" style="display:none">
+    <div class="deals-banner-carousel" id="dealsBannerCarousel">
+      <div class="deals-banner-track" id="dealsBannerTrack"></div>
+    </div>
+    <div class="deals-banner-dots" id="dealsBannerDots"></div>
+  </div>
+
+  <div id="ridersFinderSection">
   <div class="pub-hero">
     <h1 id="pubHeroTitle">Find a <span>Ride</span> in Zambia</h1>
     <p>Browse verified motorbike taxis &amp; operators — tap to call or WhatsApp instantly</p>
@@ -717,6 +816,33 @@
   </div>
   <div class="pub-stats-row" id="pubStatsRow"></div>
   <div class="pub-grid" id="pubGrid"></div>
+
+  <!-- Soft invite into Nearby Deals, shown below the rider grid -->
+  <div class="deals-invite-strip" id="dealsInviteStrip" onclick="showDealsTab()" style="display:none">
+    <span>🏷️</span>
+    <span>Check <strong>Nearby Deals</strong> — fuel, food &amp; courier offers in your zone</span>
+    <span class="dis-go">Open ›</span>
+  </div>
+  </div>
+  <!-- /ridersFinderSection -->
+
+  <!-- ══ NEARBY DEALS TAB ═══════════════════════════════════ -->
+  <div id="dealsTabSection" style="display:none">
+    <div class="deals-section-head">
+      <div>
+        <h2>🏷️ Nearby Deals</h2>
+        <p>Offers from local businesses along your route</p>
+      </div>
+    </div>
+    <div class="deals-cat-scroll" id="dealsCatScroll"></div>
+    <div class="deals-grid" id="dealsGrid"></div>
+    <div class="deals-ad-cta">
+      <h3>📣 Advertise your business here</h3>
+      <p>Reach riders and customers across Zambia, targeted to your exact zone. Plans start from K300/month.</p>
+      <button onclick="showAdvertisePage()">List My Business →</button>
+    </div>
+  </div>
+
   <div class="legal-footer-links">
     &copy; 2025 MotoConnect Zambia &mdash; Zambia<br/>
     <a onclick="openModal('tosModal')">Terms of Service</a> &nbsp;&bull;&nbsp;
@@ -877,6 +1003,241 @@
   </div>
 </div>
 
+<!-- ══ ADVERTISE PAGE (Nearby Deals signup) ═══════════════ -->
+<div id="advertisePage" style="display:none">
+  <div style="max-width:540px;margin:0 auto">
+    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1.25rem;cursor:pointer;color:rgba(255,255,255,.7)" onclick="showDealsTab()">
+      ← Back to Nearby Deals
+    </div>
+    <div class="apply-card">
+      <div class="apply-card-header">
+        <h2>📣 Advertise on MotoConnect</h2>
+        <p>Get your business in front of riders &amp; customers in your zone</p>
+        <div class="apply-steps">
+          <div class="apply-step active" id="advStepDot1"><div class="apply-step-num">1</div>Business</div>
+          <div class="apply-step" id="advStepDot2"><div class="apply-step-num">2</div>Plan</div>
+          <div class="apply-step" id="advStepDot3"><div class="apply-step-num">3</div>Rewards</div>
+          <div class="apply-step" id="advStepDot4"><div class="apply-step-num">4</div>Confirm</div>
+        </div>
+      </div>
+      <div class="apply-card-body">
+
+        <!-- Step 1: Business Details -->
+        <div class="apply-section active" id="advStep1">
+          <div class="form-row"><label>Business Name *</label><input type="text" id="advName" placeholder="e.g. Hungry Lion Kabwata"/></div>
+          <div class="form-row"><label>Category *</label>
+            <select id="advCategory">
+              <option value="">— Select —</option>
+              <option value="fuel">⛽ Filling Station</option>
+              <option value="courier">📦 Courier &amp; Logistics</option>
+              <option value="supermarket">🛒 Supermarket</option>
+              <option value="restaurant">🍔 Restaurant / Fast Food</option>
+              <option value="cafe">☕ Café</option>
+              <option value="mechanic">🔧 Auto / Mechanic</option>
+              <option value="lodge">🏨 Lodge / Guesthouse</option>
+              <option value="momo">📱 Mobile Money Agent</option>
+              <option value="other">🏬 Other</option>
+            </select>
+          </div>
+          <div class="form-row"><label>Operating Zone *</label>
+            <div class="cz-wrap">
+              <input type="text" class="cz-input" id="advZoneInput" placeholder="🔍 Search or type your zone…" autocomplete="off"
+                oninput="czOnInput('advZoneInput','czDropAdv','advZone','advZoneCustom','advZoneCustomHint','czClearAdv')"
+                onfocus="czOnFocus('advZoneInput','czDropAdv','advZone','advZoneCustom')"
+                onblur="czOnBlur('czDropAdv')"
+                onkeydown="czOnKey(event,'czDropAdv','advZone','advZoneInput','advZoneCustom','advZoneCustomHint','czClearAdv')"/>
+              <button class="cz-clear" id="czClearAdv" onclick="czClear('advZoneInput','czDropAdv','advZone','advZoneCustom','czClearAdv','advZoneCustomHint')" title="Clear">✕</button>
+              <div class="cz-dropdown" id="czDropAdv"></div>
+            </div>
+            <input type="hidden" id="advZone" value=""/>
+            <input type="hidden" id="advZoneCustom" value=""/>
+            <div id="advZoneCustomHint" style="display:none;margin-top:.4rem" class="cz-new-badge">⚠️ New region — admin will review before it goes live</div>
+            <div style="margin-top:.35rem;font-size:.75rem;color:var(--muted)">Your listing is shown to users browsing this zone.</div>
+          </div>
+          <div class="form-row"><label>Phone / WhatsApp Number *</label><input type="tel" id="advPhone" placeholder="e.g. 0977 123456"/></div>
+          <div class="form-row"><label>Offer / Promo Text <span style="font-weight:400;color:var(--muted);font-size:.75rem">(optional)</span></label>
+            <textarea id="advOffer" rows="2" placeholder="e.g. 5% off fuel for MotoConnect riders on Fridays"></textarea>
+          </div>
+          <div class="form-row">
+            <label>Business Logo <span style="font-weight:400;color:var(--muted);font-size:.75rem">(optional)</span></label>
+            <label for="advLogo" class="adv-logo-upload" id="advLogoLabel">
+              <span style="font-size:1.5rem" id="advLogoIcon">📷</span>
+              <span style="font-size:.75rem;color:var(--muted);text-align:center" id="advLogoText">Tap to upload your logo</span>
+            </label>
+            <input type="file" id="advLogo" accept="image/*" style="display:none" onchange="previewAdvLogo(this)"/>
+            <div style="margin-top:.4rem;font-size:.75rem;color:var(--muted)">Square image recommended, max 2MB. This is your own logo — we display exactly what you upload.</div>
+          </div>
+          <div class="apply-nav"><span></span><button class="btn btn-primary btn-sm" onclick="advNext(1)">Next →</button></div>
+        </div>
+
+        <!-- Step 2: Plan & Payment -->
+        <div class="apply-section" id="advStep2">
+          <div class="form-row">
+            <label>Choose Your Plan *</label>
+            <div class="tier-pick" data-tier="basic" data-price="300" onclick="selectAdvTier('basic',300)">
+              <div><div class="tp-name">Basic</div><div class="tp-desc">Listing in Nearby Deals tab</div></div>
+              <div class="tp-price">K300/mo</div>
+            </div>
+            <div class="tier-pick" data-tier="featured" data-price="600" onclick="selectAdvTier('featured',600)">
+              <div><div class="tp-name">Featured</div><div class="tp-desc">+ Dashboard banner rotation, zone boost</div></div>
+              <div class="tp-price">K600/mo</div>
+            </div>
+            <div class="tier-pick" data-tier="premium" data-price="1000" onclick="selectAdvTier('premium',1000)">
+              <div><div class="tp-name">Premium</div><div class="tp-desc">+ Top placement, 1 push alert/month</div></div>
+              <div class="tp-price">K1000/mo</div>
+            </div>
+            <input type="hidden" id="advTier" value=""/>
+          </div>
+          <div class="form-row">
+            <label>Payment Transaction ID <span style="color:var(--danger);font-weight:700">*</span></label>
+            <input type="text" id="advTxnId" placeholder="e.g. AIRTEL-20240623-XXXX or MTN-XXXXXXX"/>
+            <div style="margin-top:.4rem;font-size:.78rem;color:var(--text);line-height:1.6;background:#fffbeb;border:1px solid #fcd34d;border-radius:6px;padding:.5rem .65rem">💡 Pay via Airtel Money or MTN Mobile Money to <strong style="color:var(--accent)">0977 638790</strong> or <strong style="color:var(--accent)">0960271128</strong>, the amount for your chosen plan, then enter your transaction ID here.</div>
+          </div>
+          <div class="apply-nav">
+            <button class="btn btn-ghost btn-sm" onclick="advBack(2)">← Back</button>
+            <button class="btn btn-primary btn-sm" onclick="advNext(2)">Next →</button>
+          </div>
+        </div>
+
+        <!-- Step 3: Partner Rewards (Voucher Program) — entirely optional, -->
+        <!-- entirely the partner's own offer and terms. MotoConnect only  -->
+        <!-- verifies active-subscriber status and enforces the cadence.  -->
+        <div class="apply-section" id="advStep3">
+          <div style="background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:.75rem;font-size:.8rem;color:#92400e;margin-bottom:1rem;line-height:1.5">
+            🎁 <strong>Optional:</strong> Reward loyal MotoConnect riders directly. You decide the offer and how it's earned — MotoConnect only confirms the rider has an active subscription and counts visits fairly. You're never charged anything extra for this; the reward itself is provided by you, on your own terms.
+          </div>
+          <div class="form-row">
+            <label class="legal-consent" style="margin-bottom:.9rem">
+              <input type="checkbox" id="advVoucherEnabled" onchange="toggleVoucherFields()"/>
+              <span>Yes, I want to run a Rider Rewards program</span>
+            </label>
+          </div>
+          <div id="advVoucherFields" style="display:none">
+            <div class="form-row">
+              <label>Your Reward Offer *</label>
+              <textarea id="advVoucherOffer" rows="2" placeholder="e.g. K10 off fuel, or a free top-up, or 5% off any purchase — your choice"></textarea>
+              <div style="margin-top:.35rem;font-size:.75rem;color:var(--muted)">Shown to riders exactly as you type it. You decide what's fair for your business.</div>
+            </div>
+            <div class="form-row">
+              <label>How should the reward be earned? *</label>
+              <select id="advVoucherModel" onchange="toggleVoucherModelFields()">
+                <option value="visit">After a number of visits (best for small, frequent purchases — e.g. fuel)</option>
+                <option value="spend">After a total amount spent (best for bigger, occasional purchases)</option>
+              </select>
+              <div style="margin-top:.4rem;font-size:.76rem;color:#92400e;background:#fffbeb;border:1px solid #fde68a;border-radius:6px;padding:.5rem">
+                💡 If riders usually spend a little each visit (e.g. a few liters at a time), "visits" works better than a once-a-week discount — small amounts add up faster across several visits than they ever could in one.
+              </div>
+            </div>
+            <div class="form-row" id="advVoucherVisitRow">
+              <label>Reward after every <input type="number" id="advVoucherVisitTarget" value="5" min="2" max="30" style="width:70px;display:inline-block;margin:0 .3rem"/> visits</label>
+              <div style="margin-top:.35rem;font-size:.75rem;color:var(--muted)">Staff log each visit on the Verify page; the reward triggers automatically on the Nth visit and the count resets.</div>
+            </div>
+            <div class="form-row" id="advVoucherSpendRow" style="display:none">
+              <label>Reward after total spend reaches K<input type="number" id="advVoucherSpendTarget" value="200" min="10" style="width:90px;display:inline-block;margin:0 .3rem"/></label>
+              <div style="margin-top:.35rem;font-size:.75rem;color:var(--muted)">Staff enter the amount spent at each visit; once the running total crosses this, the reward triggers and the total resets.</div>
+            </div>
+            <div class="form-row">
+              <label>Minimum time between logged visits</label>
+              <select id="advVoucherMinGap">
+                <option value="1">Once per day</option>
+                <option value="0.5">Twice per day</option>
+                <option value="2">Once every 2 days</option>
+                <option value="7">Once per week</option>
+              </select>
+              <div style="margin-top:.35rem;font-size:.75rem;color:var(--muted)">Just an anti-abuse spacing rule — it doesn't control when the reward fires, only how often a visit can be logged.</div>
+            </div>
+            <div class="form-row">
+              <label>How should staff verify riders? <span style="font-weight:400;color:var(--muted);font-size:.75rem">(optional note)</span></label>
+              <input type="text" id="advVoucherStaffNote" placeholder="e.g. Ask for their phone number and check the Verify page"/>
+            </div>
+          </div>
+          <div class="apply-nav">
+            <button class="btn btn-ghost btn-sm" onclick="advBack(3)">← Back</button>
+            <button class="btn btn-primary btn-sm" onclick="advNext(3)">Next →</button>
+          </div>
+        </div>
+
+        <!-- Step 4: Review & Submit -->
+        <div class="apply-section" id="advStep4">
+          <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1rem;font-size:.85rem;margin-bottom:1rem">
+            <p style="font-weight:700;margin-bottom:.6rem;color:var(--sidebar-bg)">📋 Review Your Listing</p>
+            <div id="advReviewContent" style="line-height:2;color:var(--muted)"></div>
+          </div>
+          <div style="background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:.75rem;font-size:.78rem;color:#92400e;margin-bottom:1rem">
+            ⚠️ Your listing will be reviewed by admin and will go live once approved. You will be contacted on your phone.
+          </div>
+          <label class="legal-consent">
+            <input type="checkbox" id="advTosConsent"/>
+            <span>I agree to the <button type="button" onclick="openModal('tosModal')">Terms of Service</button> and <button type="button" onclick="openModal('privacyModal')">Privacy Policy</button> of MotoConnect Zambia.</span>
+          </label>
+          <div class="apply-nav">
+            <button class="btn btn-ghost btn-sm" onclick="advBack(4)">← Back</button>
+            <button class="btn btn-success btn-sm" onclick="submitAdvertiser()">✅ Submit Listing</button>
+          </div>
+        </div>
+
+        <!-- Step 5: Confirmation -->
+        <div class="apply-section" id="advStep5">
+          <div class="apply-confirm-box">
+            <div class="big-check">✅</div>
+            <h3>Listing Submitted!</h3>
+            <p>Thank you for advertising on MotoConnect Zambia. Keep your reference number safe — admin will contact you once reviewed.</p>
+            <div class="ref-chip" id="advRefDisplay">ADV-XXXX</div>
+            <p id="advFbSubmitStatus" style="font-size:.8rem;margin-top:.6rem;font-weight:600">📡 Sending to admin…</p>
+            <p style="font-size:.78rem;margin-top:.3rem;color:var(--muted)">Processing usually takes 1–2 business days.</p>
+            <div id="advVoucherStaffReminder" style="display:none;margin-top:1rem;background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:.75rem;font-size:.78rem;color:#92400e;text-align:left">
+              🎁 <strong>Reward program staff link:</strong> once approved, bookmark <code id="advVerifyLinkText" style="word-break:break-all"></code> at your counter — staff use it to confirm a rider before giving the reward.
+            </div>
+            <button class="btn btn-primary btn-sm mt1" onclick="showDealsTab()" style="margin-top:1rem">← Back to Nearby Deals</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <span class="apply-back-link" onclick="showDealsTab()">← Back to Nearby Deals</span>
+  </div>
+</div>
+
+<!-- ══ VERIFY PAGE — PARTNER STAFF CONTROL SURFACE ════════ -->
+<!-- This is the page partner staff use at the counter to confirm a    -->
+<!-- rider's active-subscriber status and lock in one redemption.      -->
+<!-- No login required (staff aren't MotoConnect users), but every     -->
+<!-- redemption is permanently logged with timestamp + names for       -->
+<!-- dispute resolution. Reachable via a direct link partners can      -->
+<!-- bookmark at the counter (motoconnect…/?verify, see boot logic).   -->
+<div id="verifyPage" style="display:none">
+  <div style="max-width:480px;margin:0 auto">
+    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1.25rem;cursor:pointer;color:rgba(255,255,255,.7)" onclick="showPublicPage()">
+      ← Back to MotoConnect
+    </div>
+    <div class="apply-card">
+      <div class="apply-card-header">
+        <h2>✅ Rider Rewards — Staff Check-In</h2>
+        <p>For partner staff only — log each rider's visit here</p>
+      </div>
+      <div class="apply-card-body">
+        <div class="form-row">
+          <label>Select Your Business *</label>
+          <select id="verifyAdvSelect" onchange="onVerifyAdvChange()">
+            <option value="">— Select your business —</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>Rider's Phone Number *</label>
+          <input type="tel" id="verifyPhoneInput" placeholder="e.g. 0977 123456"/>
+        </div>
+        <button class="btn btn-primary btn-sm" style="width:100%" onclick="runVerifyCheck()">🔍 Check Rider</button>
+        <div id="verifyResultBox" style="margin-top:1rem"></div>
+
+        <div style="margin-top:1.5rem;border-top:1px solid var(--border);padding-top:1rem">
+          <p style="font-weight:700;font-size:.85rem;color:var(--sidebar-bg);margin-bottom:.5rem">📜 Recent Visits (this business)</p>
+          <div id="verifyHistoryList" style="font-size:.78rem;color:var(--muted);line-height:1.7"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ══ TERMS OF SERVICE MODAL ════════════════════════════ -->
 <div class="overlay" id="tosModal">
   <div class="modal legal-modal">
@@ -903,7 +1264,19 @@
         <li>Your listing may be removed if you fail to renew your subscription or if you violate these Terms.</li>
       </ul>
 
-      <h4>4. Acceptable Use</h4>
+      <h4>4. Advertiser Registration &amp; Subscriptions</h4>
+      <ul>
+        <li>MotoConnect Zambia offers paid advertising placements ("Nearby Deals") through which third-party businesses ("Advertisers") may list offers, promotions, and business information to Platform users.</li>
+        <li>Advertisers must provide accurate business information, including a valid business name, category, contact number, and operating zone. Advertisers are solely responsible for the accuracy of all submitted content, including offers, pricing, and any logo or image uploaded.</li>
+        <li>By uploading a logo or business image, the Advertiser warrants that they own the rights to that image or have authorisation to use it, and grants NEXLITE DIGITAL SOLUTIONS LIMITED a non-exclusive licence to display it on the Platform for the duration of their active subscription.</li>
+        <li>Advertiser listings are subject to admin review and approval. We reserve the right to reject or remove any advertiser listing without stating a reason, including for content we consider misleading, inappropriate, or in breach of these Terms.</li>
+        <li>Advertiser subscriptions are offered on Basic (K300/month), Featured (K600/month), and Premium (K1000/month) plans. Fees are payable in advance via Airtel Money or MTN Mobile Money. Subscriptions are non-refundable once activated.</li>
+        <li>We do not verify the accuracy of advertiser offers, the quality of advertised goods or services, or an advertiser's ability to honour any promotion displayed. Users engage with advertised businesses entirely at their own discretion and risk.</li>
+        <li>MotoConnect Zambia does not endorse any advertiser or their products/services merely by displaying their listing.</li>
+        <li>An advertiser's listing may be removed at any time if they fail to renew their subscription, provide false information, or violate these Terms.</li>
+      </ul>
+
+      <h4>5. Acceptable Use</h4>
       <p>You must not:</p>
       <ul>
         <li>Provide false personal or vehicle information.</li>
@@ -913,35 +1286,36 @@
         <li>Scrape, copy, or redistribute Platform data without our written permission.</li>
       </ul>
 
-      <h4>5. Platform Availability</h4>
+      <h4>6. Platform Availability</h4>
       <p>We aim to keep MotoConnect Zambia available at all times but do not guarantee uninterrupted access. We may suspend or modify the Platform for maintenance, updates, or any other reason without notice. We are not liable for any loss resulting from unavailability of the Platform.</p>
 
-      <h4>6. Intellectual Property</h4>
+      <h4>7. Intellectual Property</h4>
       <p>All content, design, and software on the Platform is owned by NEXLITE DIGITAL SOLUTIONS LIMITED or its licensors. You may not reproduce, modify, or distribute any part of the Platform without our prior written consent.</p>
 
-      <h4>7. Limitation of Liability</h4>
+      <h4>8. Limitation of Liability</h4>
       <p>To the fullest extent permitted by Zambian law, we are not liable for any indirect, incidental, or consequential loss arising from your use of the Platform, including loss of income, disputes with customers, or transport incidents. Our total liability to you shall not exceed the subscription fees paid by you in the three months preceding the claim.</p>
 
-      <h4>8. Indemnification</h4>
+      <h4>9. Indemnification</h4>
       <p>You agree to indemnify, defend, and hold harmless NEXLITE DIGITAL SOLUTIONS LIMITED, its owners, directors, officers, employees, developers, contractors, and agents (collectively, the "Indemnified Parties") from and against any and all claims, demands, suits, losses, liabilities, damages, fines, penalties, costs, and expenses (including reasonable legal fees and disbursements) of any kind, arising out of, relating to, or in connection with:</p>
       <ul>
         <li>your access to or use of the Platform, whether or not authorised;</li>
         <li>your breach or alleged breach of these Terms;</li>
         <li>any inaccurate, false, or misleading information submitted by you;</li>
         <li>any transport service you provide, including any accident, injury, death, property damage, theft, fare dispute, or other incident arising from or connected with your activities as a rider, taxi operator, or tour operator;</li>
-        <li>any dispute, claim, or complaint brought by a customer, another rider, or any third party against you;</li>
+        <li>any content, offer, claim, image, or material submitted by you as an Advertiser, including any dispute arising from a promotion you advertised but did not honour;</li>
+        <li>any dispute, claim, or complaint brought by a customer, another rider, another advertiser, or any third party against you;</li>
         <li>your violation of any applicable law, regulation, licensing requirement, or right of a third party; or</li>
         <li>any content, data, or material you submit, post, or transmit through the Platform.</li>
       </ul>
       <p>This indemnity applies regardless of whether the underlying claim is based in contract, tort, negligence, strict liability, or any other legal theory, and regardless of whether the Indemnified Parties were aware of or could have foreseen the circumstances giving rise to the claim. This indemnity shall survive the termination or expiry of your use of the Platform, your subscription, and these Terms, and applies to the fullest extent permitted under the laws of the Republic of Zambia. The Indemnified Parties reserve the right, at your expense, to assume the exclusive defence and control of any matter otherwise subject to indemnification by you, and you agree to cooperate fully with such defence.</p>
 
-      <h4>9. Governing Law</h4>
+      <h4>10. Governing Law</h4>
       <p>These Terms are governed by the laws of the Republic of Zambia. Any disputes shall be subject to the exclusive jurisdiction of the courts of Zambia.</p>
 
-      <h4>10. Changes to Terms</h4>
+      <h4>11. Changes to Terms</h4>
       <p>We may update these Terms from time to time. Continued use of the Platform after changes are posted constitutes acceptance of the revised Terms.</p>
 
-      <h4>11. Contact</h4>
+      <h4>12. Contact</h4>
       <p>For questions about these Terms, contact us via WhatsApp or phone at <strong>+260 977 638790</strong> or <strong>+260 960 271128</strong>.</p>
     </div>
     <div class="modal-footer">
@@ -980,40 +1354,43 @@
         <li>To improve and maintain the Platform.</li>
       </ul>
 
-      <h4>3. Public Directory</h4>
-      <p>If your application is approved and your subscription is active, the following information will be visible publicly on the MotoConnect Zambia rider directory: <strong>name, vehicle type, operating zone, availability status, operating hours, and contact phone number</strong>. By submitting an application, you consent to this public display. You may request removal at any time by contacting us.</p>
+      <h4>3. Public Directory &amp; Listings</h4>
+      <p>If your application is approved and your subscription is active, the following information will be visible publicly on the MotoConnect Zambia rider directory: <strong>name, vehicle type, operating zone, availability status, operating hours, and contact phone number</strong>. By submitting an application, you consent to this public display. You may request removal at any time by contacting us. The same public-display consent applies to approved Advertiser listings described in Section 4 below.</p>
 
-      <h4>4. Data Sharing</h4>
+      <h4>4. Advertiser Data</h4>
+      <p>If you register as an Advertiser, we collect: business name, category, contact number, operating zone, logo/image, promotional text, subscription tier, and payment transaction reference. This information is displayed publicly in the Nearby Deals section and, for Featured/Premium tiers, in the dashboard banner. We do not share individual user data (names, phone numbers, location) with Advertisers. Advertisers may see only aggregate, non-identifying statistics (e.g. approximate number of views in their zone) if such a feature is introduced in future.</p>
+
+      <h4>5. Data Sharing</h4>
       <p>We do not sell your personal data. We may share data with:</p>
       <ul>
-        <li><strong>Cloud service providers:</strong> We use secure third-party cloud infrastructure to store and sync rider data across authorised devices, in accordance with industry-standard security practices.</li>
+        <li><strong>Cloud service providers:</strong> We use secure third-party cloud infrastructure to store and sync rider and advertiser data across authorised devices, in accordance with industry-standard security practices.</li>
         <li><strong>Platform administrators:</strong> Staff authorised to manage the Platform.</li>
         <li><strong>Legal authorities:</strong> Where required by Zambian law or a lawful order.</li>
       </ul>
 
-      <h4>5. Data Retention</h4>
-      <p>We retain your personal data for as long as your subscription is active plus a period of 12 months thereafter, unless you request deletion earlier. Expired or rejected applications may be retained for up to 6 months for administrative purposes.</p>
+      <h4>6. Data Retention</h4>
+      <p>We retain your personal data for as long as your subscription is active plus a period of 12 months thereafter, unless you request deletion earlier. Expired or rejected applications and advertiser listings may be retained for up to 6 months for administrative purposes.</p>
 
-      <h4>6. Your Rights</h4>
+      <h4>7. Your Rights</h4>
       <p>Under the Zambia Data Protection Act, 2021, you have the right to:</p>
       <ul>
         <li>Access the personal data we hold about you.</li>
         <li>Request correction of inaccurate data.</li>
         <li>Request deletion of your data (subject to legal obligations).</li>
-        <li>Withdraw consent at any time (this may result in removal from the directory).</li>
+        <li>Withdraw consent at any time (this may result in removal from the directory or Nearby Deals listing).</li>
         <li>Lodge a complaint with the Zambia Information and Communications Technology Authority (ZICTA).</li>
       </ul>
 
-      <h4>7. Data Security</h4>
+      <h4>8. Data Security</h4>
       <p>We implement reasonable technical and organisational measures to protect your personal data, including encrypted cloud storage and access controls on restricted parts of the Platform. No system is completely secure; please contact us immediately if you believe your data has been compromised.</p>
 
-      <h4>8. Cookies &amp; Local Storage</h4>
-      <p>The Platform uses browser localStorage to store subscription data locally on your device for offline functionality. No tracking cookies are used. No advertising networks have access to your data through this Platform.</p>
+      <h4>9. Cookies &amp; Local Storage</h4>
+      <p>The Platform uses browser localStorage to store data locally on your device for offline functionality. We do not use third-party advertising networks or behavioural ad-tracking. MotoConnect Zambia displays paid listings from local businesses ("Advertisers") directly, based only on the zone you are browsing — we do not share your personal data, browsing history, or contact details with Advertisers.</p>
 
-      <h4>9. Children's Privacy</h4>
+      <h4>10. Children's Privacy</h4>
       <p>The Platform is not intended for persons under 18 years of age. We do not knowingly collect data from minors. If you believe a minor has submitted data, please contact us for immediate removal.</p>
 
-      <h4>10. Contact &amp; Complaints</h4>
+      <h4>11. Contact &amp; Complaints</h4>
       <p>For any privacy enquiries or to exercise your rights, contact us:<br/>
       <strong>NEXLITE DIGITAL SOLUTIONS LIMITED</strong> (t/a Spike Trading and General Dealers)<br/>
       Zambia<br/>
@@ -1021,6 +1398,30 @@
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost btn-sm" onclick="closeModal('privacyModal')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PARTNER REWARDS — RIDER VOUCHER CHECK MODAL ═══════ -->
+<!-- Rider enters their MotoConnect phone number; we confirm they hold  -->
+<!-- an active subscription and haven't already redeemed this partner's -->
+<!-- reward in the current cycle, then issue a one-time code the staff  -->
+<!-- can verify on the public Verify page.                              -->
+<div class="overlay" id="voucherModal">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-header">
+      <h3>🎁 My Reward Progress</h3>
+      <button class="close-btn" onclick="closeModal('voucherModal')">✕</button>
+    </div>
+    <div style="padding:1.1rem 1.25rem">
+      <p id="voucherPartnerOffer" style="font-size:.85rem;color:var(--muted);margin-bottom:1rem;line-height:1.5"></p>
+      <div class="form-row">
+        <label>Your MotoConnect Phone Number *</label>
+        <input type="tel" id="voucherPhoneInput" placeholder="e.g. 0977 123456"/>
+        <div style="margin-top:.35rem;font-size:.75rem;color:var(--muted)">Must match the number on your active MotoConnect subscription.</div>
+      </div>
+      <button class="btn btn-success btn-sm" style="width:100%;margin-top:.5rem" onclick="submitVoucherCheck()">Check My Reward</button>
+      <div id="voucherResultBox" style="margin-top:1rem"></div>
     </div>
   </div>
 </div>
@@ -1118,7 +1519,7 @@ if('serviceWorker' in navigator){
 // ══════════════════════════════════════════════════════
 //  STATE & PERSISTENCE
 // ══════════════════════════════════════════════════════
-const KEYS={subs:'mc_subscriptions',fares:'mc_fares',zones:'mc_zones_v2',settings:'mc_settings',pendingSync:'mc_pending_sync',pendingZoneSync:'mc_pending_zone_sync'};
+const KEYS={subs:'mc_subscriptions',fares:'mc_fares',zones:'mc_zones_v2',settings:'mc_settings',pendingSync:'mc_pending_sync',pendingZoneSync:'mc_pending_zone_sync',advertisers:'mc_advertisers',pendingAdvSync:'mc_pending_adv_sync',redemptions:'mc_voucher_redemptions',pendingRedemptionSync:'mc_pending_redemption_sync'};
 const RATES={ZMW:1,USD:0.049,EUR:0.046,GBP:0.040,ZAR:0.90};
 let state={currency:'ZMW',warnDays:7,adminName:'Admin User'};
 
@@ -1605,6 +2006,165 @@ function getZones(){return load(KEYS.zones,[
   {id:'z472',name:'Zimba Boma',desc:'',mult:1.0},
   {id:'z473',name:'Zimba Rural',desc:'',mult:1.0}
 ]);}
+
+// ══════════════════════════════════════════════════════
+//  NEARBY DEALS — ADVERTISER DATA MODEL
+//  Mirrors the rider/subscription pattern: local-first storage,
+//  Firebase REST sync with retry queue, admin approval workflow.
+// ══════════════════════════════════════════════════════
+const ADV_CATEGORY_META={
+  fuel:{label:'Filling Station',icon:'⛽'},
+  courier:{label:'Courier & Logistics',icon:'📦'},
+  supermarket:{label:'Supermarket',icon:'🛒'},
+  restaurant:{label:'Restaurant',icon:'🍔'},
+  cafe:{label:'Café',icon:'☕'},
+  mechanic:{label:'Auto / Mechanic',icon:'🔧'},
+  lodge:{label:'Lodge / Guesthouse',icon:'🏨'},
+  momo:{label:'Mobile Money Agent',icon:'📱'},
+  other:{label:'Business',icon:'🏬'}
+};
+const ADV_TIER_PRICE={basic:300,featured:600,premium:1000};
+
+function getAdvertisers(){return load(KEYS.advertisers,[]);}
+
+// ══════════════════════════════════════════════════════
+//  PARTNER REWARDS — VOUCHER PROGRAM
+//  Partner sets their own reward AND chooses how it's earned:
+//   - 'visit'  : every Nth logged visit triggers the reward
+//                (fits small/frequent purchases — fuel, snacks, etc,
+//                where a single visit's discount would feel negligible)
+//   - 'spend'  : reward fires once cumulative logged spend crosses
+//                a partner-set Kwacha threshold
+//  Either way, MotoConnect only verifies (a) the rider holds an ACTIVE
+//  subscription and (b) a minimum gap between LOGGED visits (anti-abuse,
+//  not the reward trigger itself). The reward value/cost is entirely
+//  the partner's decision and liability — we just count fairly.
+// ══════════════════════════════════════════════════════
+function getRedemptions(){return load(KEYS.redemptions,[]);}
+
+// Normalizes a phone string for matching (strips spaces, leading 0/+260).
+function normPhone(p){
+  if(!p)return'';
+  let d=String(p).replace(/\D/g,'');
+  if(d.startsWith('260'))d=d.slice(3);
+  else if(d.startsWith('0'))d=d.slice(1);
+  return d;
+}
+
+// Finds the rider's most relevant ACTIVE subscription by phone number.
+// This is the trust anchor for the whole voucher system: a rider is only
+// ever voucher-eligible if they have a real, currently-active, paid
+// MotoConnect subscription — never just because they "are a rider".
+function findActiveRiderByPhone(phone){
+  const target=normPhone(phone);
+  if(!target)return null;
+  const today=new Date();
+  return getSubs().find(s=>
+    normPhone(s.phone)===target &&
+    s.status==='active' &&
+    (!s.expiry||new Date(s.expiry)>=today)
+  )||null;
+}
+
+// Returns all PAST visit logs for one rider+partner, most recent first.
+// "Visit logs" includes every logged visit, whether or not it triggered
+// a reward — this is what visit-count / spend-accumulation are computed from.
+function getVisitLogs(riderPhone, advertiserId){
+  return getRedemptions()
+    .filter(r=>r.riderPhone===normPhone(riderPhone)&&r.advertiserId===advertiserId)
+    .sort((a,b)=>new Date(b.loggedAt)-new Date(a.loggedAt));
+}
+
+// Progress since the last reward fired (or since the beginning, if none yet).
+// visitsSinceReward / spendSinceReward are what the UI shows riders/staff
+// so progress feels real even between reward-earning visits.
+function getProgressSinceLastReward(riderPhone, advertiserId){
+  const logs=getVisitLogs(riderPhone,advertiserId); // most recent first
+  let visits=0, spend=0;
+  for(const log of logs){
+    if(log.rewardFired)break; // stop counting once we hit the last reward boundary
+    visits++;
+    spend+=parseFloat(log.amount)||0;
+  }
+  return{visits,spend,lastLog:logs[0]||null};
+}
+
+// Core eligibility check: can this rider LOG a new visit right now?
+// This is the anti-abuse gate (minimum gap between visits) — separate
+// from whether that visit will actually trigger a reward.
+function checkVisitEligibility(riderPhone, advertiserId){
+  const adv=getAdvertisers().find(a=>a.id===advertiserId);
+  if(!adv)return{eligible:false,reason:'Partner not found.'};
+  if(adv.status!=='active')return{eligible:false,reason:'This partner listing is not currently active.'};
+  if(!adv.voucherEnabled)return{eligible:false,reason:'This partner has not enabled a rewards program.'};
+
+  const rider=findActiveRiderByPhone(riderPhone);
+  if(!rider)return{eligible:false,reason:'No active MotoConnect subscription found for this phone number. Only active subscribers qualify.'};
+
+  const minGapDays=parseFloat(adv.voucherMinGapDays)||1; // default: once per day
+  const logs=getVisitLogs(riderPhone,advertiserId);
+  const last=logs[0];
+  if(last){
+    const daysSince=(Date.now()-new Date(last.loggedAt).getTime())/86400000;
+    if(daysSince<minGapDays){
+      const hoursLeft=Math.ceil((minGapDays-daysSince)*24);
+      return{eligible:false,reason:`Already logged a visit recently. Try again in ${hoursLeft<24?hoursLeft+' hour(s)':Math.ceil(hoursLeft/24)+' day(s)'}.`,advertiser:adv,rider};
+    }
+  }
+
+  const progress=getProgressSinceLastReward(riderPhone,advertiserId);
+  return{eligible:true,advertiser:adv,rider,progress};
+}
+
+// Logs a visit. If the partner's chosen model means this visit crosses
+// the reward threshold, the reward fires and the counter resets —
+// otherwise it's just progress toward the next one.
+// requiresAmount tells the UI whether to even ask staff for a Kwacha figure.
+function logVisit(riderPhone, advertiserId, amountSpent, note){
+  const check=checkVisitEligibility(riderPhone, advertiserId);
+  if(!check.eligible)return{success:false,reason:check.reason};
+
+  const adv=check.advertiser;
+  const model=adv.voucherModel||'visit';
+  const amount=parseFloat(amountSpent)||0;
+  if(model==='spend'&&amount<=0){
+    return{success:false,reason:'Please enter the amount spent — this partner\'s reward is based on total spend.'};
+  }
+
+  const newVisitCount=check.progress.visits+1;
+  const newSpend=check.progress.spend+amount;
+  let rewardFired=false;
+
+  if(model==='visit'){
+    const target=parseInt(adv.voucherVisitTarget)||5;
+    rewardFired=newVisitCount>=target;
+  }else{ // 'spend'
+    const target=parseFloat(adv.voucherSpendTarget)||200;
+    rewardFired=newSpend>=target;
+  }
+
+  const entry={
+    id:uid(),
+    riderPhone:normPhone(riderPhone),
+    riderName:check.rider.name||'',
+    advertiserId,
+    advertiserName:adv.name||'',
+    offerAtRedemption:adv.voucherOffer||'',
+    model,
+    amount,
+    loggedAt:new Date().toISOString(),
+    rewardFired,
+    visitNumberAtLog:newVisitCount,
+    cumulativeSpendAtLog:Math.round(newSpend*100)/100,
+    note:note||''
+  };
+  const all=getRedemptions();
+  all.push(entry);
+  save(KEYS.redemptions,all);
+  fbRedemptionWrite(entry);
+  return{success:true,entry,rewardFired,progress:{visits:rewardFired?0:newVisitCount,spend:rewardFired?0:newSpend}};
+}
+
 function getSettings(){return load(KEYS.settings,{adminName:'Admin User',currency:'ZMW',warnDays:7});}
 
 
@@ -2105,12 +2665,13 @@ function togglePw(inputId,btn){
 // ══════════════════════════════════════════════════════
 //  PHASE 1: PAGE ROUTING (Public / Apply / Admin)
 // ══════════════════════════════════════════════════════
-const PAGES=['publicPage','applyPage','landingPage'];
+const PAGES=['publicPage','applyPage','landingPage','advertisePage','verifyPage'];
 function hideAllPages(){PAGES.forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});}
 
 function showPublicPage(){
   hideAllPages();
   document.getElementById('publicPage').style.display='block';
+  showRidersTab();
   initPubTownDropdown();
   renderPublicDirectory();
   renderPubZoneTabs();
@@ -2135,6 +2696,50 @@ function showApplyPage(){
   setApplyStep(1);
   document.getElementById('appPlan').value='Basic';
   updatePlanInfo();
+}
+
+// ══════════════════════════════════════════════════════
+//  NEARBY DEALS — TAB SWITCHING (within publicPage)
+// ══════════════════════════════════════════════════════
+function showRidersTab(){
+  document.getElementById('ridersFinderSection').style.display='block';
+  document.getElementById('dealsTabSection').style.display='none';
+  document.getElementById('navRidersBtn').style.display='none';
+  document.getElementById('navDealsBtn').style.display='inline-flex';
+  const strip=document.getElementById('dealsInviteStrip');
+  if(strip)strip.style.display='flex';
+}
+function showDealsTab(){
+  hideAllPages();
+  document.getElementById('publicPage').style.display='block';
+  document.getElementById('ridersFinderSection').style.display='none';
+  document.getElementById('dealsTabSection').style.display='block';
+  document.getElementById('navDealsBtn').style.display='none';
+  document.getElementById('navRidersBtn').style.display='inline-flex';
+  renderDealsTab();
+}
+
+function showAdvertisePage(){
+  hideAllPages();
+  document.getElementById('advertisePage').style.display='block';
+  ['advName','advPhone','advOffer','advTxnId','advVoucherOffer','advVoucherStaffNote'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('advCategory').value='';
+  czClear('advZoneInput','czDropAdv','advZone','advZoneCustom','czClearAdv','advZoneCustomHint');
+  _advLogoBase64='';
+  document.getElementById('advLogo').value='';
+  document.getElementById('advLogoIcon').innerHTML='📷';
+  document.getElementById('advLogoText').textContent='Tap to upload your logo';
+  document.getElementById('advLogoLabel').classList.remove('has-file');
+  document.querySelectorAll('.tier-pick').forEach(c=>c.classList.remove('selected'));
+  document.getElementById('advTier').value='';
+  document.getElementById('advVoucherEnabled').checked=false;
+  document.getElementById('advVoucherModel').value='visit';
+  document.getElementById('advVoucherVisitTarget').value='5';
+  document.getElementById('advVoucherSpendTarget').value='200';
+  document.getElementById('advVoucherMinGap').value='1';
+  toggleVoucherModelFields();
+  toggleVoucherFields();
+  setAdvStep(1);
 }
 
 // onApplyZoneChange replaced by combo zone widget (czOnInput / czSelect / czSelectCustom)
@@ -2300,6 +2905,13 @@ function czSelectCustom(hiddenId,inputId,ddId,customId,hintId,clearId){
 
 // On initial load: show public directory (local data first for instant render)
 window.addEventListener('DOMContentLoaded',()=>{
+  // Partner staff reach the Verify control surface via a direct,
+  // bookmarkable link (e.g. yoursite/?verify) — no login needed, since
+  // staff aren't MotoConnect account holders. Everything else boots as normal.
+  if(new URLSearchParams(window.location.search).has('verify')){
+    showVerifyPage();
+    return;
+  }
   showPublicPage();
   // Silent auto-detect on load — quietly filters to user's zone if permitted
   if(navigator.geolocation){
@@ -2400,10 +3012,144 @@ let _pubLoadFirstAttemptDone=false;
 window.addEventListener('DOMContentLoaded',()=>{
   fbRestLoad();
   renderPubZoneTabs();
+  fbAdvLoad();
   setInterval(fbRestLoad,30000);
+  setInterval(fbAdvLoad,30000);
+  setInterval(flushPendingRedemptionSync,30000);
   window.addEventListener('offline',()=>_showOfflineBanner(true));
-  window.addEventListener('online',()=>fbRestLoad());
+  window.addEventListener('online',()=>{fbRestLoad();fbAdvLoad();fbRedemptionLoad();flushPendingRedemptionSync();});
 });
+
+// ══════════════════════════════════════════════════════
+//  NEARBY DEALS — FIREBASE SYNC (same pattern as rider
+//  subscriptions: read-merge-write, retry queue on write)
+// ══════════════════════════════════════════════════════
+async function fbAdvLoad(){
+  // Always render cached advertisers immediately — works offline.
+  renderDealsBanner();
+  if(document.getElementById('dealsTabSection')&&document.getElementById('dealsTabSection').style.display!=='none'){
+    renderDealsGrid();
+  }
+  if(!navigator.onLine)return;
+  try{
+    const token=await _getAnonToken();
+    const url=_FB_DB_URL+'/motoconnect_zambia/advertisers.json'+(token?'?auth='+token:'');
+    const res=await fetch(url);
+    if(!res.ok)return;
+    const data=await res.json();
+    if(!data||typeof data!=='object')return;
+    const fbAds=Object.values(data).filter(Boolean);
+    const localMap={};
+    getAdvertisers().forEach(a=>{if(a&&a.id)localMap[a.id]=a;});
+    fbAds.forEach(a=>{if(a&&a.id)localMap[a.id]=a;});
+    save(KEYS.advertisers,Object.values(localMap));
+    renderDealsBanner();
+    if(document.getElementById('dealsTabSection')&&document.getElementById('dealsTabSection').style.display!=='none'){
+      renderDealsGrid();
+    }
+  }catch(e){
+    console.warn('Advertiser load failed, showing local data:',e);
+  }
+}
+
+function getPendingAdvSync(){return load(KEYS.pendingAdvSync,[]);}
+function markPendingAdvSync(id){
+  const p=getPendingAdvSync();
+  if(!p.includes(id)){p.push(id);save(KEYS.pendingAdvSync,p);}
+}
+function clearPendingAdvSync(id){
+  save(KEYS.pendingAdvSync,getPendingAdvSync().filter(x=>x!==id));
+}
+
+async function fbAdvWrite(item){
+  if(!item||!item.id)return;
+  markPendingAdvSync(item.id);
+  try{
+    const token=await _getAnonToken();
+    const url=_FB_DB_URL+'/motoconnect_zambia/advertisers/'+item.id+'.json'+(token?'?auth='+token:'');
+    const res=await fetch(url,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(item)});
+    if(res&&res.ok)clearPendingAdvSync(item.id);
+  }catch(e){
+    console.warn('Advertiser sync to cloud failed, will retry:',e);
+  }
+}
+
+// Retries any advertiser listings that failed to sync earlier.
+async function flushPendingAdvSync(){
+  const pending=getPendingAdvSync();
+  if(!pending.length)return;
+  const ads=getAdvertisers();
+  for(const id of pending){
+    const item=ads.find(a=>a.id===id);
+    if(item)await fbAdvWrite(item);
+    else clearPendingAdvSync(id);
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  PARTNER REWARDS — VOUCHER REDEMPTION SYNC
+//  Same read-merge-write pattern as advertisers/subscriptions.
+//  Redemption records are the dispute-proof source of truth, so
+//  the verify flow always tries a fresh cloud fetch before deciding
+//  eligibility — a stale 30s-old cache could wrongly allow a second
+//  redemption across two different devices/stations.
+// ══════════════════════════════════════════════════════
+function getPendingRedemptionSync(){return load(KEYS.pendingRedemptionSync,[]);}
+function markPendingRedemptionSync(id){
+  const p=getPendingRedemptionSync();
+  if(!p.includes(id)){p.push(id);save(KEYS.pendingRedemptionSync,p);}
+}
+function clearPendingRedemptionSync(id){
+  save(KEYS.pendingRedemptionSync,getPendingRedemptionSync().filter(x=>x!==id));
+}
+
+async function fbRedemptionWrite(item){
+  if(!item||!item.id)return;
+  markPendingRedemptionSync(item.id);
+  try{
+    const token=await _getAnonToken();
+    const url=_FB_DB_URL+'/motoconnect_zambia/redemptions/'+item.id+'.json'+(token?'?auth='+token:'');
+    const res=await fetch(url,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(item)});
+    if(res&&res.ok)clearPendingRedemptionSync(item.id);
+  }catch(e){
+    console.warn('Redemption sync to cloud failed, will retry:',e);
+  }
+}
+
+async function flushPendingRedemptionSync(){
+  const pending=getPendingRedemptionSync();
+  if(!pending.length)return;
+  const all=getRedemptions();
+  for(const id of pending){
+    const item=all.find(r=>r.id===id);
+    if(item)await fbRedemptionWrite(item);
+    else clearPendingRedemptionSync(id);
+  }
+}
+
+// Pulls the latest redemptions from the cloud and merges into local
+// cache. Returns true on success (fresh data), false if it had to fall
+// back to local-only (offline / fetch failed).
+async function fbRedemptionLoad(){
+  if(!navigator.onLine)return false;
+  try{
+    const token=await _getAnonToken();
+    const url=_FB_DB_URL+'/motoconnect_zambia/redemptions.json'+(token?'?auth='+token:'');
+    const res=await fetch(url);
+    if(!res.ok)return false;
+    const data=await res.json();
+    if(!data||typeof data!=='object')return true; // empty is still "fresh"
+    const fbR=Object.values(data).filter(Boolean);
+    const localMap={};
+    getRedemptions().forEach(r=>{if(r&&r.id)localMap[r.id]=r;});
+    fbR.forEach(r=>{if(r&&r.id)localMap[r.id]=r;});
+    save(KEYS.redemptions,Object.values(localMap));
+    return true;
+  }catch(e){
+    console.warn('Redemption load failed, using local cache:',e);
+    return false;
+  }
+}
 
 // ══════════════════════════════════════════════════════
 //  PUBLIC DIRECTORY
@@ -3212,11 +3958,325 @@ function renderPublicDirectory(){
       </div>
     </div>`;
   }).join('');
+
+  // Refresh the deals banner + invite strip whenever the directory re-renders,
+  // so approved advertisers appear without needing a manual page reload.
+  renderDealsBanner();
 }
 
 // ══════════════════════════════════════════════════════
-//  RIDER APPLICATION FORM (3-step)
+//  NEARBY DEALS — BANNER CAROUSEL (dashboard, riders tab)
+//  Only Featured/Premium active advertisers rotate here —
+//  this is the paid placement value of the higher tiers.
 // ══════════════════════════════════════════════════════
+let _dealsBannerIndex=0,_dealsBannerInterval=null;
+function renderDealsBanner(){
+  const ads=getAdvertisers().filter(a=>a.status==='active'&&(a.tier==='featured'||a.tier==='premium'));
+  const wrap=document.getElementById('dealsBannerWrap');
+  const track=document.getElementById('dealsBannerTrack');
+  const dots=document.getElementById('dealsBannerDots');
+  const inviteStrip=document.getElementById('dealsInviteStrip');
+  if(!wrap||!track||!dots)return;
+
+  if(!ads.length){
+    wrap.style.display='none';
+    clearInterval(_dealsBannerInterval);
+    // No paid banner ads yet — show the plain invite strip instead so the
+    // Nearby Deals tab still gets discovered.
+    if(inviteStrip)inviteStrip.style.display='flex';
+    return;
+  }
+  wrap.style.display='block';
+  if(inviteStrip)inviteStrip.style.display='none';
+
+  track.innerHTML=ads.map(a=>{
+    const meta=ADV_CATEGORY_META[a.category]||ADV_CATEGORY_META.other;
+    return `<div class="deals-banner-slide" onclick="showDealsTab()">
+      <div class="dbs-logo">${a.logoDataUrl?`<img src="${a.logoDataUrl}" alt="">`:meta.icon}</div>
+      <div class="dbs-text">
+        <div class="dbs-name">${esc(a.name)}</div>
+        <div class="dbs-offer">${esc(a.offer||(meta.label+' • '+a.zone))}</div>
+      </div>
+      <div class="dbs-arrow">VIEW ›</div>
+    </div>`;
+  }).join('');
+  dots.innerHTML=ads.map((_,i)=>`<div class="deals-banner-dot${i===0?' active':''}"></div>`).join('');
+
+  _dealsBannerIndex=0;
+  _positionDealsBanner();
+  clearInterval(_dealsBannerInterval);
+  if(ads.length>1){
+    _dealsBannerInterval=setInterval(()=>{
+      _dealsBannerIndex=(_dealsBannerIndex+1)%ads.length;
+      _positionDealsBanner();
+    },4500);
+  }
+}
+function _positionDealsBanner(){
+  const track=document.getElementById('dealsBannerTrack');
+  if(track)track.style.transform='translateX(-'+(_dealsBannerIndex*100)+'%)';
+  document.querySelectorAll('.deals-banner-dot').forEach((d,i)=>d.classList.toggle('active',i===_dealsBannerIndex));
+}
+
+// ══════════════════════════════════════════════════════
+//  NEARBY DEALS — TAB CONTENT (category chips + listing grid)
+// ══════════════════════════════════════════════════════
+let _dealsCategoryFilter='all';
+function renderDealsTab(){
+  renderDealsCatChips();
+  renderDealsGrid();
+}
+function renderDealsCatChips(){
+  const wrap=document.getElementById('dealsCatScroll');
+  if(!wrap)return;
+  let html=`<div class="deals-chip${_dealsCategoryFilter==='all'?' active':''}" onclick="setDealsCategory('all')">All</div>`;
+  html+=Object.entries(ADV_CATEGORY_META).map(([key,meta])=>
+    `<div class="deals-chip${_dealsCategoryFilter===key?' active':''}" onclick="setDealsCategory('${key}')">${meta.icon} ${esc(meta.label)}</div>`
+  ).join('');
+  wrap.innerHTML=html;
+}
+function setDealsCategory(key){
+  _dealsCategoryFilter=key;
+  renderDealsCatChips();
+  renderDealsGrid();
+}
+function renderDealsGrid(){
+  const grid=document.getElementById('dealsGrid');
+  if(!grid)return;
+  let ads=getAdvertisers().filter(a=>a.status==='active');
+  if(_dealsCategoryFilter!=='all')ads=ads.filter(a=>a.category===_dealsCategoryFilter);
+  // Zone-aware sort: ads matching the rider directory's current zone filter
+  // float to the top first, then Premium → Featured → Basic by tier.
+  const zoneFilter=(_pubZoneFilter||_pubTownFilter||'').toLowerCase();
+  const tierRank={premium:0,featured:1,basic:2};
+  ads.sort((a,b)=>{
+    if(zoneFilter){
+      const aMatch=(a.zone||'').toLowerCase().includes(zoneFilter)?0:1;
+      const bMatch=(b.zone||'').toLowerCase().includes(zoneFilter)?0:1;
+      if(aMatch!==bMatch)return aMatch-bMatch;
+    }
+    return (tierRank[a.tier]??3)-(tierRank[b.tier]??3);
+  });
+
+  if(!ads.length){
+    grid.innerHTML=`<div class="deals-empty"><div>🏷️</div><p>No deals in this category yet.</p><p style="font-size:.8rem;margin-top:.4rem">Check back soon, or <span style="color:#fbbf24;cursor:pointer" onclick="showAdvertisePage()">list your business</span>.</p></div>`;
+    return;
+  }
+
+  grid.innerHTML=ads.map(a=>{
+    const meta=ADV_CATEGORY_META[a.category]||ADV_CATEGORY_META.other;
+    const phone=zamPhone(a.phone);
+    const waMsg=encodeURIComponent('Hi, I found '+a.name+' on MotoConnect Zambia. I have a question about your offer.');
+    return `<div class="deal-card">
+      <div class="deal-card-top">
+        <div class="deal-logo-box">${a.logoDataUrl?`<img src="${a.logoDataUrl}" alt="">`:meta.icon}</div>
+        <div class="deal-info">
+          <div class="deal-name">${esc(a.name)} ${a.tier!=='basic'?`<span class="deal-tier-badge">${a.tier.toUpperCase()}</span>`:''}</div>
+          <div class="deal-cat">${meta.icon} ${esc(meta.label)}</div>
+          <div class="deal-zone">📍 ${esc(a.zone)}</div>
+        </div>
+      </div>
+      ${a.offer?`<div class="deal-offer-box">🏷️ ${esc(a.offer)}</div>`:''}
+      ${a.voucherEnabled?`<div class="deal-offer-box" style="background:#ecfdf5;border-color:#6ee7b1;color:#065f46">🎁 <strong>MotoConnect Rider Reward:</strong> ${esc(a.voucherOffer)}</div>`:''}
+      <div class="deal-card-actions">
+        ${phone?`<a class="btn-call" href="tel:+${phone}">📞 Call</a>`:'<span class="btn-call" style="opacity:.4;cursor:default">📞 No Phone</span>'}
+        ${phone?`<a class="btn-wa" href="https://wa.me/${phone}?text=${waMsg}" target="_blank">💬 WhatsApp</a>`:'<span class="btn-wa" style="opacity:.4;cursor:default">💬 WhatsApp</span>'}
+      </div>
+      ${a.voucherEnabled?`<button class="btn btn-success btn-sm" style="width:100%;margin-top:.5rem" onclick="openVoucherCheck('${a.id}')">🎁 Check My Progress</button>`:''}
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════════
+//  PARTNER REWARDS — RIDER-SIDE VOUCHER CHECK
+//  Shows the rider their PROGRESS, not just a yes/no — this is what
+//  makes small/frequent purchases feel worthwhile: seeing "3 of 5
+//  visits" is motivating in a way a single small weekly discount isn't.
+// ══════════════════════════════════════════════════════
+let _voucherCheckAdvId='';
+
+function openVoucherCheck(advertiserId){
+  const adv=getAdvertisers().find(a=>a.id===advertiserId);
+  if(!adv)return;
+  _voucherCheckAdvId=advertiserId;
+  const earnLine=adv.voucherModel==='spend'
+    ?`Earn it after spending K${adv.voucherSpendTarget} in total here.`
+    :`Earn it after ${adv.voucherVisitTarget} visits here.`;
+  document.getElementById('voucherPartnerOffer').innerHTML=
+    `<strong>${esc(adv.name)}:</strong> ${esc(adv.voucherOffer)}<br>
+     <span style="font-size:.78rem">${earnLine}</span><br>
+     <span style="font-size:.78rem">Enter your MotoConnect phone number to see your progress.</span>`;
+  document.getElementById('voucherPhoneInput').value='';
+  document.getElementById('voucherResultBox').innerHTML='';
+  openModal('voucherModal');
+  // Pull the freshest redemption + advertiser data before the rider checks,
+  // so a visit logged at a different station/device a minute ago is
+  // already reflected.
+  fbRedemptionLoad();
+  fbAdvLoad();
+}
+
+function submitVoucherCheck(){
+  const phone=document.getElementById('voucherPhoneInput').value.trim();
+  const box=document.getElementById('voucherResultBox');
+  if(!phone){box.innerHTML='<div style="color:var(--danger);font-size:.85rem">Please enter your phone number.</div>';return;}
+
+  const adv=getAdvertisers().find(a=>a.id===_voucherCheckAdvId);
+  const rider=findActiveRiderByPhone(phone);
+  if(!rider){
+    box.innerHTML=`<div style="background:#fee2e2;border:1px solid #fca5a5;border-radius:8px;padding:.75rem;font-size:.85rem;color:#991b1b">⚠️ No active MotoConnect subscription found for this number. Only active subscribers can earn rewards.</div>`;
+    return;
+  }
+  const progress=getProgressSinceLastReward(phone,_voucherCheckAdvId);
+  let pct,label;
+  if(adv.voucherModel==='spend'){
+    const target=parseFloat(adv.voucherSpendTarget)||200;
+    pct=Math.min(100,Math.round((progress.spend/target)*100));
+    label=`K${progress.spend.toFixed(0)} of K${target} spent`;
+  }else{
+    const target=parseInt(adv.voucherVisitTarget)||5;
+    pct=Math.min(100,Math.round((progress.visits/target)*100));
+    label=`${progress.visits} of ${target} visits`;
+  }
+  box.innerHTML=`
+    <div style="background:#ecfdf5;border:1px solid #6ee7b1;border-radius:8px;padding:1rem">
+      <div style="font-size:.78rem;color:#065f46;margin-bottom:.5rem;text-align:center">Hi ${esc(rider.name||'')} — your progress toward this reward:</div>
+      <div style="background:#fff;border-radius:6px;height:14px;overflow:hidden;margin-bottom:.5rem">
+        <div style="background:#10b981;height:100%;width:${pct}%;transition:width .3s"></div>
+      </div>
+      <div style="font-size:.95rem;font-weight:700;color:#065f46;text-align:center">${esc(label)}</div>
+    </div>
+    <div style="font-size:.72rem;color:var(--muted);margin-top:.6rem;text-align:center">Ask staff to log each visit on their Verify page — your progress updates automatically. No code needed.</div>
+  `;
+}
+
+// ══════════════════════════════════════════════════════
+//  PARTNER REWARDS — STAFF VERIFY PAGE
+//  This page is the actual control point: it's the only place a visit
+//  gets permanently logged. Checking eligibility alone (the rider-side
+//  modal above) never logs anything — only "Log This Visit" here does.
+// ══════════════════════════════════════════════════════
+function showVerifyPage(){
+  hideAllPages();
+  document.getElementById('verifyPage').style.display='block';
+  populateVerifyAdvSelect();
+  document.getElementById('verifyPhoneInput').value='';
+  document.getElementById('verifyResultBox').innerHTML='';
+  // Always try a fresh pull before staff start checking — this is the
+  // moment cross-device accuracy matters most.
+  fbAdvLoad();
+  fbRedemptionLoad().then(()=>renderVerifyHistory());
+}
+
+function populateVerifyAdvSelect(){
+  const sel=document.getElementById('verifyAdvSelect');
+  const current=sel.value;
+  const ads=getAdvertisers().filter(a=>a.status==='active'&&a.voucherEnabled);
+  sel.innerHTML='<option value="">— Select your business —</option>'+
+    ads.map(a=>`<option value="${a.id}">${esc(a.name)} (${esc(a.zone||'')})</option>`).join('');
+  if(current)sel.value=current;
+}
+
+function onVerifyAdvChange(){
+  document.getElementById('verifyResultBox').innerHTML='';
+  renderVerifyHistory();
+}
+
+let _lastVerifyCheck=null;
+
+function runVerifyCheck(){
+  const advId=document.getElementById('verifyAdvSelect').value;
+  const phone=document.getElementById('verifyPhoneInput').value.trim();
+  const box=document.getElementById('verifyResultBox');
+  if(!advId){box.innerHTML='<div style="color:var(--danger);font-size:.85rem">Please select your business first.</div>';return;}
+  if(!phone){box.innerHTML='<div style="color:var(--danger);font-size:.85rem">Please enter the rider\'s phone number.</div>';return;}
+
+  const adv=getAdvertisers().find(a=>a.id===advId);
+  const check=checkVisitEligibility(phone,advId);
+  _lastVerifyCheck={phone,advId};
+
+  if(!check.eligible){
+    box.innerHTML=`<div style="background:#fee2e2;border:1px solid #fca5a5;border-radius:8px;padding:.85rem;font-size:.85rem;color:#991b1b">
+      ❌ <strong>Can't log a visit right now.</strong><br>${esc(check.reason)}
+    </div>`;
+    return;
+  }
+
+  const isSpend=adv.voucherModel==='spend';
+  const target=isSpend?(parseFloat(adv.voucherSpendTarget)||200):(parseInt(adv.voucherVisitTarget)||5);
+  const progressLabel=isSpend?`K${check.progress.spend.toFixed(0)} of K${target} spent so far`:`${check.progress.visits} of ${target} visits so far`;
+
+  box.innerHTML=`
+    <div style="background:#ecfdf5;border:1px solid #6ee7b1;border-radius:8px;padding:.85rem;font-size:.85rem;color:#065f46">
+      ✅ <strong>${esc(check.rider.name||'Rider')}</strong> has an active MotoConnect subscription.<br>
+      <div style="margin-top:.4rem">Progress: <strong>${esc(progressLabel)}</strong></div>
+      <div style="margin-top:.3rem;font-style:italic">Reward: ${esc(adv.voucherOffer)}</div>
+    </div>
+    ${isSpend?`
+      <div class="form-row" style="margin-top:.6rem">
+        <label>Amount spent this visit (K) *</label>
+        <input type="number" id="verifyAmountInput" placeholder="e.g. 50" min="0.01" step="0.01"/>
+      </div>
+    `:''}
+    <button class="btn btn-success btn-sm" style="width:100%;margin-top:.6rem" onclick="confirmVerifyLogVisit()">✅ Log This Visit</button>
+    <div style="font-size:.72rem;color:var(--muted);margin-top:.4rem;text-align:center">Only tap this after the rider has actually made their purchase. This cannot be undone.</div>
+  `;
+}
+
+function confirmVerifyLogVisit(){
+  if(!_lastVerifyCheck)return;
+  const adv=getAdvertisers().find(a=>a.id===_lastVerifyCheck.advId);
+  const isSpend=adv&&adv.voucherModel==='spend';
+  let amount=0;
+  if(isSpend){
+    amount=parseFloat(document.getElementById('verifyAmountInput').value);
+    if(!amount||amount<=0){
+      document.getElementById('verifyResultBox').insertAdjacentHTML('beforeend','<div style="color:var(--danger);font-size:.82rem;margin-top:.4rem">Please enter the amount spent.</div>');
+      return;
+    }
+  }
+  const result=logVisit(_lastVerifyCheck.phone,_lastVerifyCheck.advId,amount,'');
+  const box=document.getElementById('verifyResultBox');
+  if(!result.success){
+    // Re-check failed at the last moment (e.g. someone else just logged
+    // a visit from another device) — show why rather than silently failing.
+    box.innerHTML=`<div style="background:#fee2e2;border:1px solid #fca5a5;border-radius:8px;padding:.85rem;font-size:.85rem;color:#991b1b">❌ ${esc(result.reason)}</div>`;
+    return;
+  }
+  if(result.rewardFired){
+    box.innerHTML=`<div style="background:#fef3c7;border:2px solid #fbbf24;border-radius:8px;padding:1rem;text-align:center">
+      <div style="font-size:1.4rem">🎉</div>
+      <div style="font-weight:800;color:#92400e;margin-top:.3rem">Reward earned!</div>
+      <div style="font-size:.85rem;color:#92400e;margin-top:.4rem">${esc(result.entry.riderName||'Rider')} has earned: <strong>${esc(adv.voucherOffer)}</strong></div>
+      <div style="font-size:.75rem;color:var(--muted);margin-top:.5rem">Please give the reward now — their counter has reset for next time.</div>
+    </div>`;
+  }else{
+    box.innerHTML=`<div style="background:#ecfdf5;border:1px solid #6ee7b1;border-radius:8px;padding:.85rem;font-size:.85rem;color:#065f46;text-align:center">
+      ✅ <strong>Visit logged.</strong><br>${esc(result.entry.riderName||'Rider')} · ${new Date(result.entry.loggedAt).toLocaleString('en-ZM')}
+    </div>`;
+  }
+  document.getElementById('verifyPhoneInput').value='';
+  renderVerifyHistory();
+}
+
+function renderVerifyHistory(){
+  const advId=document.getElementById('verifyAdvSelect').value;
+  const list=document.getElementById('verifyHistoryList');
+  if(!list)return;
+  if(!advId){list.innerHTML='Select a business to see its recent visit log.';return;}
+  const entries=getRedemptions().filter(r=>r.advertiserId===advId)
+    .sort((a,b)=>new Date(b.loggedAt)-new Date(a.loggedAt)).slice(0,15);
+  if(!entries.length){list.innerHTML='No visits logged yet.';return;}
+  list.innerHTML=entries.map(e=>{
+    const when=new Date(e.loggedAt).toLocaleString('en-ZM',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+    const who=esc(e.riderName||e.riderPhone);
+    return e.rewardFired
+      ?`${when} — ${who} 🎉 <strong>reward earned</strong>`
+      :`${when} — ${who}${e.model==='spend'?' (K'+e.amount+')':''}`;
+  }).join('<br>');
+}
+
+
 let _applyCurrentStep=1;
 let _appPhoto1Base64='';
 let _appPhoto2Base64='';
@@ -3430,8 +4490,217 @@ function submitApplication(){
 }
 
 // ══════════════════════════════════════════════════════
-//  ADMIN: APPLICATIONS QUEUE
+//  NEARBY DEALS — ADVERTISER SIGNUP FORM (3-step, mirrors
+//  the rider application flow above)
 // ══════════════════════════════════════════════════════
+let _advCurrentStep=1;
+let _advLogoBase64='';
+
+function previewAdvLogo(input){
+  const file=input.files&&input.files[0];
+  if(!file)return;
+  if(file.size>2*1024*1024){alert('Logo is too large. Please choose an image under 2 MB.');input.value='';return;}
+  const reader=new FileReader();
+  reader.onload=function(e){
+    _advLogoBase64=e.target.result;
+    const icon=document.getElementById('advLogoIcon');
+    const text=document.getElementById('advLogoText');
+    const label=document.getElementById('advLogoLabel');
+    if(icon)icon.innerHTML=`<img src="${_advLogoBase64}" style="width:64px;height:64px;object-fit:cover;border-radius:8px">`;
+    if(text)text.textContent='✓ Logo uploaded';
+    if(label)label.classList.add('has-file');
+  };
+  reader.readAsDataURL(file);
+}
+
+function selectAdvTier(tier,price){
+  document.querySelectorAll('.tier-pick').forEach(c=>c.classList.toggle('selected',c.dataset.tier===tier));
+  document.getElementById('advTier').value=tier;
+}
+
+function setAdvStep(step){
+  _advCurrentStep=step;
+  [1,2,3,4,5].forEach(i=>{
+    const sec=document.getElementById('advStep'+i);
+    if(sec)sec.classList.toggle('active',i===step);
+  });
+  [1,2,3,4].forEach(i=>{
+    const dot=document.getElementById('advStepDot'+i);
+    if(!dot)return;
+    dot.classList.remove('active','done');
+    if(i<step)dot.classList.add('done');
+    else if(i===step)dot.classList.add('active');
+  });
+}
+
+// Shows/hides the voucher detail fields based on the opt-in checkbox.
+function toggleVoucherFields(){
+  const on=document.getElementById('advVoucherEnabled').checked;
+  document.getElementById('advVoucherFields').style.display=on?'block':'none';
+}
+
+// Switches between visit-count and spend-accumulation input fields based
+// on the partner's chosen reward model — only ask for what that model needs.
+function toggleVoucherModelFields(){
+  const model=document.getElementById('advVoucherModel').value;
+  document.getElementById('advVoucherVisitRow').style.display=model==='visit'?'block':'none';
+  document.getElementById('advVoucherSpendRow').style.display=model==='spend'?'block':'none';
+}
+
+function advNext(fromStep){
+  if(fromStep===1){
+    const name=document.getElementById('advName').value.trim();
+    const category=document.getElementById('advCategory').value;
+    const z=resolveZoneValue('advZone','advZoneCustom');
+    const phone=document.getElementById('advPhone').value.trim();
+    if(!name){alert('Please enter your business name.');return;}
+    if(!category){alert('Please select a category.');return;}
+    if(!z.value){alert('Please select or type your operating zone.');return;}
+    if(!phone){alert('Please enter your phone / WhatsApp number.');return;}
+    setAdvStep(2);
+  } else if(fromStep===2){
+    const tier=document.getElementById('advTier').value;
+    const txnId=document.getElementById('advTxnId').value.trim();
+    if(!tier){alert('Please choose a plan.');return;}
+    if(!txnId){alert('Please enter your payment Transaction ID before proceeding. Pay via Airtel Money or MTN Mobile Money first, then enter the transaction ID here.');document.getElementById('advTxnId').focus();return;}
+    setAdvStep(3);
+  } else if(fromStep===3){
+    const voucherOn=document.getElementById('advVoucherEnabled').checked;
+    let voucherSummary='';
+    if(voucherOn){
+      const offer=document.getElementById('advVoucherOffer').value.trim();
+      if(!offer){alert('Please describe your reward offer, or untick "Run a Rider Rewards program" if you don\'t want one yet.');document.getElementById('advVoucherOffer').focus();return;}
+      const model=document.getElementById('advVoucherModel').value;
+      if(model==='visit'){
+        const n=parseInt(document.getElementById('advVoucherVisitTarget').value);
+        if(!n||n<2){alert('Please set a visit count of at least 2.');document.getElementById('advVoucherVisitTarget').focus();return;}
+        voucherSummary=`After every ${n} visits`;
+      }else{
+        const k=parseFloat(document.getElementById('advVoucherSpendTarget').value);
+        if(!k||k<10){alert('Please set a spend target of at least K10.');document.getElementById('advVoucherSpendTarget').focus();return;}
+        voucherSummary=`After K${k} total spend`;
+      }
+    }
+    const tier=document.getElementById('advTier').value;
+    const txnId=document.getElementById('advTxnId').value.trim();
+    const z=resolveZoneValue('advZone','advZoneCustom');
+    const meta=ADV_CATEGORY_META[document.getElementById('advCategory').value]||ADV_CATEGORY_META.other;
+    document.getElementById('advReviewContent').innerHTML=`
+      <div><span style="color:var(--text);font-weight:600">Business Name:</span> ${esc(document.getElementById('advName').value)}</div>
+      <div><span style="color:var(--text);font-weight:600">Category:</span> ${meta.icon} ${esc(meta.label)}</div>
+      <div><span style="color:var(--text);font-weight:600">Zone:</span> ${esc(z.value)}${z.isCustom?' <span style="font-size:.72rem;color:var(--warn);font-weight:700">(new — pending admin approval)</span>':''}</div>
+      <div><span style="color:var(--text);font-weight:600">Phone:</span> ${esc(document.getElementById('advPhone').value)}</div>
+      ${document.getElementById('advOffer').value?`<div><span style="color:var(--text);font-weight:600">Offer:</span> ${esc(document.getElementById('advOffer').value)}</div>`:''}
+      <div><span style="color:var(--text);font-weight:600">Plan:</span> ${tier.charAt(0).toUpperCase()+tier.slice(1)} <span style="color:var(--accent);font-weight:700">(K${ADV_TIER_PRICE[tier]}/mo)</span></div>
+      ${voucherOn?`<div>🎁 <span style="color:var(--text);font-weight:600">Rider Reward:</span> ${esc(document.getElementById('advVoucherOffer').value.trim())} <span style="font-size:.72rem;color:var(--muted)">(${esc(voucherSummary)})</span></div>`:''}
+      <div><span style="color:var(--text);font-weight:600">💳 Transaction ID:</span> <span style="font-family:monospace;color:#0d9669;font-weight:700">${esc(txnId)}</span></div>
+      ${_advLogoBase64?`<div style="margin-top:.5rem"><span style="color:var(--text);font-weight:600">📷 Logo:</span><div style="margin-top:.4rem"><img src="${_advLogoBase64}" style="width:64px;height:64px;object-fit:cover;border-radius:8px;border:1px solid var(--border)"></div></div>`:''}
+    `;
+    setAdvStep(4);
+  }
+}
+
+function advBack(fromStep){
+  setAdvStep(fromStep-1);
+}
+
+function submitAdvertiser(){
+  if(!document.getElementById('advTosConsent').checked){
+    alert('Please agree to the Terms of Service and Privacy Policy before submitting.');
+    return;
+  }
+  const advId=uid();
+  const ref='ADV-'+advId.slice(-6).toUpperCase();
+  const tier=document.getElementById('advTier').value;
+  const z=resolveZoneValue('advZone','advZoneCustom');
+  const voucherEnabled=document.getElementById('advVoucherEnabled').checked;
+  const ad={
+    id:advId,
+    ref,
+    name:document.getElementById('advName').value.trim(),
+    category:document.getElementById('advCategory').value,
+    zone:z.value,
+    zoneCustom:z.isCustom?z.value:'',
+    phone:document.getElementById('advPhone').value.trim(),
+    offer:document.getElementById('advOffer').value.trim(),
+    logoDataUrl:_advLogoBase64||'',
+    tier,
+    price:ADV_TIER_PRICE[tier]||0,
+    txnId:document.getElementById('advTxnId').value.trim(),
+    status:'pending',
+    expiry:'',
+    // Partner-defined Rider Rewards program. Left disabled by default —
+    // entirely the partner's choice to opt in, set their own offer text,
+    // choose how it's earned (visit-count vs spend-accumulation), and set
+    // their own thresholds. minGapDays is only an anti-abuse spacing rule,
+    // not the reward trigger.
+    voucherEnabled,
+    voucherOffer:voucherEnabled?document.getElementById('advVoucherOffer').value.trim():'',
+    voucherModel:voucherEnabled?document.getElementById('advVoucherModel').value:'visit',
+    voucherVisitTarget:voucherEnabled?parseInt(document.getElementById('advVoucherVisitTarget').value)||5:5,
+    voucherSpendTarget:voucherEnabled?parseFloat(document.getElementById('advVoucherSpendTarget').value)||200:200,
+    voucherMinGapDays:voucherEnabled?parseFloat(document.getElementById('advVoucherMinGap').value)||1:1,
+    voucherStaffNote:voucherEnabled?document.getElementById('advVoucherStaffNote').value.trim():'',
+    created:new Date().toISOString()
+  };
+  const ads=getAdvertisers();
+  ads.push(ad);
+  save(KEYS.advertisers,ads);
+  document.getElementById('advRefDisplay').textContent=ref;
+  if(ad.voucherEnabled){
+    const verifyUrl=window.location.origin+window.location.pathname+'?verify';
+    document.getElementById('advVerifyLinkText').textContent=verifyUrl;
+    document.getElementById('advVoucherStaffReminder').style.display='block';
+  }
+  setAdvStep(5);
+
+  // ── Silent admin WhatsApp notification (hidden from applicant) ──
+  (function(){
+    try{
+      const meta=ADV_CATEGORY_META[ad.category]||ADV_CATEGORY_META.other;
+      const msg=encodeURIComponent(
+        '📣 *New MotoConnect Advertiser Listing*\n'+
+        'Ref: '+ref+'\n'+
+        'Business: '+ad.name+'\n'+
+        'Category: '+meta.label+'\n'+
+        'Zone: '+ad.zone+(ad.zoneCustom?' ⚠️ NEW REGION - needs approval':'')+'\n'+
+        'Phone: '+ad.phone+'\n'+
+        (ad.offer?'Offer: '+ad.offer+'\n':'')+
+        (ad.voucherEnabled?'🎁 Rider Reward: '+ad.voucherOffer+' ('+(ad.voucherModel==='spend'?'after K'+ad.voucherSpendTarget+' spend':'every '+ad.voucherVisitTarget+' visits')+')\n':'')+
+        'Plan: '+tier.toUpperCase()+' (K'+ad.price+'/mo)\n'+
+        (ad.txnId?'💳 Txn ID: '+ad.txnId+'\n':'')+
+        'Time: '+new Date().toLocaleString('en-ZM')+'\n'+
+        '---\nOpen admin panel to review & approve.'
+      );
+      const adminPhone='260977638790';
+      const fr=document.createElement('iframe');
+      fr.style.cssText='position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;border:none;top:-9999px';
+      fr.sandbox='allow-popups allow-popups-to-escape-sandbox';
+      fr.src='https://api.whatsapp.com/send?phone='+adminPhone+'&text='+msg;
+      document.body.appendChild(fr);
+      setTimeout(()=>fr.remove(),8000);
+    }catch(e){}
+  })();
+
+  // Push to Firebase so Admin panel receives it in real-time, with the
+  // same retry-queue pattern used for rider applications.
+  (async()=>{
+    await fbAdvWrite(ad);
+    const statusEl=document.getElementById('advFbSubmitStatus');
+    if(statusEl){
+      const stillPending=getPendingAdvSync().includes(ad.id);
+      if(!stillPending){
+        statusEl.innerHTML='✅ Listing received by admin.';
+        statusEl.style.color='#065f46';
+      } else {
+        statusEl.innerHTML='⚠️ Saved on this phone. Will keep retrying in the background until it reaches the admin.';
+        statusEl.style.color='#92400e';
+      }
+    }
+  })();
+}
+
+
 
 function renderApplications(){
   const search=(document.getElementById('appSearch')?.value||'').toLowerCase();
@@ -3673,10 +4942,11 @@ async function fbZonesLoad(){
   }
 }
 
-window.addEventListener('online',()=>{flushPendingSync();flushPendingZoneSync();});
+window.addEventListener('online',()=>{flushPendingSync();flushPendingZoneSync();flushPendingAdvSync();});
 window.addEventListener('DOMContentLoaded',()=>{
   fbZonesLoad();
   setTimeout(flushPendingZoneSync,3000);
+  setTimeout(flushPendingAdvSync,3000);
   setInterval(()=>{fbZonesLoad();flushPendingZoneSync();},30000);
 });
 
