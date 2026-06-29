@@ -2985,9 +2985,20 @@ async function fbRestLoad(){
     if(!data||typeof data!=='object'){_showOfflineBanner(false);_pubLoadFirstAttemptDone=true;return;}
     // Firebase returns an object map {id: record}; convert to array
     const fbSubs=Object.values(data).filter(Boolean);
-    // Merge: Firebase (admin) is source of truth; keep any local-only records
+    // Firebase is authoritative for any record it has ever synced. Keep a
+    // locally cached record only if Firebase still has it, OR it's a local
+    // record still waiting to be pushed out (pendingSync) — e.g. a new
+    // application submitted while offline. Otherwise drop it: the old
+    // version of this merge only ever added/overwrote by id and never
+    // removed anything, so a rider deleted in the admin panel would
+    // disappear from Firebase's response but the stale local copy never
+    // went away on any device that had already cached it.
+    const fbIds=new Set(fbSubs.map(s=>s&&s.id).filter(Boolean));
+    const pending=new Set(getPendingSync());
     const localMap={};
-    getSubs().forEach(s=>{if(s&&s.id)localMap[s.id]=s;});
+    getSubs().forEach(s=>{
+      if(s&&s.id&&(fbIds.has(s.id)||pending.has(s.id)))localMap[s.id]=s;
+    });
     fbSubs.forEach(s=>{if(s&&s.id)localMap[s.id]=s;});
     save(KEYS.subs,Object.values(localMap));
     _showOfflineBanner(false);
@@ -3039,8 +3050,16 @@ async function fbAdvLoad(){
     const data=await res.json();
     if(!data||typeof data!=='object')return;
     const fbAds=Object.values(data).filter(Boolean);
+    // Same reasoning as fbRestLoad's subscriptions merge: keep a locally
+    // cached advertiser only if Firebase still has it, or it's still
+    // waiting to be pushed out — otherwise an admin-side delete never
+    // disappears from this device.
+    const fbAdIds=new Set(fbAds.map(a=>a&&a.id).filter(Boolean));
+    const pendingAdv=new Set(getPendingAdvSync());
     const localMap={};
-    getAdvertisers().forEach(a=>{if(a&&a.id)localMap[a.id]=a;});
+    getAdvertisers().forEach(a=>{
+      if(a&&a.id&&(fbAdIds.has(a.id)||pendingAdv.has(a.id)))localMap[a.id]=a;
+    });
     fbAds.forEach(a=>{if(a&&a.id)localMap[a.id]=a;});
     save(KEYS.advertisers,Object.values(localMap));
     renderDealsBanner();
@@ -3140,8 +3159,12 @@ async function fbRedemptionLoad(){
     const data=await res.json();
     if(!data||typeof data!=='object')return true; // empty is still "fresh"
     const fbR=Object.values(data).filter(Boolean);
+    const fbRIds=new Set(fbR.map(r=>r&&r.id).filter(Boolean));
+    const pendingR=new Set(getPendingRedemptionSync());
     const localMap={};
-    getRedemptions().forEach(r=>{if(r&&r.id)localMap[r.id]=r;});
+    getRedemptions().forEach(r=>{
+      if(r&&r.id&&(fbRIds.has(r.id)||pendingR.has(r.id)))localMap[r.id]=r;
+    });
     fbR.forEach(r=>{if(r&&r.id)localMap[r.id]=r;});
     save(KEYS.redemptions,Object.values(localMap));
     return true;
@@ -4930,8 +4953,12 @@ async function fbZonesLoad(){
     const data=await res.json();
     if(!data||typeof data!=='object')return;
     const fbZones=Object.values(data).filter(Boolean);
+    const fbZoneIds=new Set(fbZones.map(z=>z&&z.id).filter(Boolean));
+    const pendingZ=new Set(getPendingZoneSync());
     const localMap={};
-    getZones().forEach(z=>{if(z&&z.id)localMap[z.id]=z;});
+    getZones().forEach(z=>{
+      if(z&&z.id&&(fbZoneIds.has(z.id)||pendingZ.has(z.id)))localMap[z.id]=z;
+    });
     fbZones.forEach(z=>{if(z&&z.id)localMap[z.id]=z;});
     save(KEYS.zones,Object.values(localMap));
     initPubTownDropdown();
