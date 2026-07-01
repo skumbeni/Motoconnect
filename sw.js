@@ -3,7 +3,7 @@
 // Based on proven GitHub Pages PWA pattern
 
 const GHPATH = '/Motoconnect';
-const CACHE  = 'mc-v6';
+const CACHE  = 'mc-v7';
 
 // Every URL the app needs to open offline — both slash forms required
 const URLS = [

@@ -2653,6 +2653,13 @@ function dl(name,content,type){
 //  HELPERS
 // ══════════════════════════════════════════════════════
 function esc(s){const d=document.createElement('div');d.textContent=String(s||'');return d.innerHTML;}
+// Only allow genuine base64 image data URIs through to src="" attributes.
+// Blocks stored-XSS payloads that could otherwise be injected in place of
+// a photo/logo (e.g. via a direct Firebase REST write bypassing the UI).
+function safeImgSrc(s){
+  if(typeof s!=='string')return '';
+  return /^data:image\/(png|jpe?g|gif|webp);base64,[A-Za-z0-9+/=]+$/.test(s)?s:'';
+}
 function togglePw(inputId,btn){
   const el=document.getElementById(inputId);
   if(el.type==='password'){el.type='text';btn.textContent='🙈';}
@@ -3955,7 +3962,8 @@ function renderPublicDirectory(){
     const phone=zamPhone(s.phone);
     const waMsg=encodeURIComponent('Hi '+s.name+', I found you on MotoConnect Zambia. Are you available for a ride?');
     const riderId='MCM-'+s.id.slice(-4).toUpperCase();
-    const photosHtml=(s.photo1||s.photo2)?`<div style="display:flex;gap:.4rem;padding:.5rem .75rem 0;overflow:hidden">${s.photo1?`<img src="${s.photo1}" style="width:72px;height:54px;object-fit:cover;border-radius:7px;border:1px solid var(--border);flex-shrink:0" alt="Vehicle photo">`:''}${s.photo2?`<img src="${s.photo2}" style="width:72px;height:54px;object-fit:cover;border-radius:7px;border:1px solid var(--border);flex-shrink:0" alt="Vehicle photo">`:''}` +'</div>':'';
+    const safePhoto1=safeImgSrc(s.photo1),safePhoto2=safeImgSrc(s.photo2);
+    const photosHtml=(safePhoto1||safePhoto2)?`<div style="display:flex;gap:.4rem;padding:.5rem .75rem 0;overflow:hidden">${safePhoto1?`<img src="${safePhoto1}" style="width:72px;height:54px;object-fit:cover;border-radius:7px;border:1px solid var(--border);flex-shrink:0" alt="Vehicle photo">`:''}${safePhoto2?`<img src="${safePhoto2}" style="width:72px;height:54px;object-fit:cover;border-radius:7px;border:1px solid var(--border);flex-shrink:0" alt="Vehicle photo">`:''}` +'</div>':'';
     return `<div class="rider-card">
       <div class="rider-card-top">
         <div class="rider-avatar">${esc(s.name.charAt(0).toUpperCase())}</div>
@@ -4015,7 +4023,7 @@ function renderDealsBanner(){
   track.innerHTML=ads.map(a=>{
     const meta=ADV_CATEGORY_META[a.category]||ADV_CATEGORY_META.other;
     return `<div class="deals-banner-slide" onclick="showDealsTab()">
-      <div class="dbs-logo">${a.logoDataUrl?`<img src="${a.logoDataUrl}" alt="">`:meta.icon}</div>
+      <div class="dbs-logo">${safeImgSrc(a.logoDataUrl)?`<img src="${safeImgSrc(a.logoDataUrl)}" alt="">`:meta.icon}</div>
       <div class="dbs-text">
         <div class="dbs-name">${esc(a.name)}</div>
         <div class="dbs-offer">${esc(a.offer||(meta.label+' • '+a.zone))}</div>
@@ -4092,7 +4100,7 @@ function renderDealsGrid(){
     const waMsg=encodeURIComponent('Hi, I found '+a.name+' on MotoConnect Zambia. I have a question about your offer.');
     return `<div class="deal-card">
       <div class="deal-card-top">
-        <div class="deal-logo-box">${a.logoDataUrl?`<img src="${a.logoDataUrl}" alt="">`:meta.icon}</div>
+        <div class="deal-logo-box">${safeImgSrc(a.logoDataUrl)?`<img src="${safeImgSrc(a.logoDataUrl)}" alt="">`:meta.icon}</div>
         <div class="deal-info">
           <div class="deal-name">${esc(a.name)} ${a.tier!=='basic'?`<span class="deal-tier-badge">${a.tier.toUpperCase()}</span>`:''}</div>
           <div class="deal-cat">${meta.icon} ${esc(meta.label)}</div>
