@@ -4952,6 +4952,10 @@ async function flushPendingZoneSync(){
 // Pulls the latest zones list from Firebase (e.g. zones another admin
 // device approved) and merges with any local-only zones, then refreshes
 // every UI that lists zones.
+// Merge is a safe UNION: a local zone is never dropped just because
+// Firebase doesn't have it yet (that previously wiped out the unsynced
+// default seed zones on every 30s poll). Local-only zones are kept and
+// also pushed up to Firebase so they become properly synced.
 async function fbZonesLoad(){
   try{
     const token=await _getAnonToken();
@@ -4959,19 +4963,27 @@ async function fbZonesLoad(){
     const res=await fetch(url);
     if(!res.ok)return;
     const data=await res.json();
-    if(!data||typeof data!=='object')return;
-    const fbZones=Object.values(data).filter(Boolean);
-    const fbZoneIds=new Set(fbZones.map(z=>z&&z.id).filter(Boolean));
-    const pendingZ=new Set(getPendingZoneSync());
+    const fbZones=(data&&typeof data==='object')?Object.values(data).filter(Boolean):[];
+    const fbMap={};
+    fbZones.forEach(z=>{if(z&&z.id)fbMap[z.id]=z;});
+
     const localMap={};
-    getZones().forEach(z=>{
-      if(z&&z.id&&(fbZoneIds.has(z.id)||pendingZ.has(z.id)))localMap[z.id]=z;
-    });
+    const local=getZones();
+    // Start from local so nothing local ever silently vanishes.
+    local.forEach(z=>{if(z&&z.id)localMap[z.id]=z;});
+    // Overlay FB data (FB wins for zones both sides have).
     fbZones.forEach(z=>{if(z&&z.id)localMap[z.id]=z;});
+
     save(KEYS.zones,Object.values(localMap));
     initPubTownDropdown();
     renderPubZoneTabs();
     renderZones();
+
+    // Auto-heal: any local zone Firebase doesn't have yet gets pushed up
+    // (e.g. unsynced seed data) instead of being deleted on the next poll.
+    local.forEach(z=>{
+      if(z&&z.id&&!fbMap[z.id])fbZoneWrite(z).catch(()=>{});
+    });
   }catch(e){
     console.warn('Zone load failed, showing local zones:',e);
   }
