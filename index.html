@@ -1531,7 +1531,7 @@ function getFares(){return load(KEYS.fares,[
   {id:'f2',type:'Motorbike',base:10,perKm:2.5,svc:8},
   {id:'f3',type:'Tour Operator',base:30,perKm:5.0,svc:12},
 ]);}
-function getZones(){return load(KEYS.zones,[
+const DEFAULT_ZONES=[
   {id:'z001',name:'Avondale',desc:'',mult:1.0},
   {id:'z002',name:'Bangweulu swamps settlements',desc:'',mult:1.0},
   {id:'z003',name:'Bangweulu wetlands settlements',desc:'',mult:1.0},
@@ -2005,7 +2005,16 @@ function getZones(){return load(KEYS.zones,[
   {id:'z471',name:'Zimba',desc:'',mult:1.0},
   {id:'z472',name:'Zimba Boma',desc:'',mult:1.0},
   {id:'z473',name:'Zimba Rural',desc:'',mult:1.0}
-]);}
+];
+// Zones are reference/seed data — if the stored list is missing OR has
+// been emptied out (e.g. by a stale sync, a bad Firebase pull, or
+// clearAllData), always fall back to the built-in seed list rather than
+// showing 0. A genuinely empty array in storage is never treated as
+// "the user intentionally deleted all 470+ zones".
+function getZones(){
+  const z=load(KEYS.zones,DEFAULT_ZONES);
+  return (Array.isArray(z)&&z.length)?z:DEFAULT_ZONES;
+}
 
 // ══════════════════════════════════════════════════════
 //  NEARBY DEALS — ADVERTISER DATA MODEL
@@ -4974,14 +4983,22 @@ async function fbZonesLoad(){
     // Overlay FB data (FB wins for zones both sides have).
     fbZones.forEach(z=>{if(z&&z.id)localMap[z.id]=z;});
 
-    save(KEYS.zones,Object.values(localMap));
+    let merged=Object.values(localMap);
+    // If both sides are empty (e.g. mc_zones_v2 was ever saved as [] and
+    // Firebase has nothing either), re-seed from the built-in defaults
+    // instead of persisting 0 forever — an empty merge is never a valid
+    // "no zones" state for this app.
+    if(!merged.length){
+      merged=DEFAULT_ZONES;
+    }
+    save(KEYS.zones,merged);
     initPubTownDropdown();
     renderPubZoneTabs();
     renderZones();
 
     // Auto-heal: any local zone Firebase doesn't have yet gets pushed up
     // (e.g. unsynced seed data) instead of being deleted on the next poll.
-    local.forEach(z=>{
+    merged.forEach(z=>{
       if(z&&z.id&&!fbMap[z.id])fbZoneWrite(z).catch(()=>{});
     });
   }catch(e){
